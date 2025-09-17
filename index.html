@@ -13,37 +13,41 @@
   <style>
     .layout {
       display: flex;
-      align-items: center;   /* vertically center video with content */
+      align-items: center; /* vertically center videos with content */
       justify-content: space-between;
       gap: 20px;
     }
 
-    .main-content {
-      flex: 1;  /* content takes remaining space */
-    }
-
-    .side-video {
-      flex: 0 0 320px;       /* fixed width */
-      aspect-ratio: 9/ 16;  /* keep 16:9 */
+    .side-video, .left-video {
+      aspect-ratio: 9 / 16;
       border-radius: 8px;
       overflow: hidden;
       border: 2px solid rgba(0,0,0,0.3);
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       background: #000;
+      flex: 0 0 250px; /* increased width */
     }
 
-    .side-video video {
+    .side-video video, .left-video video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
     @media (max-width: 900px) {
       .layout {
-        flex-direction: column; /* stack for small screens */
+        flex-direction: column;
+        align-items: center;
       }
-      .side-video {
+      .side-video, .left-video {
         width: 100%;
       }
     }
@@ -53,7 +57,12 @@
   <button class="button" id="theme-toggle">◐</button>
 
   <div class="layout">
-    <!-- Left side: content -->
+    <!-- Left video -->
+    <div class="left-video">
+      <video src="idk2.mp4" autoplay loop muted playsinline></video>
+    </div>
+
+    <!-- Main content -->
     <div class="main-content">
       <div class="container">
         <img src="image.png" alt="Avatar" class="avatar">
@@ -71,7 +80,7 @@
       </div>
     </div>
 
-    <!-- Right side: integrated video -->
+    <!-- Right video -->
     <div class="side-video">
       <video src="idk.mp4" autoplay loop muted playsinline></video>
     </div>

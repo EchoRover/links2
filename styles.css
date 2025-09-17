@@ -297,3 +297,18 @@ a:hover {
 :root[data-theme="light"] #quizzes-box p {
   color: #fff;
 }
+.side-video-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 0 320px; /* fixed width for the column */
+}
+
+.side-video {
+  aspect-ratio: 16 / 9;  /* keep 16:9 */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: #000;
+}
