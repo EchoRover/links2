@@ -329,3 +329,12 @@ a:hover {
   flex-direction: column;
   justify-content: flex-start; /* keep heading on top */
 }
+.side-video {
+  aspect-ratio: 9 / 16;  /* new ratio for right video */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: #000;
+  flex: 0 0 250px; /* width remains the same */
+}
