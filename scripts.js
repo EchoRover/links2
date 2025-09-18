@@ -14,10 +14,10 @@ const linksData = {
       Tutorials: "https://iitdabudhabi.sharepoint.com/:f:/s/AENL220_jacpcl/EtURNCymC25FqStyIHHQjH8BzKEl9InbYIHEWA3reHm2CQ?e=w8iQBg"
     },
     "AAPL105 (Mech)": {
-      "Check Outlook": "https://outlook.office.com/"
+      Blackboard: "https://iida.blackboard.com/ultra/courses/_38_1/outline"
     },
     "AENL210 (Thermo)": {
-      Onedrive: "https://iitdabudhabi-my.sharepoint.com/personal/kkant_iitdabudhabi_ac_ae/_layouts/15/onedrive.aspx?id=/personal/kkant_iitdabudhabi_ac_ae/Documents/AENL%20210/Regular_course_material&ga=1",
+      Blackboard : "https://iida.blackboard.com/ultra/courses/_39_1/outline",
       Lectures: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/Enl1qAazZR9BiFn9yuRHZl4Be2lylwrBb1NKZ_ew9EDn7Q?e=JzixUb",
       "Assig/Quiz/Tut": "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/EmyiV-znPk9NtH9FoIu7GREBj0c8bxilcB5rOI_EQgTnkA?e=MfniI6",
       "Assig/Quiz/Tut (Solution)": "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/Es8ZXG4JDGJBl8iwEl7fmHwBu-cJIzobmNyaq4GFLzK5NQ?e=IBLE0E"
@@ -37,9 +37,7 @@ const linksData = {
 // ====== Updates Data ======
 const updatesData = [
   ["assignments", "AAPL105 (Mech): Assignment 3 submission by 19/09/2025", "2025-09-19"],
-  ["assignments", "AENL210 (Thermo): Assignment 2 and 3 submission by 18/09/2025", "2025-09-18"],
-  ["assignments", "AENL220 (Heat): Assignment 2 submission on teams by 19/09/2025", "2025-09-19"],
-  ["quizzes", "AENL222: Quiz based on the portions covered till September 11th will be held on 18/09/2025", "2025-09-18"]
+  ["assignments", "AENL220 (Heat): Assignment 2 submission on teams by 19/09/2025", "2025-09-19"]
 ];
 
 // ====== Helper to Add Update ======
@@ -117,7 +115,7 @@ toggleBtn.addEventListener("click", () => {
 
 
 //Updates:
-addUpdate("timetable","AAPL105+AENL210: Timings swapped, AENL210 lecture at 10 am, AAPL105 lecture at 11 am for 16/09/2025 ","2025-09-16")
+
 
 addUpdate("quizzes","AENL210: Quiz of the week on Friday, 19/09/2025, 11:30-12:30 PM (Online)","2025-09-19")
 
