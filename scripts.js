@@ -122,7 +122,7 @@ addUpdate("quizzes","AENL210: Quiz of the week on Friday, 19/09/2025, 11:30-12:3
 
 
 
-
+addUpdate("assignments","AENL210: Tutorial submission on Monday, 22/09/2025","2025-09-22")
 
 
 
