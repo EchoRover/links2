@@ -35,10 +35,7 @@ const linksData = {
 };
 
 // ====== Updates Data ======
-const updatesData = [
-  ["assignments", "AAPL105 (Mech): Assignment 3 submission by 19/09/2025", "2025-09-19"],
-  ["assignments", "AENL220 (Heat): Assignment 2 submission on teams by 19/09/2025", "2025-09-19"]
-];
+const updatesData = [];
 
 // ====== Helper to Add Update ======
 function addUpdate(category, text, expiry) {
@@ -117,13 +114,8 @@ toggleBtn.addEventListener("click", () => {
 //Updates:
 
 
-addUpdate("quizzes","AENL210: Quiz of the week on Friday, 19/09/2025, 11:30-12:30 PM (Online)","2025-09-19")
-
-
-
-
 addUpdate("assignments","AENL210: Tutorial submission on Monday, 22/09/2025","2025-09-22")
-
+addUpdate("timetable","Online classes will be held on Sunday 21/09/2025 following the Wednesday timetable","2025-09-21")
 
 
 
