@@ -339,9 +339,9 @@ a:hover {
   flex: 0 0 250px; /* width remains the same */
 }
 .video-column.left-videos {
-  margin-left: 15px; /* pushes right a bit */
+  margin-left: 25px; /* pushes right a bit */
 }
 
 .video-column.right-videos {
-  margin-right: 15px; /* pushes left a bit */
+  margin-right: 25px; /* pushes left a bit */
 }
