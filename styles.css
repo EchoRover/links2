@@ -338,3 +338,10 @@ a:hover {
   background: #000;
   flex: 0 0 250px; /* width remains the same */
 }
+.video-column.left-videos {
+  margin-left: 15px; /* pushes right a bit */
+}
+
+.video-column.right-videos {
+  margin-right: 15px; /* pushes left a bit */
+}
