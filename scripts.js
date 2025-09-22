@@ -118,7 +118,7 @@ addUpdate("assignments","AENL210: Tutorial submission on Monday, 22/09/2025","20
 addUpdate("timetable","Online classes will be held on Sunday 21/09/2025 following the Wednesday timetable","2025-09-21")
 
 addUpdate("timetable","AAPL105: No class on Sunday, instead a physical class from 3-4 PM on Monday, 22/09/2025","2025-09-22")
-addUpdate("assignments","AAPL105: Submission of Assignment for chapter 3 is on 24/09/2025, questions uploaded in blackboard","24-09-2025")
+addUpdate("assignments","AAPL105: Submission of Assignment for chapter 3 is on 24/09/2025, questions uploaded on blackboard","2025-09-24")
 
 
 
