@@ -119,7 +119,7 @@ addUpdate("timetable","Online classes will be held on Sunday 21/09/2025 followin
 
 addUpdate("timetable","AAPL105: No class on Sunday, instead a physical class from 3-4 PM on Monday, 22/09/2025","2025-09-22")
 addUpdate("assignments","AAPL105: Submission of Assignment for chapter 3 is on 24/09/2025, questions uploaded on blackboard","2025-09-24")
-
+addUpdate("timetable","AENL220: Buffer class will be taken on 24/09/2025 from 12:30 in classroom 5","2025-09-24")
 
 
 
