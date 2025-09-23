@@ -123,8 +123,8 @@ addUpdate("timetable","AENL220: Buffer class will be taken on 24/09/2025 from 12
 
 
 
-
-
+addUpdate("assignments","AENL210: Tutorial 5 submission on Thursday, 25/09/2025","2025-09-25")
+addUpdate("quizzes","AENL210: Quiz 5 on Wednesday, 01/10/2025 at 12:30 PM","2025-10-01")
 
 
 
