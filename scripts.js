@@ -82,23 +82,31 @@ function renderCourseLinks(selector, data) {
 function renderUpdates() {
   const now = new Date();
 
+  // group updates by category
+  const grouped = {};
   updatesData.forEach(([category, text, expiry]) => {
-    const parts = String(expiry).split('-').map(Number);
-    if (parts.length !== 3) return;
-    const [y, m, d] = parts;
+    if (!grouped[category]) grouped[category] = [];
+    grouped[category].push([text, expiry]);
+  });
 
-    // Expiry = start of next day
-    const expiryExclusive = new Date(y, m - 1, d + 1, 0, 0, 0, 0);
+  // sort inside each category
+  for (const [category, items] of Object.entries(grouped)) {
+    items.sort((a, b) => new Date(a[1]) - new Date(b[1]));
+    const container = document.getElementById(category + "-box");
+    if (!container) continue;
 
-    if (now < expiryExclusive) {
-      const container = document.getElementById(category + "-box");
-      if (container) {
+    items.forEach(([text, expiry]) => {
+      const parts = String(expiry).split('-').map(Number);
+      if (parts.length !== 3) return;
+      const [y, m, d] = parts;
+      const expiryExclusive = new Date(y, m - 1, d + 1, 0, 0, 0, 0);
+      if (now < expiryExclusive) {
         const p = document.createElement("p");
         p.textContent = text;
         container.appendChild(p);
       }
-    }
-  });
+    });
+  }
 }
 
 // ====== Theme Toggle ======
@@ -122,12 +130,11 @@ addUpdate("timetable","AENL220: Buffer class will be taken on 24/09/2025 from 12
 addUpdate("assignments","AENL210: Tutorial 5 submission on Thursday, 25/09/2025","2025-09-25");
 addUpdate("quizzes","AENL210: Quiz 5 on Wednesday, 01/10/2025 at 12:30 PM","2025-10-01");
 addUpdate("quizzes","AAPL105: Quiz 2 based on Homework 3 and 4 will be on 29/09/2025, 3-4 PM","2025-09-29");
+addUpdate("quizzes","AENL338: Quiz on Friday, 3/10/2025","2025-10-03");
+addUpdate("assignments", "AAPL105: Assignment 5 to be submitted on 01/10/2025, questions uploaded on blackboard", "2025-10-01");
+addUpdate("timetable","AENL220: Thursday tutorial will be held in the first half, ie. classes will start from 9 AM","2025-09-25");
+addUpdate("quizzes","AENL220: Quiz based on start till fins on Tuesday, 30/09/2025 9-10 AM","2025-09-30");
 
-
-addUpdate("quizzes","AENL338: Quiz on Friday, 3/10/2025","2025-10-03")
-addUpdate("assignments", "AAPL105: Assignment 5 to be submitted on 01/10/2025, questions uploaded on blackboard", "2025-10-01")
-addUpdate("timetable","AENL220: Thursday tutorial will be held in the first half, ie. classes will start from 9 AM","2025-09-25")
-addUpdate("quizzes","AENL220: Quiz based on start till fins on Tuesday, 30/09/2025 9-10 AM","2025-09-30")
 // ====== Initialize Page ======
 window.addEventListener("DOMContentLoaded", () => {
   renderGeneralLinks(".general", linksData.general);
