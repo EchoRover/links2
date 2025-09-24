@@ -125,10 +125,7 @@ addUpdate("timetable","AENL220: Buffer class will be taken on 24/09/2025 from 12
 
 addUpdate("assignments","AENL210: Tutorial 5 submission on Thursday, 25/09/2025","2025-09-25")
 addUpdate("quizzes","AENL210: Quiz 5 on Wednesday, 01/10/2025 at 12:30 PM","2025-10-01")
-
-
-
-
+addUpdate("quizzes","AAPL105: Quiz 2 based on Homework 3 and 4 will be on 29/09/2025, 3-4 PM","2025-09-2025")
 
 // ====== Initialize Page ======
 window.addEventListener("DOMContentLoaded", () => {
