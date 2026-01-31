@@ -1,16 +1,17 @@
 // ================= LINKS DATA =================
+"hi"
 const linksData = {
   general: {
     ERP: "https://iitdadierp.iitd.ac.in/student/login",
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
-    TimeTable: "file:///C:/Users/sumed/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/9E31299E24A5A650AB1943C959BB6F966C723F1E/transfers/2026-05/V2%20-%20B.Tech%20EEN%20-%20Semester%204.pdf"
-  },
+    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/V2%20-%20B.Tech%20EEN%20-%20Semester%204.pdf"},
 
   courses: {
     "AENL200 (CET)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_106_1/outline"
+      Blackboard: "https://iida.blackboard.com/ultra/courses/_106_1/outline",
+      OneDrive : "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/IgA1z2c0PZS7SpSKP8KdWAvxARnQrbKCoolunTP-2x1HJfo?e=A5mbyu"
     },
 
     "AENL224 (Elec Mch)": {
