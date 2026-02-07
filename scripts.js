@@ -168,8 +168,8 @@ addUpdate(
 
 addUpdate(
   "quizzes",
-  "AENL202: \"Suprise\" Quiz 1 scheduled for Unknown date next week",
-  "2026-02-06"
+  "AENL223:  Quiz 1 scheduled for Unknown date next week",
+  "2026-02-13"
 );
 
 // ================= INIT =================
