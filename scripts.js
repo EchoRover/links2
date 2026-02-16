@@ -6,12 +6,15 @@ const linksData = {
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
-    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/V2%20-%20B.Tech%20EEN%20-%20Semester%204.pdf"},
+
+    // ✅ UPDATED TIMETABLE (V3)
+    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/B.Tech%20EEN%20-%20Semester%204%20-%20V3-2025-20.pdf"
+  },
 
   courses: {
     "AENL200 (CET)": {
       Blackboard: "https://iida.blackboard.com/ultra/courses/_106_1/outline",
-      OneDrive : "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/IgA1z2c0PZS7SpSKP8KdWAvxARnQrbKCoolunTP-2x1HJfo?e=A5mbyu"
+      OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/IgA1z2c0PZS7SpSKP8KdWAvxARnQrbKCoolunTP-2x1HJfo?e=A5mbyu"
     },
 
     "AENL224 (Elec Mch)": {
@@ -24,6 +27,11 @@ const linksData = {
 
     "AENL202 (RET)": {
       Blackboard: "https://iida.blackboard.com/ultra/courses/_108_1/outline"
+    },
+
+    "AHUL 213 (Macro Economics)": {
+      Blackboard: "https://iida.blackboard.com/ultra/courses/_110_1/outline",
+      Wordpress: "https://jayanjthomas.wordpress.com/teaching/macroeconomics-for-undergraduates/"
     }
   }
 };
@@ -32,7 +40,6 @@ const linksData = {
 const updatesData = [];
 
 // ================= INSTAGRAM REELS =================
-// Local vertical clips (idk1.mp4 ... idk16.mp4)
 const localClips = Array.from({ length: 16 }, (_, i) => `idk${i + 1}.mp4`);
 
 function pickRandomClips(count) {
@@ -158,8 +165,6 @@ if (toggleBtn) {
 }
 
 // ================= SEM 2 UPDATES =================
-
-
 addUpdate(
   "quizzes",
   "AENL200: Quiz 1 scheduled for Monday 02/02/2026",
@@ -168,7 +173,7 @@ addUpdate(
 
 addUpdate(
   "quizzes",
-  "AENL223:  Quiz 1 scheduled for Unknown date next week",
+  "AENL223: Quiz 1 scheduled for Unknown date next week",
   "2026-02-13"
 );
 
