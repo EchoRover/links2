@@ -1,5 +1,4 @@
 // ================= LINKS DATA =================
-"hi"
 const linksData = {
   general: {
     ERP: "https://iitdadierp.iitd.ac.in/student/login",
@@ -7,7 +6,7 @@ const linksData = {
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
 
-    // ✅ UPDATED TIMETABLE (V3)
+    // UPDATED TIMETABLE (V3)
     TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/B.Tech%20EEN%20-%20Semester%204%20-%20V3-2025-20.pdf"
   },
 
@@ -26,7 +25,8 @@ const linksData = {
     },
 
     "AENL202 (RET)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_108_1/outline"
+      Blackboard: "https://iida.blackboard.com/ultra/courses/_108_1/outline",
+      OwnCloud: "https://owncloud.iitd.ac.in/nextcloud/index.php/s/43MTJGEktM4kcFM"
     },
 
     "AHUL 213 (Macro Economics)": {
