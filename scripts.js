@@ -21,7 +21,8 @@ const linksData = {
     },
 
     "AENL223 (Materials Enrgy Sys)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_107_1/outline"
+      Blackboard: "https://iida.blackboard.com/ultra/courses/_107_1/outline",
+      OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/nkhare_iitdabudhabi_ac_ae/IgBSoUudo8CNSpwJL0ZsdkgmAe_E_AJzQ32W1YNAIQvlSSA?e=MKXG7H"
     },
 
     "AENL202 (RET)": {
