@@ -3,53 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>EEN Year 2 Links</title>
+  <title>linkeen · EEN Year 3</title>
   <link rel="icon" type="image/png" href="sustainability.png">
   <script>
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
   </script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <!-- games.css FIRST so styles.css overrides its #games-section positioning -->
   <link rel="stylesheet" href="games.css">
-  <style>
-    .layout {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    /* video columns removed */
-
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    @media (max-width: 900px) {
-      .layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      .video-column {
-        width: 100%;
-        flex-direction: row;
-        justify-content: center;
-        margin: 0; /* reset margins for mobile */
-      }
-      .video-box {
-        flex: 1;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <div id="games-section">
-    <button id="open-games-modal">GAMES</button>
-  </div>
 
   <!-- Games Modal Popup -->
   <div id="games-modal" class="modal">
@@ -64,45 +31,73 @@
       </div>
     </div>
   </div>
-  <button class="button" id="theme-toggle">◐</button>
 
   <div class="layout">
-    <!-- Main content -->
     <div class="main-content">
       <div class="container">
-        <img src="image.png" alt="Avatar" class="avatar">
-        <h1>BTECH Energy YEAR 2</h1>
 
-        <div class="general"></div>
-        <div class="links"></div>
+        <!-- Top bar -->
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand-text">linkeen<small>y3 · sem 5</small></div>
+          </div>
+          <div class="topbar-actions">
+            <div id="games-section">
+              <button id="open-games-modal" type="button">Games</button>
+            </div>
+            <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
+          </div>
+        </header>
 
-        <div class="updates-layout">
-          <div class="reel-panel left-reel">
-            <h3>Random Clip</h3>
-            <div class="reel-frame">
-              <video id="local-clip-left" playsinline autoplay muted loop></video>
+        <!-- Hero strip -->
+        <section class="hero">
+          <img src="image.png" alt="Avatar" class="avatar">
+          <div class="hero-text">
+            <h1>Semester 5</h1>
+            <p class="hero-sub" id="hero-sub">y3 · running studies, links, updates &amp; the off-clock</p>
+          </div>
+          <div class="general"></div>
+        </section>
+
+        <!-- Body: left = courses + updates, right = reels -->
+        <div class="body-grid">
+
+          <div class="left-col">
+            <div class="links"></div>
+
+            <div class="updates-layout">
+              <div class="updates">
+                <h1>updates</h1>
+                <div class="box" id="timetable-box"><h2>Timetable</h2></div>
+                <div class="box" id="assignments-box"><h2>Assignments</h2></div>
+                <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
+              </div>
             </div>
           </div>
 
-          <div class="updates">
-            <h1>Updates</h1>
-            <div class="box" id="timetable-box"><h2>Timetable</h2></div>
-            <div class="box" id="assignments-box"><h2>Assignments</h2></div>
-            <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
-          </div>
-
-          <div class="reel-panel right-reel">
-            <h3>Random Clip</h3>
-            <div class="reel-frame">
-              <video id="local-clip-right" playsinline autoplay muted loop></video>
+          <aside class="side-col">
+            <div class="reel-panel left-reel">
+              <div class="reel-frame">
+                <video id="local-clip-left" playsinline autoplay muted loop></video>
+              </div>
             </div>
-          </div>
+            <div class="reel-panel right-reel">
+              <div class="reel-frame">
+                <video id="local-clip-right" playsinline autoplay muted loop></video>
+              </div>
+            </div>
+          </aside>
+
         </div>
+
+        <footer class="site-footer">
+          <span class="footer-quote" id="footer-quote">linkeen · IITDA Energy</span>
+          <span>2026 ✿</span>
+        </footer>
+
       </div>
     </div>
   </div>
-
-  <!-- Video elements and mp4 autoplay removed -->
 
   <script src="scripts.js"></script>
   <script src="gamesscript.js"></script>

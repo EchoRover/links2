@@ -1,39 +1,31 @@
 // ================= LINKS DATA =================
+// general values may be either:
+//   string url
+//   { url, className?: string, quip?: string }
 const linksData = {
   general: {
     ERP: "https://iitdadierp.iitd.ac.in/student/login",
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
-
-    // UPDATED TIMETABLE (V3)
-    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/B.Tech%20EEN%20-%20Semester%204%20-%20V3-2025-20.pdf"
+    TimeTable: "https://iitdabudhabi.ac.ae/",
+    linkCS: {
+      url: "https://linkcs.vercel.app",
+      className: "cs-link",
+      quip: "the other side of town ↗",
+      quipTop: "you and i are polar opposites"
+    }
   },
 
+  // Sem 5 (Y3, 2026-27) — links empty until shared. meta = credits + LTP (lec-tut-prac)
   courses: {
-    "AENL200 (CET)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_106_1/outline",
-      OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/IgA1z2c0PZS7SpSKP8KdWAvxARnQrbKCoolunTP-2x1HJfo?e=A5mbyu"
-    },
-
-    "AENL224 (Elec Mch)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_109_1/outline"
-    },
-
-    "AENL223 (Materials Enrgy Sys)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_107_1/outline",
-      OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/nkhare_iitdabudhabi_ac_ae/IgBSoUudo8CNSpwJL0ZsdkgmAe_E_AJzQ32W1YNAIQvlSSA?e=MKXG7H"
-    },
-
-    "AENL202 (RET)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_108_1/outline",
-      OwnCloud: "https://owncloud.iitd.ac.in/nextcloud/index.php/s/43MTJGEktM4kcFM"
-    },
-
-    "AHUL 213 (Macro Economics)": {
-      Blackboard: "https://iida.blackboard.com/ultra/courses/_110_1/outline",
-      Wordpress: "https://jayanjthomas.wordpress.com/teaching/macroeconomics-for-undergraduates/"
-    }
+    "AENL226 (Power Electronics)": { credits: 4,   ltp: "3-1-0", links: {} },
+    "AENL228 (Measurement & Instr)": { credits: 3,   ltp: "2-0-2", links: {} },
+    "AENP200 (Energy Tech Lab)":     { credits: 1.5, ltp: "0-0-3", links: {} },
+    "AENP225 (Elec Energy Lab)":     { credits: 1.5, ltp: "0-0-3", links: {} },
+    "AHUL256 (Critical Thinking)":   { credits: 4,   ltp: "3-1-0", links: {} },
+    "AHUL261 (Intro to Psychology)": { credits: 4,   ltp: "3-1-0", links: {} },
+    "ASBL100 (Intro Biology)":       { credits: 4,   ltp: "3-0-2", links: {} }
   }
 };
 
@@ -83,37 +75,98 @@ function renderGeneralLinks(selector, data) {
   const container = document.querySelector(selector);
   if (!container) return;
 
-  for (const [name, url] of Object.entries(data)) {
+  for (const [name, value] of Object.entries(data)) {
+    const url      = typeof value === "string" ? value : value.url;
+    const klass    = typeof value === "object" ? value.className : null;
+    const quip     = typeof value === "object" ? value.quip      : null;
+    const quipTop  = typeof value === "object" ? value.quipTop   : null;
+
     const link = document.createElement("a");
     link.href = url;
     link.target = "_blank";
-    link.textContent = name;
+    link.rel = "noopener noreferrer";
+    if (klass === "cs-link") {
+      link.innerHTML = `${name}<span class="cs-arrow" aria-hidden="true">↗</span>`;
+    } else {
+      link.textContent = name;
+    }
+    if (klass) link.classList.add(klass);
+    if (quip)    { link.dataset.quip    = quip;    link.title = quip; }
+    if (quipTop) { link.dataset.quipTop = quipTop; }
     container.appendChild(link);
   }
 }
 
 // ================= RENDER COURSE LINKS =================
+function splitCourseLabel(label) {
+  const match = String(label).match(/^\s*([A-Z]{2,}\s*\d+[A-Za-z]*)\s*(?:\((.+)\))?\s*$/);
+  if (match) {
+    return { code: match[1].trim(), title: (match[2] || "").trim() || match[1].trim() };
+  }
+  return { code: "", title: label };
+}
+
+// Accepts both shapes:
+//   "CODE (Title)": { Blackboard: "url", OneDrive: "url" }     (legacy flat)
+//   "CODE (Title)": { credits: 4, ltp: "3-1-0", links: {...} } (new with meta)
+function normalizeCourseEntry(value) {
+  if (value && typeof value === "object" && (value.links || value.credits || value.ltp)) {
+    return {
+      credits: value.credits ?? null,
+      ltp: value.ltp ?? null,
+      links: value.links || {}
+    };
+  }
+  return { credits: null, ltp: null, links: value || {} };
+}
+
 function renderCourseLinks(selector, data) {
   const container = document.querySelector(selector);
   if (!container) return;
 
-  for (const [course, resources] of Object.entries(data)) {
-    const box = document.createElement("div");
-    box.className = "box";
+  for (const [course, raw] of Object.entries(data)) {
+    const { credits, ltp, links } = normalizeCourseEntry(raw);
+    const card = document.createElement("article");
+    card.className = "course-card";
 
-    const title = document.createElement("h1");
-    title.textContent = course;
-    box.appendChild(title);
+    const { code, title } = splitCourseLabel(course);
 
-    for (const [name, url] of Object.entries(resources)) {
+    if (code) {
+      const eyebrow = document.createElement("p");
+      eyebrow.className = "course-eyebrow";
+      eyebrow.textContent = code;
+      card.appendChild(eyebrow);
+    }
+
+    const heading = document.createElement("h3");
+    heading.className = "course-title";
+    heading.textContent = title;
+    card.appendChild(heading);
+
+    if (credits != null || ltp) {
+      const meta = document.createElement("p");
+      meta.className = "course-meta";
+      const parts = [];
+      if (credits != null) parts.push(`<span class="cr">${credits}</span> cr`);
+      if (ltp) parts.push(`<span class="ltp">${ltp}</span>`);
+      meta.innerHTML = parts.join(`<span class="sep">·</span>`);
+      card.appendChild(meta);
+    }
+
+    const linkRow = document.createElement("div");
+    linkRow.className = "course-links";
+
+    for (const [name, url] of Object.entries(links)) {
       const link = document.createElement("a");
       link.href = url;
       link.target = "_blank";
+      link.rel = "noopener noreferrer";
       link.textContent = name;
-      box.appendChild(link);
+      linkRow.appendChild(link);
     }
 
-    container.appendChild(box);
+    card.appendChild(linkRow);
+    container.appendChild(card);
   }
 }
 
@@ -165,18 +218,206 @@ if (toggleBtn) {
   });
 }
 
-// ================= SEM 2 UPDATES =================
-addUpdate(
-  "quizzes",
-  "AENL200: Quiz 1 scheduled for Monday 02/02/2026",
-  "2026-02-02"
-);
+// ================= SEM 5 UPDATES =================
+// add with: addUpdate("category", "text", "YYYY-MM-DD-expiry")
+// categories: timetable | assignments | quizzes
 
-addUpdate(
-  "quizzes",
-  "AENL223: Quiz 1 scheduled for Unknown date next week",
-  "2026-02-13"
-);
+// ================= SEM 5 CONFIG =================
+const SEM_CONFIG = {
+  number: 5,
+  // Adjust when IITDA publishes the Sem 5 academic calendar.
+  startDate: "2026-08-03"
+};
+
+// ================= GREETING + SEM-DAY =================
+function buildHeroSub() {
+  const sub = document.getElementById("hero-sub");
+  if (!sub) return;
+
+  const now = new Date();
+  const h = now.getHours();
+  let greeting;
+  if (h >= 5 && h < 12)        greeting = "good morning";
+  else if (h >= 12 && h < 17)  greeting = "good afternoon";
+  else if (h >= 17 && h < 21)  greeting = "good evening";
+  else if (h >= 21 || h < 1)   greeting = "burning the midnight oil";
+  else                          greeting = "the witching hour";
+
+  const start = new Date(SEM_CONFIG.startDate + "T00:00:00");
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const diffDays = Math.floor((now - start) / msPerDay);
+
+  let counter;
+  if (diffDays < 0)        counter = `sem ${SEM_CONFIG.number} starts in ${Math.abs(diffDays)} day${Math.abs(diffDays) === 1 ? "" : "s"}`;
+  else if (diffDays === 0) counter = `day 1 of sem ${SEM_CONFIG.number}, the first one`;
+  else                      counter = `day ${diffDays + 1} of sem ${SEM_CONFIG.number}`;
+
+  sub.textContent = `${greeting} · ${counter}`;
+}
+
+// ================= QUOTE ROTATOR =================
+// keep attributions tight — every line should be traceable to the listed source.
+// quotes default to weight: 1. give a higher weight to bias the random pick.
+const QUOTES = [
+  // --- House lines (weighted to surface ~5x more often than base quotes) ---
+  { text: "That's soo sad",                                   src: "Sumedh Jamsandekar",  weight: 5 },
+  { text: "It's soo over",                                    src: "Sumedh Jamsandekar",  weight: 5 },
+  { text: "MONNNKKKKKEEEYYYYYY!!!",                           src: "James Joshua Koshy",  weight: 5 },
+  { text: "I love KFC wrappers",                              src: "James Joshua Koshy",  weight: 5 },
+  { text: "Procrastination is the assassination of all destination", src: "Aaron Binoj Amacadu", weight: 5 },
+  { text: "Chocolate chip cookies",                           src: "Evan Johan Tobias",   weight: 5 },
+
+  // --- Star Wars / Star Trek ---
+  { text: "Do or do not. There is no try.",                                              src: "Yoda" },
+  { text: "May the Force be with you.",                                                  src: "Star Wars" },
+  { text: "I find your lack of faith disturbing.",                                       src: "Darth Vader" },
+  { text: "I am one with the Force, the Force is with me.",                              src: "Chirrut Îmwe" },
+  { text: "Rebellions are built on hope.",                                               src: "Jyn Erso" },
+  { text: "Never tell me the odds.",                                                     src: "Han Solo" },
+  { text: "Help me, Obi-Wan Kenobi. You're my only hope.",                               src: "Princess Leia" },
+  { text: "Live long and prosper.",                                                      src: "Spock" },
+  { text: "The needs of the many outweigh the needs of the few.",                        src: "Spock" },
+
+  // --- Sci-fi / cult ---
+  { text: "I've seen things you people wouldn't believe.",                               src: "Roy Batty, Blade Runner" },
+  { text: "Houston, we have a problem.",                                                 src: "Apollo 13" },
+  { text: "There is no spoon.",                                                          src: "The Matrix" },
+  { text: "I know kung fu.",                                                              src: "Neo" },
+  { text: "I'll be back.",                                                                src: "The Terminator" },
+  { text: "Hasta la vista, baby.",                                                       src: "Terminator 2" },
+  { text: "Life finds a way.",                                                           src: "Ian Malcolm, Jurassic Park" },
+  { text: "Welcome to Jurassic Park.",                                                   src: "John Hammond" },
+  { text: "Roads? Where we're going, we don't need roads.",                              src: "Doc Brown" },
+  { text: "I see dead people.",                                                          src: "The Sixth Sense" },
+
+  // --- LOTR / Middle-Earth ---
+  { text: "Even the smallest person can change the course of the future.",               src: "Galadriel" },
+  { text: "All we have to decide is what to do with the time that is given us.",         src: "Gandalf" },
+  { text: "You shall not pass!",                                                          src: "Gandalf" },
+  { text: "Not all those who wander are lost.",                                          src: "Tolkien" },
+  { text: "There is some good in this world. And it's worth fighting for.",              src: "Samwise Gamgee" },
+  { text: "My precious.",                                                                src: "Gollum" },
+
+  // --- Iconic Hollywood ---
+  { text: "Frankly, my dear, I don't give a damn.",                                      src: "Gone with the Wind" },
+  { text: "Here's looking at you, kid.",                                                 src: "Casablanca" },
+  { text: "I'm gonna make him an offer he can't refuse.",                                src: "The Godfather" },
+  { text: "You're gonna need a bigger boat.",                                            src: "Jaws" },
+  { text: "Life is like a box of chocolates.",                                           src: "Forrest Gump" },
+  { text: "Stupid is as stupid does.",                                                   src: "Forrest Gump" },
+  { text: "Get busy living, or get busy dying.",                                         src: "The Shawshank Redemption" },
+  { text: "Hope is a good thing, maybe the best of things.",                             src: "The Shawshank Redemption" },
+  { text: "I'm the king of the world!",                                                  src: "Titanic" },
+  { text: "There's no place like home.",                                                 src: "The Wizard of Oz" },
+  { text: "Bond. James Bond.",                                                           src: "James Bond" },
+  { text: "Carpe diem. Seize the day, boys.",                                            src: "Dead Poets Society" },
+  { text: "Just keep swimming.",                                                         src: "Dory, Finding Nemo" },
+  { text: "Hakuna Matata.",                                                              src: "The Lion King" },
+  { text: "To infinity and beyond.",                                                     src: "Buzz Lightyear" },
+
+  // --- Dark Knight ---
+  { text: "Why so serious?",                                                             src: "The Joker" },
+  { text: "The night is darkest just before the dawn.",                                  src: "Harvey Dent" },
+  { text: "Some men just want to watch the world burn.",                                 src: "Alfred Pennyworth" },
+  { text: "You either die a hero, or live long enough to see yourself become the villain.", src: "Harvey Dent" },
+  { text: "Madness is like gravity. All it takes is a little push.",                     src: "The Joker" },
+  { text: "I am vengeance. I am the night. I am Batman.",                                src: "Batman" },
+
+  // --- Christopher Nolan ---
+  { text: "You mustn't be afraid to dream a little bigger, darling.",                    src: "Eames, Inception" },
+  { text: "Dreams feel real while we're in them.",                                       src: "Cobb, Inception" },
+  { text: "Do not go gentle into that good night.",                                      src: "Dylan Thomas" },
+  { text: "Love is the one thing that transcends time and space.",                       src: "Brand, Interstellar" },
+  { text: "We used to look up at the sky and wonder. Now we just look down and worry.",  src: "Cooper, Interstellar" },
+
+  // --- Tarantino / cult ---
+  { text: "The Dude abides.",                                                            src: "The Big Lebowski" },
+  { text: "What's the most you ever lost on a coin toss?",                               src: "Chigurh, No Country for Old Men" },
+
+  // --- Whiplash ---
+  { text: "There are no two words in the English language more harmful than 'good job'.", src: "Whiplash" },
+  { text: "Were you rushing or were you dragging?",                                      src: "Whiplash" },
+  { text: "I'd rather die drunk and broke at 34 than live to 90 sitting at a dinner table.", src: "Andrew, Whiplash" },
+
+  // --- Marvel ---
+  { text: "I am Iron Man.",                                                              src: "Tony Stark" },
+  { text: "With great power comes great responsibility.",                                src: "Uncle Ben" },
+  { text: "Whatever it takes.",                                                          src: "Avengers: Endgame" },
+  { text: "I love you 3000.",                                                            src: "Morgan Stark" },
+  { text: "I am Groot.",                                                                  src: "Groot" },
+  { text: "Wakanda forever.",                                                            src: "Black Panther" },
+  { text: "Avengers, assemble.",                                                         src: "Captain America" },
+  { text: "On your left.",                                                               src: "Steve Rogers" },
+  { text: "I can do this all day.",                                                      src: "Steve Rogers" },
+  { text: "Mr. Stark, I don't feel so good.",                                            src: "Peter Parker" },
+
+  // --- Indie / romantic ---
+  { text: "We accept the love we think we deserve.",                                     src: "Perks of Being a Wallflower" },
+  { text: "Here's to the ones who dream, foolish as they may seem.",                     src: "La La Land" },
+  { text: "Constantly talking isn't necessarily communicating.",                         src: "Eternal Sunshine of the Spotless Mind" },
+
+  // --- Studio Ghibli ---
+  { text: "Once you've met someone, you never really forget them.",                      src: "Zeniba, Spirited Away" },
+  { text: "Nothing that happens is ever forgotten, even if you can't remember it.",      src: "Zeniba, Spirited Away" },
+  { text: "A heart's a heavy burden.",                                                   src: "Calcifer, Howl's Moving Castle" },
+  { text: "Everybody, try laughing. Then whatever scares you will go away.",             src: "My Neighbor Totoro" },
+  { text: "I want to see with eyes unclouded by hate.",                                  src: "Ashitaka, Princess Mononoke" },
+  { text: "I want to live.",                                                              src: "Ashitaka, Princess Mononoke" },
+
+  // --- Shōnen / anime ---
+  { text: "I'll become the Pirate King!",                                                src: "Monkey D. Luffy" },
+  { text: "If you don't take risks, you can't create a future.",                         src: "Monkey D. Luffy" },
+  { text: "I am the hope of the universe.",                                              src: "Goku" },
+  { text: "I'll be the Hokage one day!",                                                 src: "Naruto Uzumaki" },
+  { text: "Hard work is absolutely worthless for those who don't believe in themselves.", src: "Naruto Uzumaki" },
+  { text: "I am the storm that is approaching.",                                         src: "Madara Uchiha" },
+  { text: "There's no such thing as a painless lesson.",                                 src: "Edward Elric" },
+  { text: "The world isn't perfect. But it's there for us, doing the best it can.",     src: "Roy Mustang, FMA: Brotherhood" },
+  { text: "Plus Ultra!",                                                                  src: "All Might" },
+  { text: "Tatakae.",                                                                     src: "Eren Yeager" },
+  { text: "Yare yare daze.",                                                              src: "Jotaro Kujo" },
+  { text: "Ora ora ora ora ora!",                                                         src: "Star Platinum" },
+  { text: "I'll take a potato chip and eat it.",                                         src: "Light Yagami" },
+  { text: "Just as planned.",                                                            src: "Light Yagami" },
+  { text: "I shall become the god of the new world.",                                    src: "Light Yagami" },
+  { text: "Shinigami love apples.",                                                      src: "Ryuk" },
+  { text: "I am the bone of my sword.",                                                  src: "Archer, Fate/Stay Night" },
+  { text: "If you really want to be strong, stop caring about what others think of you.", src: "Saitama" },
+  { text: "I'm just a hero for fun.",                                                    src: "Saitama" },
+  { text: "All hail Lelouch!",                                                           src: "Code Geass" },
+  { text: "The only ones who should kill are those who are prepared to be killed.",      src: "Lelouch vi Britannia" },
+
+  // --- Literature ---
+  { text: "A man can be destroyed but not defeated.",                                    src: "Hemingway" },
+  { text: "It was the best of times, it was the worst of times.",                        src: "Dickens" },
+  { text: "We are such stuff as dreams are made on.",                                    src: "Shakespeare" },
+  { text: "The course of true love never did run smooth.",                               src: "A Midsummer Night's Dream" },
+
+  // --- Harry Potter ---
+  { text: "After all this time? Always.",                                                src: "Severus Snape" },
+  { text: "It does not do to dwell on dreams and forget to live.",                       src: "Dumbledore" },
+  { text: "Happiness can be found, even in the darkest of times.",                       src: "Dumbledore" },
+
+  // --- Misc ---
+  { text: "What is a man? A miserable little pile of secrets.",                          src: "Dracula, Castlevania" },
+  { text: "Whatever you do, make it your masterpiece.",                                  src: "John Wooden" }
+];
+function pickWeighted(items) {
+  const total = items.reduce((sum, q) => sum + (q.weight || 1), 0);
+  let r = Math.random() * total;
+  for (const q of items) {
+    r -= (q.weight || 1);
+    if (r <= 0) return q;
+  }
+  return items[items.length - 1];
+}
+
+function buildFooterQuote() {
+  const el = document.getElementById("footer-quote");
+  if (!el) return;
+  const q = pickWeighted(QUOTES);
+  el.innerHTML = `<span class="q-mark q-open">“</span><span class="q-body">${q.text}</span><span class="q-mark q-close">”</span> <span class="q-src">· ${q.src}</span>`;
+}
 
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {
@@ -184,4 +425,6 @@ window.addEventListener("DOMContentLoaded", () => {
   renderCourseLinks(".links", linksData.courses);
   renderUpdates();
   renderLocalClips();
+  buildHeroSub();
+  buildFooterQuote();
 });
