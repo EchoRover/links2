@@ -10,7 +10,7 @@
 const archiveData = {
   // ---------------- Year 2 · Semester 1 (term: 18 cr) ----------------
   sem1: {
-    "AENL220 (Heat)": {
+    "AENL220 (Heat Transfer)": {
       credits: 4, ltp: "3-1-0",
       links: {
         "Lecture slides": "https://iitdabudhabi.sharepoint.com/sites/AENL220_jacpcl/Class%20Materials/Forms/AllItems.aspx",
@@ -18,13 +18,13 @@ const archiveData = {
         Tutorials: "https://iitdabudhabi.sharepoint.com/:f:/s/AENL220_jacpcl/EtURNCymC25FqStyIHHQjH8BzKEl9InbYIHEWA3reHm2CQ?e=w8iQBg"
       }
     },
-    "AAPL105 (Mech)": {
+    "AAPL105 (Mechanics of Solids and Fluids)": {
       credits: 4, ltp: "3-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_38_1/outline"
       }
     },
-    "AENL210 (Thermo)": {
+    "AENL210 (Thermodynamics)": {
       credits: 4, ltp: "3-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_39_1/outline",
@@ -33,7 +33,7 @@ const archiveData = {
         "Assig/Quiz/Tut (Solution)": "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/Es8ZXG4JDGJBl8iwEl7fmHwBu-cJIzobmNyaq4GFLzK5NQ?e=IBLE0E"
       }
     },
-    "AENL222 (Electro & Micro)": {
+    "AENL222 (Basic Electronics and Microcontrollers)": {
       credits: 3, ltp: "2-0-2",
       links: {
         Onedrive: "https://iitdabudhabi-my.sharepoint.com/personal/anandarup_iitdabudhabi_ac_ae/_layouts/15/onedrive.aspx?id=/personal/anandarup_iitdabudhabi_ac_ae/Documents/AENL222_for_sharing&ga=1",
@@ -42,7 +42,7 @@ const archiveData = {
         "Problem Sheets": "https://iitdabudhabi-my.sharepoint.com/:f:/r/personal/anandarup_iitdabudhabi_ac_ae/Documents/AENL222_for_sharing/problem_sheet?csf=1&web=1&e=1TktU9"
       }
     },
-    "AENL338 (AI)": {
+    "AENL338 (AI for Energy Transition)": {
       credits: 3, ltp: "3-0-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_6_1/outline"
@@ -52,28 +52,28 @@ const archiveData = {
 
   // ---------------- Year 2 · Semester 2 (term: 19 cr) ----------------
   sem2: {
-    "AENL200 (CET)": {
+    "AENL200 (Conventional Energy Technologies)": {
       credits: 4, ltp: "3-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_106_1/outline",
         OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/kkant_iitdabudhabi_ac_ae/IgA1z2c0PZS7SpSKP8KdWAvxARnQrbKCoolunTP-2x1HJfo?e=A5mbyu"
       }
     },
-    "AENL223 (Materials Enrgy Sys)": {
+    "AENL223 (Materials for Energy Systems)": {
       credits: 4, ltp: "3-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_107_1/outline",
         OneDrive: "https://iitdabudhabi-my.sharepoint.com/:f:/g/personal/nkhare_iitdabudhabi_ac_ae/IgBSoUudo8CNSpwJL0ZsdkgmAe_E_AJzQ32W1YNAIQvlSSA?e=MKXG7H"
       }
     },
-    "AENL202 (RET)": {
+    "AENL202 (Renewable Energy Technologies)": {
       credits: 4, ltp: "3-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_108_1/outline",
         OwnCloud: "https://owncloud.iitd.ac.in/nextcloud/index.php/s/43MTJGEktM4kcFM"
       }
     },
-    "AENL224 (Elec Mch)": {
+    "AENL224 (Electrical Machines)": {
       credits: 3, ltp: "2-1-0",
       links: {
         Blackboard: "https://iida.blackboard.com/ultra/courses/_109_1/outline"

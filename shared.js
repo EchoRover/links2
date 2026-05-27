@@ -78,46 +78,62 @@ function renderCourseLinks(selector, data) {
 
   for (const [course, raw] of Object.entries(data)) {
     const { credits, ltp, links } = normalizeCourseEntry(raw);
+    const { code, title } = splitCourseLabel(course);
+
     const card = document.createElement("article");
     card.className = "course-card";
 
-    const { code, title } = splitCourseLabel(course);
-
+    // header row: code pill (left) + spec [ltp + credits badge] (right)
+    const head = document.createElement("div");
+    head.className = "course-head";
     if (code) {
-      const eyebrow = document.createElement("p");
-      eyebrow.className = "course-eyebrow";
-      eyebrow.textContent = code;
-      card.appendChild(eyebrow);
+      const codeEl = document.createElement("span");
+      codeEl.className = "course-code";
+      codeEl.textContent = code;
+      head.appendChild(codeEl);
     }
+    if (ltp || credits != null) {
+      const spec = document.createElement("span");
+      spec.className = "course-spec";
+      if (ltp) {
+        const l = document.createElement("span");
+        l.className = "ltp";
+        l.textContent = ltp;
+        spec.appendChild(l);
+      }
+      if (credits != null) {
+        const c = document.createElement("span");
+        c.className = "cr-badge";
+        c.textContent = credits;
+        c.title = credits + " credits";
+        spec.appendChild(c);
+      }
+      head.appendChild(spec);
+    }
+    card.appendChild(head);
 
+    // title — colored drop-cap initial via CSS ::first-letter
     const heading = document.createElement("h3");
     heading.className = "course-title";
     heading.textContent = title;
     card.appendChild(heading);
 
-    if (credits != null || ltp) {
-      const meta = document.createElement("p");
-      meta.className = "course-meta";
-      const parts = [];
-      if (credits != null) parts.push(`<span class="cr">${credits}</span> cr`);
-      if (ltp) parts.push(`<span class="ltp">${ltp}</span>`);
-      meta.innerHTML = parts.join(`<span class="sep">·</span>`);
-      card.appendChild(meta);
-    }
-
+    // links — bullet + label + reveal-on-hover arrow
     const linkRow = document.createElement("div");
     linkRow.className = "course-links";
-
     for (const [name, url] of Object.entries(links)) {
       const link = document.createElement("a");
       link.href = url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = name;
+      const label = document.createElement("span");
+      label.className = "ln-label";
+      label.textContent = name;
+      link.appendChild(label);
       linkRow.appendChild(link);
     }
-
     card.appendChild(linkRow);
+
     container.appendChild(card);
   }
 }
