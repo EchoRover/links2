@@ -283,20 +283,20 @@ body #open-games-modal:hover {
 /* quick-link pills in hero */
 .general {
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  flex-wrap: nowrap;
+  gap: 6px;
   margin: 0; padding: 0; background: transparent; border-radius: 0;
   width: auto;
   justify-content: flex-end;
-  max-width: 480px;
+  max-width: none;
   transition: none;
 }
 .general a {
   display: inline-flex;
   align-items: center;
-  padding: 4px 11px;
+  padding: 6px 14px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   font-weight: 500;
   background: var(--surface-elevated);
   color: var(--text);
@@ -776,6 +776,7 @@ body #open-games-modal:hover {
 @media (max-width: 1024px) {
   .layout { padding: 12px 16px; height: auto; min-height: 100vh; }
   body { overflow: auto; }
+  .general { flex-wrap: wrap; }
   .body-grid { grid-template-columns: 1fr; }
   .side-col {
     grid-template-columns: 1fr 1fr;
