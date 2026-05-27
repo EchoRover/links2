@@ -842,3 +842,110 @@ body #open-games-modal:hover {
   font-weight: 600;
 }
 .game-choice-btn:hover { background: var(--accent-strong); color: #fff; transform: translateY(-2px); }
+
+/* =====================================================
+   ADDITIVE — hero eyebrow, archive button, floating
+   botanicals, archive page. Nothing above is changed.
+   ===================================================== */
+
+/* hero eyebrow (program / semester line above the headline) */
+.hero-eyebrow {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin: 0 0 2px;
+}
+
+/* archive icon button in topbar (square, like #theme-toggle) */
+body #archive-btn {
+  width: 30px; height: 30px;
+  padding: 0;
+  justify-content: center;
+  color: var(--text-muted);
+}
+body #archive-btn svg { width: 16px; height: 16px; display: block; }
+body #archive-btn:hover { color: var(--accent-strong); }
+:root[data-theme="dark"] body #archive-btn:hover { color: var(--text); }
+
+/* ---------- Floating botanicals background ---------- */
+:root[data-theme="light"] { --leaf-fill: #4a9c3f; --leaf-op: 0.16; }
+:root[data-theme="dark"]  { --leaf-fill: #83e07d; --leaf-op: 0.14; }
+
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.leaf {
+  position: absolute;
+  top: 0;
+  left: var(--x, 50vw);
+  width: var(--sz, 22px);
+  height: var(--sz, 22px);
+  will-change: transform, opacity;
+  animation-name: leaf-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.leaf svg { width: 100%; height: 100%; display: block; fill: var(--leaf-fill, #4a9c3f); }
+@keyframes leaf-rise {
+  0%   { transform: translateY(112vh) translateX(0) rotate(0deg); opacity: 0; }
+  12%  { opacity: var(--leaf-op, 0.16); }
+  88%  { opacity: var(--leaf-op, 0.16); }
+  100% { transform: translateY(-14vh) translateX(var(--drift, 40px)) rotate(var(--spin, 320deg)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #bg { display: none; }
+}
+
+/* ---------- Archive page (scrolls; overrides one-screen shell) ---------- */
+html:has(body.archive-page) { height: auto; }
+body.archive-page { overflow: visible; height: auto; min-height: 100vh; }
+body.archive-page .layout { height: auto; min-height: 100vh; display: block; padding-bottom: 48px; }
+body.archive-page .container { display: block; }
+
+.archive-intro { margin: 6px 0 4px; }
+.archive-eyebrow {
+  font-family: "Inter", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin: 0 0 2px;
+}
+.archive-intro h1 {
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  color: var(--text);
+  margin: 0;
+}
+.archive-section { margin-top: 26px; }
+.archive-head {
+  font-family: "Caveat", "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.45rem;
+  color: var(--accent-strong);
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+:root[data-theme="dark"] .archive-head { color: var(--accent); }
+.archive-head::before {
+  content: "✿";
+  color: var(--accent-warm);
+  font-size: 0.85em;
+}
+/* archive reuses the .links 4-up grid, but sizes rows to content */
+body.archive-page .links { min-height: auto; }
+body.archive-page .course-card { min-height: auto; }

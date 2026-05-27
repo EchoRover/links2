@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>linkeen · archive</title>
+  <link rel="icon" type="image/png" href="sustainability.png">
+  <script>
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=5">
+</head>
+<body class="archive-page">
+
+  <!-- animated background layer -->
+  <div id="bg" aria-hidden="true"></div>
+
+  <div class="layout">
+    <div class="main-content">
+      <div class="container">
+
+        <!-- Top bar -->
+        <header class="topbar">
+          <div class="brand">
+            <a class="brand-text" href="index.html">← linkeen<small>archive</small></a>
+          </div>
+          <div class="topbar-actions">
+            <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
+          </div>
+        </header>
+
+        <!-- Intro -->
+        <section class="archive-intro">
+          <p class="archive-eyebrow">B.Tech Energy Engineering</p>
+          <h1>past semesters</h1>
+          <p class="hero-sub">course links from earlier semesters · kept around so they don't vanish</p>
+        </section>
+
+        <!-- Year 2 · Semester 1 -->
+        <section id="sem1" class="archive-section">
+          <h2 class="archive-head">Year 2 · Semester 1</h2>
+          <div class="links"></div>
+        </section>
+
+        <!-- Year 2 · Semester 2 -->
+        <section id="sem2" class="archive-section">
+          <h2 class="archive-head">Year 2 · Semester 2</h2>
+          <div class="links"></div>
+        </section>
+
+        <footer class="site-footer">
+          <span class="footer-quote" id="footer-quote">linkeen · archive</span>
+          <span>2026 ✿</span>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js?v=5"></script>
+  <script src="archive.js?v=5"></script>
+
+</body>
+</html>

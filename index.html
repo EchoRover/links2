@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>linkeen · EEN Year 3</title>
+  <title>linkeen · B.Tech Energy Engineering</title>
   <link rel="icon" type="image/png" href="sustainability.png">
   <script>
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -14,9 +14,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <!-- games.css FIRST so styles.css overrides its #games-section positioning -->
   <link rel="stylesheet" href="games.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
+
+  <!-- animated background layer -->
+  <div id="bg" aria-hidden="true"></div>
 
   <!-- Games Modal Popup -->
   <div id="games-modal" class="modal">
@@ -45,6 +48,13 @@
             <div id="games-section">
               <button id="open-games-modal" type="button">Games</button>
             </div>
+            <a class="button" id="archive-btn" href="archive.html" aria-label="View past semesters" title="Past semesters">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="5" rx="1"></rect>
+                <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"></path>
+                <path d="M10 12h4"></path>
+              </svg>
+            </a>
             <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
           </div>
         </header>
@@ -53,7 +63,8 @@
         <section class="hero">
           <img src="image.png" alt="Avatar" class="avatar">
           <div class="hero-text">
-            <h1>Semester 5</h1>
+            <p class="hero-eyebrow">Year 3 · Semester 5</p>
+            <h1>B.Tech Energy Engineering</h1>
             <p class="hero-sub" id="hero-sub">y3 · running studies, links, updates &amp; the off-clock</p>
           </div>
           <div class="general"></div>
@@ -99,7 +110,8 @@
     </div>
   </div>
 
-  <script src="scripts.js"></script>
+  <script src="shared.js?v=5"></script>
+  <script src="scripts.js?v=5"></script>
   <script src="gamesscript.js"></script>
 
 </body>
