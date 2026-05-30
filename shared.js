@@ -343,9 +343,9 @@ function initEnergySprite() {
   sprite.appendChild(orb);
   document.body.appendChild(sprite);
 
-  // Instant follow for cursor replacement
+  // Instant follow for cursor replacement (exactly at mouse tip)
   window.addEventListener("mousemove", (e) => {
-    sprite.style.transform = `translate3d(${e.clientX - 16}px, ${e.clientY - 16}px, 0)`;
+    sprite.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
   });
 
   const courseForms = {
