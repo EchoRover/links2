@@ -236,6 +236,130 @@ body #open-games-modal:hover {
   gap: 14px;
   padding: 2px 0 0;
 }
+.title-with-mascot {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#mascot-container {
+  position: relative;
+  width: 54px; /* Bigger! */
+  height: 54px;
+  cursor: pointer;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+#mascot {
+  width: 100%;
+  height: 100%;
+  background: #2ecc71;
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(46, 204, 113, 0.4), inset 0 -4px 0 rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: mascot-breathe 3s ease-in-out infinite;
+}
+
+.mascot-face {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mascot-aura {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mascot-eye {
+  width: 6px;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  animation: mascot-blink 4s infinite;
+}
+
+.mascot-mouth {
+  position: absolute;
+  bottom: 14px;
+  width: 12px;
+  height: 4px;
+  border-bottom: 2px solid #1a1a1a;
+  border-radius: 0 0 10px 10px;
+  transition: all 0.2s;
+}
+
+/* Speech Bubble (Enlarged) */
+#mascot-speech {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: #fff;
+  color: #1a1a1a;
+  padding: 10px 20px;
+  border-radius: 16px;
+  font-family: "Caveat", cursive;
+  font-size: 1.35rem; /* Bigger text */
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1.5px solid var(--accent);
+}
+
+#mascot-speech::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+}
+
+/* Interactions */
+#mascot-container:hover #mascot {
+  transform: scale(1.15) rotate(5deg);
+  background: #50fa7b;
+}
+
+#mascot-container:hover #mascot-speech {
+  transform: translateX(-50%) scale(1);
+}
+
+#mascot-container:active #mascot {
+  transform: scale(0.9) translateY(2px);
+}
+
+/* States */
+#mascot.mood-surprised .mascot-eye { height: 6px; }
+#mascot.mood-surprised .mascot-mouth { height: 6px; border: 1.5px solid #1a1a1a; border-radius: 50%; bottom: 6px; }
+
+#mascot.mood-sleepy { background: #95a5a6 !important; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+#mascot.mood-sleepy .mascot-eye { height: 1px; border-radius: 0; }
+
+@keyframes mascot-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes mascot-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0); }
+}
 .avatar {
   width: 60px; height: 60px;
   border-radius: 16px;
@@ -349,13 +473,13 @@ body #open-games-modal:hover {
   position: absolute;
   right: 0;
   background: var(--surface-elevated);
-  border: 1px solid var(--accent-warm);
+  border: 1.5px solid var(--accent-warm);
   color: var(--accent-warm);
   font-family: "Caveat", "Source Serif 4", Georgia, serif;
   font-style: normal;
   font-weight: 600;
-  font-size: 0.95rem;
-  padding: 4px 10px;
+  font-size: 1.2rem; /* Enlarged from 0.95rem */
+  padding: 6px 14px; /* Enlarged padding */
   border-radius: 999px;
   white-space: nowrap;
   opacity: 0;
@@ -930,7 +1054,372 @@ body #archive-btn:hover { color: var(--accent-strong); }
   #bg { display: none; }
 }
 
-/* ---------- Archive page (scrolls; overrides one-screen shell) ---------- */
+/* ---------- Energy Sprite (Mimic) ---------- */
+#energy-sprite {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Form: Spark (Electronics) */
+.sprite-orb.form-spark {
+  background: #f1c40f;
+  box-shadow: 0 0 20px #f1c40f, 0 0 40px rgba(241, 196, 15, 0.4);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: sprite-jolt 0.2s infinite;
+}
+
+/* Form: Leaf (Biology) */
+.sprite-orb.form-leaf {
+  background: #2ecc71;
+  box-shadow: 0 0 15px #2ecc71;
+  border-radius: 50% 0 50% 0;
+  transform: rotate(-45deg);
+}
+
+/* Form: Flame (Heat) */
+.sprite-orb.form-flame {
+  background: #e67e22;
+  box-shadow: 0 0 20px #e67e22;
+  border-radius: 50% 50% 50% 50% / 0% 0% 100% 100%;
+  transform: scaleY(1.3) translateY(-2px);
+  animation: sprite-flicker 0.3s infinite alternate;
+}
+
+/* Form: Ghost (Games) */
+.sprite-orb.form-ghost {
+  background: #fff;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 0 15px rgba(255,255,255,0.8);
+  width: 20px;
+  height: 22px;
+}
+.sprite-orb.form-ghost::after {
+  content: "••";
+  font-family: monospace;
+  font-size: 10px;
+  color: #000;
+  letter-spacing: 2px;
+}
+
+/* Form: Eye (Critical/Psych) */
+.sprite-orb.form-eye {
+  background: #9b59b6;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #9b59b6;
+}
+.sprite-orb.form-eye::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px #fff;
+}
+
+/* Form: Gear (Mechanics/Solids) */
+.sprite-orb.form-gear {
+  background: #7f8c8d;
+  box-shadow: 0 0 15px #7f8c8d;
+  clip-path: polygon(
+    50% 0%, 60% 10%, 90% 10%, 90% 40%, 100% 50%, 90% 60%, 90% 90%, 60% 90%, 50% 100%, 40% 90%, 10% 90%, 10% 60%, 0% 50%, 10% 40%, 10% 10%, 40% 10%
+  );
+  animation: sprite-spin 4s linear infinite;
+}
+
+/* Form: Atom (Labs/Tech) */
+.sprite-orb.form-atom {
+  background: #3498db;
+  box-shadow: 0 0 20px #3498db;
+}
+.sprite-orb.form-atom::before,
+.sprite-orb.form-atom::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 50%;
+  animation: sprite-atom-spin 1.4s linear infinite;
+}
+.sprite-orb.form-atom::after {
+  animation-delay: -0.7s;
+  transform: rotate(60deg);
+}
+
+/* Form: Grid (Timetable/Updates) */
+.sprite-orb.form-grid {
+  background: transparent;
+  box-shadow: none;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.sprite-orb.form-grid::before {
+  content: "";
+  display: block;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  grid-column: 1; grid-row: 1;
+}
+.sprite-orb.form-grid::after {
+  content: "";
+  display: block;
+  width: 10px; height: 10px;
+  background: var(--accent-warm);
+  box-shadow: 0 0 10px var(--accent-warm);
+  grid-column: 2; grid-row: 2;
+  animation: sprite-grid-pulse 0.6s infinite alternate;
+}
+
+/* Form: Old Person (Archive) */
+.sprite-orb.form-old {
+  background: #bdc3c7;
+  border-radius: 50% 50% 40% 40%;
+  box-shadow: 0 0 10px #bdc3c7;
+}
+.sprite-orb.form-old::before {
+  content: "👴";
+  font-size: 14px;
+}
+
+/* Form: Computer (LinkCS) */
+.sprite-orb.form-computer {
+  background: #2c3e50;
+  border-radius: 3px;
+  width: 22px;
+  height: 18px;
+  border: 2px solid #95a5a6;
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+.sprite-orb.form-computer::after {
+  content: "";
+  width: 12px;
+  height: 8px;
+  background: #3498db;
+  border-radius: 1px;
+}
+
+/* Form: Sun (Light Mode Toggle) */
+.sprite-orb.form-sun {
+  background: #f39c12;
+  box-shadow: 0 0 20px #f39c12, 0 0 40px rgba(243, 156, 18, 0.4);
+  transform: scale(1.2);
+}
+.sprite-orb.form-sun::before {
+  content: "☀️";
+  font-size: 14px;
+}
+
+/* Form: Moon (Dark Mode Toggle) */
+.sprite-orb.form-moon {
+  background: #f1c40f;
+  box-shadow: 0 0 20px #f1c40f;
+  clip-path: circle(50% at 50% 50%);
+}
+.sprite-orb.form-moon::after {
+  content: "";
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background: var(--surface);
+  border-radius: 50%;
+  right: -20%;
+  top: -20%;
+}
+
+/* Form: Battery (Power Electronics) */
+.sprite-orb.form-battery {
+  background: #27ae60;
+  width: 16px; height: 22px;
+  border-radius: 2px;
+  border: 2px solid #fff;
+  position: relative;
+}
+.sprite-orb.form-battery::before {
+  content: "";
+  position: absolute;
+  top: -5px; left: 3px;
+  width: 6px; height: 3px;
+  background: #fff;
+}
+
+/* Form: Meter (Measurement & Instr) */
+.sprite-orb.form-meter {
+  background: #2c3e50;
+  border-radius: 50% 50% 0 0;
+  border: 2px solid #bdc3c7;
+  width: 26px; height: 16px;
+}
+.sprite-orb.form-meter::after {
+  content: "";
+  position: absolute;
+  bottom: 2px; left: 50%;
+  width: 1px; height: 10px;
+  background: #e74c3c;
+  transform-origin: bottom center;
+  animation: meter-sweep 2s ease-in-out infinite alternate;
+}
+@keyframes meter-sweep { from { transform: rotate(-45deg); } to { transform: rotate(45deg); } }
+
+/* Form: Solar Panel (Energy Tech Lab) */
+.sprite-orb.form-solar {
+  background: #2c3e50;
+  width: 22px; height: 22px;
+  border: 1.5px solid #ecf0f1;
+  background-image: 
+    linear-gradient(rgba(52, 152, 219, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 152, 219, 0.6) 1px, transparent 1px);
+  background-size: 6px 6px;
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
+  border-radius: 2px;
+}
+
+/* Form: High Voltage (Elec Energy Lab) */
+.sprite-orb.form-volt {
+  background: #f1c40f;
+  width: 18px; height: 26px;
+  clip-path: polygon(40% 0%, 100% 0%, 60% 45%, 100% 45%, 20% 100%, 40% 55%, 0% 55%);
+  box-shadow: 0 0 15px #f1c40f;
+}
+
+/* Form: Brain (Psychology) */
+.sprite-orb.form-brain {
+  background: #ff79c6;
+  width: 24px; height: 20px;
+  border-radius: 40% 50% 50% 40%;
+  box-shadow: inset -4px 0 0 rgba(0,0,0,0.1), 0 0 15px rgba(255, 121, 198, 0.4);
+}
+.sprite-orb.form-brain::after {
+  content: "〰️";
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Form: Question (Critical Thinking) */
+.sprite-orb.form-think {
+  background: #8be9fd;
+  width: 22px; height: 22px;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 0 15px rgba(139, 233, 253, 0.4);
+}
+.sprite-orb.form-think::before {
+  content: "?";
+  font-weight: bold;
+  font-family: sans-serif;
+  color: #282a36;
+}
+
+/* Form: DNA (Biology) */
+.sprite-orb.form-dna {
+  background: transparent;
+  width: 16px; height: 28px;
+  box-shadow: none;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.sprite-orb.form-dna::before,
+.sprite-orb.form-dna::after {
+  content: "";
+  width: 100%;
+  height: 6px;
+  background: #50fa7b;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #50fa7b;
+}
+.sprite-orb.form-dna::before { transform: rotate(20deg); }
+.sprite-orb.form-dna::after { transform: rotate(-20deg); }
+  border-radius: 10px;
+}
+.sprite-orb.form-dna::before, .sprite-orb.form-dna::after {
+  content: "—";
+  font-weight: bold;
+  color: #282a36;
+  font-size: 14px;
+  line-height: 6px;
+}
+
+/* Form: Clock (Timetable) */
+.sprite-orb.form-clock {
+  background: #f8f8f2;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #44475a;
+}
+.sprite-orb.form-clock::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 1px; height: 8px;
+  background: #44475a;
+  transform-origin: top center;
+  animation: sprite-spin 5s linear infinite;
+}
+
+/* Form: Clipboard (Assignments) */
+.sprite-orb.form-task {
+  background: #ffb86c;
+  width: 20px; height: 24px;
+  border-radius: 2px;
+}
+.sprite-orb.form-task::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 4px;
+  width: 12px; height: 4px;
+  background: #44475a;
+}
+
+/* Form: Star (Quizzes) */
+.sprite-orb.form-star {
+  background: #ff5555;
+  width: 24px; height: 24px;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 15px #ff5555;
+}
+
+@keyframes sprite-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sprite-atom-spin {
+  0% { transform: rotate(0deg) scaleX(1.5); }
+  100% { transform: rotate(360deg) scaleX(1.5); }
+}
+
+@keyframes sprite-grid-pulse {
+  from { opacity: 0.4; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes sprite-jolt {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes sprite-flicker {
+  from { opacity: 0.9; transform: scaleY(1.1); }
+  to { opacity: 1; transform: scaleY(1.15); }
+}
+
+/* Hide sprite on mobile or when cursor is out of window */
+@media (max-width: 1024px) {
+  #energy-sprite { display: none; }
+}
+
 html:has(body.archive-page) { height: auto; }
 body.archive-page { overflow: visible; height: auto; min-height: 100vh; }
 body.archive-page .layout { height: auto; min-height: 100vh; display: block; padding-bottom: 48px; }

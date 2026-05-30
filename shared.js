@@ -332,9 +332,64 @@ function spawnBotanicals(count = 6) {
   }
 }
 
+// ================= ENERGY SPRITE (CURSOR REPLACEMENT) =================
+function initEnergySprite() {
+  if (window.innerWidth <= 1024) return;
+
+  const sprite = document.createElement("div");
+  sprite.id = "energy-sprite";
+  const orb = document.createElement("div");
+  orb.className = "sprite-orb";
+  sprite.appendChild(orb);
+  document.body.appendChild(sprite);
+
+  // Instant follow for cursor replacement
+  window.addEventListener("mousemove", (e) => {
+    sprite.style.transform = `translate3d(${e.clientX - 16}px, ${e.clientY - 16}px, 0)`;
+  });
+
+  const courseForms = {
+    "aenl226": "form-battery", "power": "form-battery",
+    "aenl228": "form-meter", "measurement": "form-meter", "instr": "form-meter",
+    "aenp200": "form-solar", "energy tech": "form-solar",
+    "aenp225": "form-volt", "elec energy": "form-volt",
+    "ahul256": "form-think", "thinking": "form-think",
+    "ahul261": "form-brain", "psych": "form-brain",
+    "asbl100": "form-dna", "bio": "form-dna"
+  };
+
+  document.addEventListener("mouseover", (e) => {
+    const target = e.target.closest(".course-card, #open-games-modal, #archive-btn, .game-choice-btn, .box, .general a, #theme-toggle, .brand a");
+    if (!target) { orb.className = "sprite-orb"; return; }
+    const rawText = (target.innerText || target.textContent || "").toLowerCase();
+    const id = (target.id || "").toLowerCase();
+    const klass = (target.className || "").toLowerCase();
+    let form = "sprite-orb";
+
+    if (id === "open-games-modal" || klass.includes("game-choice-btn")) form = "sprite-orb form-ghost";
+    else if (id === "archive-btn" || rawText.includes("archive")) form = "sprite-orb form-old";
+    else if (klass.includes("cs-link") || rawText.includes("linkcs")) form = "sprite-orb form-computer";
+    else if (id === "theme-toggle") {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      form = isDark ? "sprite-orb form-sun" : "sprite-orb form-moon";
+    }
+    else if (id.includes("timetable")) form = "sprite-orb form-clock";
+    else if (id.includes("assignment")) form = "sprite-orb form-task";
+    else if (id.includes("quiz")) form = "sprite-orb form-star";
+    else {
+      for (const [key, val] of Object.entries(courseForms)) {
+        if (rawText.indexOf(key) !== -1) { form = `sprite-orb ${val}`; break; }
+      }
+    }
+    orb.className = form;
+  });
+}
+
 // ================= COMMON INIT =================
 window.addEventListener("DOMContentLoaded", () => {
+  console.log("--- SHARED.JS FORCE LOAD V10 ---");
   wireThemeToggle();
   buildFooterQuote();
   spawnBotanicals(6);
+  initEnergySprite();
 });

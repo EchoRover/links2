@@ -1,0 +1,270 @@
+/* ---------- Enhanced Sparky Mascot ---------- */
+.title-with-mascot {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#mascot-container {
+  position: relative;
+  width: 54px; 
+  height: 54px;
+  cursor: pointer;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+#mascot {
+  width: 100%;
+  height: 100%;
+  background: #2ecc71;
+  border-radius: 50%;
+  box-shadow: 0 0 25px rgba(46, 204, 113, 0.4), inset 0 -4px 0 rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: mascot-idle 4s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.mascot-face {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mascot-aura {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mascot-eye {
+  width: 6px;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  animation: mascot-blink 4s infinite;
+}
+
+.mascot-mouth {
+  position: absolute;
+  bottom: 14px;
+  width: 12px;
+  height: 4px;
+  border-bottom: 2px solid #1a1a1a;
+  border-radius: 0 0 10px 10px;
+  transition: all 0.2s;
+}
+
+.mascot-blush {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.mascot-blush::before, .mascot-blush::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  background: rgba(255, 121, 198, 0.4);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+/* Ears/Antennae for Sparky */
+#mascot::before, #mascot::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  width: 10px;
+  height: 14px;
+  background: #27ae60;
+  border-radius: 50% 50% 0 0;
+  z-index: -1;
+  transition: transform 0.3s;
+}
+#mascot::before { left: 8px; transform: rotate(-15deg); }
+#mascot::after { right: 8px; transform: rotate(15deg); }
+
+#mascot-container:hover #mascot::before { transform: rotate(-35deg) translateY(-2px); }
+#mascot-container:hover #mascot::after { transform: rotate(35deg) translateY(-2px); }
+
+/* Speech Bubble (Organic/Creative Overhaul) */
+#mascot-speech {
+  position: absolute;
+  top: -75px;
+  left: 50%;
+  transform: translateX(-50%) scale(0) rotate(-2deg);
+  background: var(--surface-elevated);
+  color: var(--text);
+  padding: 14px 24px;
+  /* Organic border-radius for hand-drawn look */
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border: 2px solid var(--accent);
+  font-family: "Caveat", "Inter", cursive; /* Fallback to Inter for clarity */
+  font-size: 1.5rem; /* Slightly larger */
+  font-weight: 500; /* Medium weight for better ink flow look */
+  letter-spacing: 0.02em; /* More space between letters */
+  line-height: 1.1;
+  white-space: nowrap;
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.15);
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+  opacity: 0;
+  z-index: 1000;
+}
+
+#mascot-speech::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 15px;
+  background: var(--surface-elevated);
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 0 0 4px 0;
+}
+
+#mascot-container:hover #mascot-speech {
+  transform: translateX(-50%) scale(1) rotate(1deg);
+  opacity: 1;
+  animation: speech-float 3s ease-in-out infinite;
+}
+
+@keyframes speech-float {
+  0%, 100% { transform: translateX(-50%) scale(1) rotate(1deg) translateY(0); }
+  50% { transform: translateX(-50%) scale(1) rotate(-1deg) translateY(-3px); }
+}
+
+/* Interactions */
+#mascot-container:hover #mascot {
+  transform: scale(1.1) translateY(-5px);
+  background: #50fa7b;
+}
+#mascot-container:hover .mascot-aura { opacity: 1; }
+#mascot-container:hover #mascot-speech { transform: translateX(-50%) scale(1); }
+#mascot-container:active #mascot { transform: scale(1.2) rotate(360deg); }
+
+/* Petted State */
+#mascot.state-petted { animation: mascot-wiggle 0.5s ease-in-out; }
+#mascot.state-petted .mascot-mouth { height: 6px; border-radius: 50%; border: 2px solid #1a1a1a; }
+
+@keyframes mascot-idle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(2deg); }
+  75% { transform: translateY(-2px) rotate(-2deg); }
+}
+
+@keyframes mascot-wiggle {
+  0%, 100% { transform: scale(1.1) rotate(0deg); }
+  20% { transform: scale(1.15) rotate(-8deg); }
+  40% { transform: scale(1.15) rotate(8deg); }
+  60% { transform: scale(1.1) rotate(-4deg); }
+  80% { transform: scale(1.1) rotate(4deg); }
+}
+
+@keyframes mascot-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0); }
+}
+
+/* ---------- Cursor Replacement Styling ---------- */
+html, body, a, button, .course-card, #mascot-container {
+  cursor: none !important; /* Hide default cursor everywhere */
+}
+
+#energy-sprite {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px; /* Slightly larger for cursor presence */
+  height: 32px;
+  pointer-events: none;
+  z-index: 10000; /* Above everything */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Remove all smoothing for cursor-perfect tracking */
+  transition: opacity 0.3s ease; 
+  will-change: transform;
+}
+
+.sprite-orb {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Default 'cursor' form: a neutral spark or dot */
+.sprite-orb:not([class*="form-"])::after {
+  content: "";
+  width: 10px; /* Bigger dot (was 6px) */
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 15px var(--accent), 0 0 30px rgba(46, 204, 113, 0.3);
+}
+
+/* Peaceful Sparky Reactions (No Jumping/Pounding) */
+@keyframes mascot-cheer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.9; }
+}
+
+.state-cheer {
+  animation: mascot-cheer 0.4s ease-out !important;
+  transform: none !important; /* Force no movement */
+}
+
+/* Authentic Happy face during cheer - Purely Facial */
+.state-cheer .mascot-eye {
+  height: 2px;
+  border-radius: 2px;
+  transform: scaleX(1.4);
+}
+.state-cheer .mascot-mouth {
+  height: 2px;
+  width: 12px;
+  border-bottom: 2px solid #1a1a1a;
+  border-radius: 0;
+  bottom: 12px;
+}
+.state-cheer .mascot-blush {
+  opacity: 1;
+}
+
+/* Redesign Click Interaction: Smooth Spin only, no scale/jump */
+#mascot-container:active #mascot {
+  transform: rotate(360deg); 
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mascot-idle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(1deg); }
+}
+
+@keyframes mascot-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}

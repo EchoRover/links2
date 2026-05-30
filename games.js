@@ -806,7 +806,7 @@ window.initGridGambit = function() {
 
   let score = Number(localStorage.getItem('gambit_score')) || 0;
   let streak = 0;
-  let bestStreak = 0; // Don't load from storage to fix the bug
+  let bestStreak = Number(localStorage.getItem('gambit_best_streak')) || 0;
   let safeScore = 0; // half of your score that you can't lose
   let totalGuesses = 0;
   let correctGuesses = 0;
