@@ -214,14 +214,16 @@ html, body, a, button, .course-card, #mascot-container {
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Default 'cursor' form: a neutral spark or dot */
+/* Default 'cursor' form: a sharp green arrow */
 .sprite-orb:not([class*="form-"])::after {
   content: "";
-  width: 10px; /* Bigger dot (was 6px) */
-  height: 10px;
+  width: 14px; 
+  height: 20px;
   background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 15px var(--accent), 0 0 30px rgba(46, 204, 113, 0.3);
+  /* Classic cursor arrow shape */
+  clip-path: polygon(0% 0%, 100% 70%, 50% 70%, 80% 100%, 60% 100%, 30% 70%, 0% 80%);
+  box-shadow: 0 0 10px var(--accent);
+  transform: rotate(-15deg); /* Slight tilt for that natural cursor feel */
 }
 
 /* Peaceful Sparky Reactions (No Jumping/Pounding) */
