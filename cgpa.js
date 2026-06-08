@@ -213,8 +213,15 @@ function addSemester() {
   saveData();
 }
 
+function reindexSemesters() {
+  semesters.forEach((sem, index) => {
+    sem.name = `Semester ${index + 1}`;
+  });
+}
+
 function removeSemester(index) {
   semesters.splice(index, 1);
+  reindexSemesters();
   render();
   saveData();
 }
