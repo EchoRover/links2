@@ -142,10 +142,19 @@ function triggerMonkeyMode() {
 
 function validateAndUnlock(isManual = true) {
   const inputEl = document.getElementById("student-id");
-  const input = inputEl.value.trim().toUpperCase();
+  let input = inputEl.value.trim().toUpperCase();
   const status = document.getElementById("sync-status");
   
   if (!input) return;
+
+  // Auto-expansion for 4-digit IDs
+  if (input.length === 4 && /^\d+$/.test(input)) {
+    const matchedId = Object.keys(STUDENT_NAMES).find(id => id.endsWith(input));
+    if (matchedId) {
+      input = matchedId;
+      inputEl.value = input; // Optional: Update UI
+    }
+  }
 
   // STRICT VALIDATION: ID must exist in our registry
   if (!STUDENT_NAMES.hasOwnProperty(input)) {
@@ -369,8 +378,15 @@ function render() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  const studentIdInput = document.getElementById("student-id");
   document.getElementById("sync-btn").onclick = () => validateAndUnlock(true);
-  document.getElementById("student-id").onkeypress = (e) => { if(e.key === 'Enter') validateAndUnlock(true); };
+  studentIdInput.onkeypress = (e) => { if(e.key === 'Enter') validateAndUnlock(true); };
+  studentIdInput.oninput = () => {
+    const val = studentIdInput.value.trim();
+    if (val.length === 4 && /^\d+$/.test(val)) {
+      validateAndUnlock(true);
+    }
+  };
   document.getElementById("add-semester").onclick = addSemester;
   init();
 });
