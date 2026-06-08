@@ -35,8 +35,13 @@ function renderGeneralLinks(selector, data) {
 
     const link = document.createElement("a");
     link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
+    
+    // Internal links (no http/https) should stay in the same tab
+    if (url.startsWith("http")) {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
+
     if (klass === "cs-link") {
       link.innerHTML = `${name}<span class="cs-arrow" aria-hidden="true">↗</span>`;
     } else {
