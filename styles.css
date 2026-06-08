@@ -94,7 +94,6 @@ body {
   /* theme-specific background images live in the "moody / clean" block below */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow: hidden;
 }
 
 h1, h2, h3 { margin: 0; font-weight: 600; color: var(--text); }

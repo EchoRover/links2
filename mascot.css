@@ -183,10 +183,10 @@
   95% { transform: scaleY(0); }
 }
 
-/* ---------- Cursor Replacement Styling ---------- */
-html, body, a, button, .course-card, #mascot-container {
-  cursor: none !important; /* Hide default cursor everywhere */
-}
+/* ---------- Cursor Replacement Styling (REMOVED) ---------- */
+/* html, body, a, button, .course-card, #mascot-container {
+  cursor: none !important; 
+} */
 
 #energy-sprite {
   position: fixed;

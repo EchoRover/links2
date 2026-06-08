@@ -373,6 +373,7 @@ function initEnergySprite() {
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
       form = isDark ? "sprite-orb form-sun" : "sprite-orb form-moon";
     }
+    else if (rawText.includes("cgpa")) form = "sprite-orb form-task";
     else if (id.includes("timetable")) form = "sprite-orb form-clock";
     else if (id.includes("assignment")) form = "sprite-orb form-task";
     else if (id.includes("quiz")) form = "sprite-orb form-star";
@@ -387,9 +388,8 @@ function initEnergySprite() {
 
 // ================= COMMON INIT =================
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("--- SHARED.JS FORCE LOAD V10 ---");
+  console.log("--- SHARED.JS FORCE LOAD V11 ---");
   wireThemeToggle();
   buildFooterQuote();
   spawnBotanicals(6);
-  initEnergySprite();
 });

@@ -6,6 +6,7 @@
 const linksData = {
   general: {
     ERP: "https://iitdadierp.iitd.ac.in/student/login",
+    CGPA: "cgpa",
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
