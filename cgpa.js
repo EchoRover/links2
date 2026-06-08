@@ -141,7 +141,8 @@ function triggerMonkeyMode() {
 }
 
 function validateAndUnlock(isManual = true) {
-  const input = document.getElementById("student-id").value.trim().toUpperCase();
+  const inputEl = document.getElementById("student-id");
+  const input = inputEl.value.trim().toUpperCase();
   const status = document.getElementById("sync-status");
   
   if (!input) return;
@@ -167,24 +168,22 @@ function validateAndUnlock(isManual = true) {
   }
 
   // Check for valid CSE ID (Redirects)
-  const cseRegex = /^24A1CSEB\d{4}$/i;
-  if (cseRegex.test(input)) {
-    status.textContent = `Hi ${greetingName}, redirecting you to LinkCS...`;
-    status.style.color = "var(--accent-strong)";
+  if (input.startsWith("24A1CSEB")) {
+    status.textContent = `Hi ${greetingName}! Redirecting you to LinkCS...`;
+    status.style.color = "var(--accent)";
     setTimeout(() => {
       window.location.href = "https://linkcs.vercel.app";
-    }, 1500);
+    }, 1200);
     return;
   }
 
   // Check for valid Energy (EEN) ID
-  const eenRegex = /^24A1EENB\d{4}$/i;
-  if (eenRegex.test(input)) {
+  if (input.startsWith("24A1EENB")) {
     studentId = input;
     localStorage.setItem("student-id", studentId);
     
     status.textContent = `Hi ${greetingName}! Access Granted. Loading local data...`;
-    status.style.color = "var(--accent-strong)";
+    status.style.color = "var(--accent)";
     
     document.getElementById("semesters-list").style.display = "grid";
     document.getElementById("add-sem-container").style.display = "block";
