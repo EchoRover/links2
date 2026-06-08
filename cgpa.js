@@ -147,12 +147,13 @@ function validateAndUnlock(isManual = true) {
   
   if (!input) return;
 
-  // Auto-expansion for 4-digit IDs
-  if (input.length === 4 && /^\d+$/.test(input)) {
-    const matchedId = Object.keys(STUDENT_NAMES).find(id => id.endsWith(input));
+  // Auto-expansion for numeric IDs (pads with zeros, e.g. 77 -> 0077)
+  if (/^\d+$/.test(input) && input.length <= 4) {
+    const padded = input.padStart(4, "0");
+    const matchedId = Object.keys(STUDENT_NAMES).find(id => id.endsWith(padded));
     if (matchedId) {
       input = matchedId;
-      inputEl.value = input; // Optional: Update UI
+      inputEl.value = input; 
     }
   }
 
