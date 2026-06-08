@@ -161,15 +161,37 @@
     .btn-main:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
     @media (max-width: 640px) {
-      .course-row { grid-template-columns: 1fr 1fr auto; }
-      .course-row input:first-child { grid-column: span 3; }
-      .summary-value { font-size: 1.1rem; }
+      .course-row { 
+        grid-template-columns: 1fr 1fr auto; 
+        gap: 8px;
+      }
+      .course-row input:first-child { 
+        grid-column: span 3; 
+      }
+      .course-row input, .course-row select {
+        width: 100%;
+        min-width: 0;
+      }
+      .semester-header h2 {
+        font-size: 1.3rem;
+      }
+      .summary-value { font-size: 1.05rem; }
       .summary-card { 
         flex-direction: row; 
-        gap: 20px; 
-        padding: 8px 20px;
-        bottom: 16px;
+        gap: 16px; 
+        padding: 8px 16px;
+        bottom: 12px;
+        width: calc(100% - 32px);
+        max-width: 320px;
       }
+    }
+    @media (max-width: 360px) {
+      .summary-card {
+        gap: 10px;
+        padding: 6px 12px;
+      }
+      .summary-label { font-size: 0.55rem; }
+      .summary-value { font-size: 0.95rem; }
     }
   </style>
 </head>
