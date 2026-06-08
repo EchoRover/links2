@@ -199,30 +199,66 @@ function validateAndUnlock(isManual = true) {
 function loadData() {
   const local = localStorage.getItem(`data-${studentId}`);
   if (local) {
-    semesters = JSON.parse(local);
+    let loadedSemesters = JSON.parse(local);
     
     // MIGRATION: Split combined Sem 4 elective row if it exists
-    if (semesters[3] && semesters[3].name === "Semester 4") {
-      const combinedIdx = semesters[3].courses.findIndex(c => c.name.includes("Macro/Lit/DS"));
+    if (loadedSemesters[3] && loadedSemesters[3].name === "Semester 4") {
+      const combinedIdx = loadedSemesters[3].courses.findIndex(c => c.name.includes("Macro/Lit/DS"));
       if (combinedIdx !== -1) {
-        const grade = semesters[3].courses[combinedIdx].grade;
-        semesters[3].courses.splice(combinedIdx, 1, 
+        const grade = loadedSemesters[3].courses[combinedIdx].grade;
+        loadedSemesters[3].courses.splice(combinedIdx, 1, 
           { name: "HUL Elective: Macroeconomics (AHUL213)", credits: 4, grade: grade },
           { name: "HUL Elective: Literature", credits: 4, grade: grade },
           { name: "Open Elective: Data Science", credits: 4, grade: grade }
         );
       }
     }
+    
+    // Prevent messed up data where user deleted a semester: rebuild fresh 5 semesters and copy over existing courses by matching index
+    semesters = [];
+    for (let i = 0; i < 5; i++) {
+      const semNum = i + 1;
+      const semName = `Semester ${semNum}`;
+      // Load from saved if it matches the current index, otherwise prepopulate
+      if (loadedSemesters[i]) {
+        // If the user somehow shifted Semester 5 into index 0 due to the bug, it won't match.
+        // Actually, just taking the saved data as-is but ensuring we have 5 items is safer.
+        // Let's just grab up to 5 items and set their name correctly.
+        let semToKeep = loadedSemesters[i];
+        semToKeep.name = semName;
+        semesters.push(semToKeep);
+      } else {
+        const courses = PREPOPULATED_COURSES[semName] 
+          ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
+          : [{ name: "", credits: "", grade: "A" }];
+        semesters.push({ name: semName, courses: courses });
+      }
+    }
+  } else {
+    semesters = [];
+    for (let i = 0; i < 5; i++) {
+      const semNum = i + 1;
+      const semName = `Semester ${semNum}`;
+      const courses = PREPOPULATED_COURSES[semName] 
+        ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
+        : [{ name: "", credits: "", grade: "A" }];
+      semesters.push({ name: semName, courses: courses });
+    }
   }
   
-  // Force load all semesters up to 5
-  while (semesters.length < 5) {
-    const semNum = semesters.length + 1;
-    const semName = `Semester ${semNum}`;
-    const courses = PREPOPULATED_COURSES[semName] 
-      ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
-      : [{ name: "", credits: "", grade: "A" }];
-    semesters.push({ name: semName, courses: courses });
+  // FIX for user who already shifted Sem 5 to Sem 1:
+  // We can detect this by checking if Semester 1 has "Power Electronics"
+  if (semesters[0] && semesters[0].courses.some(c => c.name.includes("Power Electronics"))) {
+    // If we detect the bug, nuke the bad local data and generate a fresh 5 semesters
+    semesters = [];
+    for (let i = 0; i < 5; i++) {
+      const semNum = i + 1;
+      const semName = `Semester ${semNum}`;
+      const courses = PREPOPULATED_COURSES[semName] 
+        ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
+        : [{ name: "", credits: "", grade: "A" }];
+      semesters.push({ name: semName, courses: courses });
+    }
   }
   
   render();
@@ -231,31 +267,6 @@ function loadData() {
 function saveData() {
   if (!studentId) return;
   localStorage.setItem(`data-${studentId}`, JSON.stringify(semesters));
-}
-
-function addSemester() {
-  const semNum = semesters.length + 1;
-  const semName = `Semester ${semNum}`;
-  const courses = PREPOPULATED_COURSES[semName] 
-    ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
-    : [{ name: "", credits: "", grade: "A" }];
-    
-  semesters.push({ name: semName, courses: courses });
-  render();
-  saveData();
-}
-
-function reindexSemesters() {
-  semesters.forEach((sem, index) => {
-    sem.name = `Semester ${index + 1}`;
-  });
-}
-
-function removeSemester(index) {
-  semesters.splice(index, 1);
-  reindexSemesters();
-  render();
-  saveData();
 }
 
 function addCourse(semIndex) {
@@ -312,7 +323,6 @@ function render() {
         <h2>${sem.name}</h2>
         <div>
           <span style="font-size: 0.8rem; color: var(--text-subtle); margin-right: 10px;">SGPA: <strong id="sgpa-${semIdx}">0.00</strong></span>
-          ${semesters.length > 1 ? `<button class="calc-btn btn-remove-sem" onclick="removeSemester(${semIdx})">Remove</button>` : ""}
         </div>
       </div>
     `;
@@ -339,7 +349,6 @@ function render() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("add-semester").onclick = addSemester;
   document.getElementById("sync-btn").onclick = () => validateAndUnlock(true);
   document.getElementById("student-id").onkeypress = (e) => { if(e.key === 'Enter') validateAndUnlock(true); };
   init();
