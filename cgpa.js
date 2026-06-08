@@ -358,7 +358,7 @@ function render() {
     });
     const actions = document.createElement("div");
     actions.className = "calc-actions";
-    actions.innerHTML = \`<button class="calc-btn btn-add" onclick="addCourse(\${semIdx})">+ Add Course</button>\`;
+    actions.innerHTML = `<button class="calc-btn btn-add" onclick="addCourse(${semIdx})">+ Add Course</button>`;
     block.appendChild(actions);
     list.appendChild(block);
   });
