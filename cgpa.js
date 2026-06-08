@@ -117,6 +117,29 @@ async function init() {
   }
 }
 
+function triggerMonkeyMode() {
+  const bg = document.getElementById("bg");
+  if (!bg) return;
+  bg.innerHTML = ""; // Clear existing botanicals
+  for (let i = 0; i < 25; i++) {
+    const monkey = document.createElement("span");
+    monkey.className = "leaf";
+    monkey.textContent = Math.random() > 0.5 ? "🐒" : "🦍";
+    monkey.style.fontSize = "3rem";
+    monkey.style.lineHeight = "1";
+    monkey.style.display = "block";
+    
+    const dur = 10 + Math.random() * 15;
+    monkey.style.setProperty("--x", (Math.random() * 100).toFixed(2) + "vw");
+    monkey.style.setProperty("--sz", "50px"); // needed for the animation transform origin
+    monkey.style.setProperty("--drift", (Math.random() * 120 - 60).toFixed(0) + "px");
+    monkey.style.setProperty("--spin", (Math.random() * 720 - 360).toFixed(0) + "deg");
+    monkey.style.animationDuration = dur.toFixed(1) + "s";
+    monkey.style.animationDelay = (-Math.random() * dur).toFixed(1) + "s";
+    bg.appendChild(monkey);
+  }
+}
+
 function validateAndUnlock(isManual = true) {
   const input = document.getElementById("student-id").value.trim().toUpperCase();
   const status = document.getElementById("sync-status");
@@ -134,10 +157,19 @@ function validateAndUnlock(isManual = true) {
 
   const studentName = STUDENT_NAMES[input];
 
+  // Easter Egg Check
+  const monkeyIDs = ["24A1CSEB0008", "24A1CSEB0012", "24A1EENB0080"];
+  const isMonkey = monkeyIDs.includes(input);
+  const greetingName = isMonkey ? `${studentName} you monkey 🐒` : studentName;
+
+  if (isMonkey && isManual) {
+    triggerMonkeyMode();
+  }
+
   // Check for valid CSE ID (Redirects)
   const cseRegex = /^24A1CSEB\d{4}$/i;
   if (cseRegex.test(input)) {
-    status.textContent = `Hi ${studentName}, redirecting you to LinkCS...`;
+    status.textContent = `Hi ${greetingName}, redirecting you to LinkCS...`;
     status.style.color = "var(--accent-strong)";
     setTimeout(() => {
       window.location.href = "https://linkcs.vercel.app";
@@ -151,7 +183,7 @@ function validateAndUnlock(isManual = true) {
     studentId = input;
     localStorage.setItem("student-id", studentId);
     
-    status.textContent = `Hi ${studentName}! Access Granted. Loading local data...`;
+    status.textContent = `Hi ${greetingName}! Access Granted. Loading local data...`;
     status.style.color = "var(--accent-strong)";
     
     document.getElementById("semesters-list").style.display = "grid";
