@@ -118,41 +118,58 @@
 
     .summary-card {
       position: sticky;
-      bottom: 20px;
-      background: var(--accent);
-      color: var(--surface);
-      padding: 12px 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      bottom: 24px;
+      background: var(--surface-elevated);
+      color: var(--text);
+      padding: 8px 30px;
+      border-radius: 999px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
       display: flex;
-      justify-content: space-around;
+      justify-content: center;
       align-items: center;
+      gap: 32px;
       z-index: 100;
-      margin-top: 30px;
-      border: 2px solid var(--accent-strong);
+      margin: 40px auto 0;
+      border: 1px solid var(--border-soft);
+      width: fit-content;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+    .summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.16);
+      border-color: var(--accent);
     }
     .summary-item { text-align: center; }
-    .summary-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.9; margin-bottom: 2px; }
-    .summary-value { font-size: 1.5rem; font-weight: 700; font-family: "Source Serif 4", serif; }
+    .summary-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.7; margin-bottom: 0; }
+    .summary-value { font-size: 1.2rem; font-weight: 700; font-family: "Inter", sans-serif; color: var(--accent-strong); }
+    :root[data-theme="dark"] .summary-value { color: var(--accent); }
 
     .add-sem-container {
       text-align: center;
-      margin: 24px 0;
+      margin: 32px 0;
     }
     .btn-main {
       background: var(--accent-strong);
       color: white;
-      padding: 10px 20px;
-      font-size: 0.88rem;
+      padding: 8px 18px;
+      font-size: 0.8rem;
       border: none;
+      border-radius: 999px;
     }
-    .btn-main:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .btn-main:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
     @media (max-width: 640px) {
       .course-row { grid-template-columns: 1fr 1fr auto; }
       .course-row input:first-child { grid-column: span 3; }
-      .summary-value { font-size: 1.5rem; }
-      .summary-card { flex-direction: column; gap: 12px; }
+      .summary-value { font-size: 1.1rem; }
+      .summary-card { 
+        flex-direction: row; 
+        gap: 20px; 
+        padding: 8px 20px;
+        bottom: 16px;
+      }
     }
   </style>
 </head>
