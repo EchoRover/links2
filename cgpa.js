@@ -132,10 +132,12 @@ function validateAndUnlock(isManual = true) {
     return;
   }
 
+  const studentName = STUDENT_NAMES[input];
+
   // Check for valid CSE ID (Redirects)
   const cseRegex = /^24A1CSEB\d{4}$/i;
   if (cseRegex.test(input)) {
-    status.textContent = `Redirecting you to LinkCS...`;
+    status.textContent = `Hi ${studentName}, redirecting you to LinkCS...`;
     status.style.color = "var(--accent-strong)";
     setTimeout(() => {
       window.location.href = "https://linkcs.vercel.app";
@@ -149,7 +151,7 @@ function validateAndUnlock(isManual = true) {
     studentId = input;
     localStorage.setItem("student-id", studentId);
     
-    status.textContent = `Access Granted. Loading local data...`;
+    status.textContent = `Hi ${studentName}! Access Granted. Loading local data...`;
     status.style.color = "var(--accent-strong)";
     
     document.getElementById("semesters-list").style.display = "grid";
