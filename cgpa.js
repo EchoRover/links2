@@ -213,9 +213,9 @@ function loadData() {
       }
     }
     
-    // Prevent messed up data where user deleted a semester: rebuild fresh 5 semesters (min) and copy over existing courses by matching index
+    // Prevent messed up data where user deleted a semester: rebuild fresh 4 semesters (min) and copy over existing courses by matching index
     semesters = [];
-    const count = Math.max(5, loadedSemesters.length);
+    const count = Math.max(4, loadedSemesters.length);
     for (let i = 0; i < count; i++) {
       const semNum = i + 1;
       const semName = `Semester ${semNum}`;
@@ -233,7 +233,7 @@ function loadData() {
     }
   } else {
     semesters = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       const semNum = i + 1;
       const semName = `Semester ${semNum}`;
       const courses = PREPOPULATED_COURSES[semName] 
@@ -246,9 +246,9 @@ function loadData() {
   // FIX for user who already shifted Sem 5 to Sem 1:
   // We can detect this by checking if Semester 1 has "Power Electronics"
   if (semesters[0] && semesters[0].courses.some(c => c.name.includes("Power Electronics"))) {
-    // If we detect the bug, nuke the bad local data and generate a fresh 5 semesters
+    // If we detect the bug, nuke the bad local data and generate a fresh 4 semesters
     semesters = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 4; i++) {
       const semNum = i + 1;
       const semName = `Semester ${semNum}`;
       const courses = PREPOPULATED_COURSES[semName] 
@@ -269,7 +269,10 @@ function saveData() {
 function addSemester() {
   const nextSemNum = semesters.length + 1;
   const semName = `Semester ${nextSemNum}`;
-  semesters.push({ name: semName, courses: [{ name: "", credits: "", grade: "A" }] });
+  const courses = PREPOPULATED_COURSES[semName] 
+    ? JSON.parse(JSON.stringify(PREPOPULATED_COURSES[semName]))
+    : [{ name: "", credits: "", grade: "A" }];
+  semesters.push({ name: semName, courses: courses });
   render();
   saveData();
 }
@@ -339,7 +342,7 @@ function render() {
         <h2>${sem.name}</h2>
         <div>
           <span style="font-size: 0.8rem; color: var(--text-subtle); margin-right: 10px;">SGPA: <strong id="sgpa-${semIdx}">0.00</strong></span>
-          ${semIdx >= 5 ? `<button class="btn-remove-sem" onclick="removeSemester(${semIdx})">Remove</button>` : ''}
+          ${semIdx >= 4 ? `<button class="btn-remove-sem" onclick="removeSemester(${semIdx})">Remove</button>` : ''}
         </div>
       </div>
     `;
