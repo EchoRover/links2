@@ -149,9 +149,10 @@
     .btn-main:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 
     @media (max-width: 640px) {
-      .course-row { grid-template-columns: 1fr 1fr; }
-      .course-row input:first-child { grid-column: span 2; }
+      .course-row { grid-template-columns: 1fr 1fr auto; }
+      .course-row input:first-child { grid-column: span 3; }
       .summary-value { font-size: 1.5rem; }
+      .summary-card { flex-direction: column; gap: 12px; }
     }
   </style>
 </head>
@@ -175,23 +176,9 @@
         </header>
 
         <!-- Intro -->
-        <section class="archive-intro" style="position: relative;">
+        <section class="archive-intro">
           <p class="archive-eyebrow">IIT Delhi · Standard 10-Point Scale</p>
-          <div class="title-with-mascot" style="justify-content: center;">
-            <h1>cgpa calculator</h1>
-            <div id="mascot-container" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%);">
-              <div id="mascot">
-                <div class="mascot-face">
-                  <div class="mascot-eye left"></div>
-                  <div class="mascot-eye right"></div>
-                  <div class="mascot-mouth"></div>
-                  <div class="mascot-blush"></div>
-                </div>
-                <div class="mascot-aura"></div>
-              </div>
-              <div id="mascot-speech">math is hard!</div>
-            </div>
-          </div>
+          <h1>cgpa calculator</h1>
           <p class="hero-sub">track your progress · plan your semester · keep it green</p>
         </section>
 

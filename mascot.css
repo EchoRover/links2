@@ -274,3 +274,10 @@
   25% { transform: rotate(-3deg); }
   75% { transform: rotate(3deg); }
 }
+
+@media (max-width: 640px) {
+  .title-with-mascot { gap: 10px; }
+  #mascot-container { width: 42px; height: 42px; }
+  #mascot-speech { font-size: 1.1rem; padding: 10px 18px; top: -65px; }
+  .mascot-mouth { bottom: 10px; }
+}

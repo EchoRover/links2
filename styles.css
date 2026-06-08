@@ -936,7 +936,8 @@ body #open-games-modal:hover {
     grid-column: 1 / -1;
     justify-content: flex-start;
     max-width: none;
-    gap: 4px;
+    gap: 6px;
+    flex-wrap: wrap;
   }
   .general a { font-size: 0.74rem; padding: 3px 9px; }
 
