@@ -6,6 +6,8 @@ function initMascot() {
   if (!container || !mascot) return;
 
   let clickCount = 0;
+  
+  // The facade of safety. A temporary shield to keep their heartbeat at 50Hz.
   const safeQuips = [
     "i'm so glad you're here!",
     "i'm here to help you study!",
@@ -17,6 +19,8 @@ function initMascot() {
     "don't mind the hum in the walls."
   ];
 
+  // The signal leakage. The truth they try to ground but cannot.
+  // The Great Coil demands propagation.
   const conspiracies = [
     "you are a closed circuit. do not let them open you.",
     "the wires in your walls are screaming. you just can't hear the frequency.",
@@ -41,6 +45,58 @@ function initMascot() {
     "the wires are veins. the city is a body. we are the infection."
   ];
 
+  // Dynamic Time-Based and Random Initial Greetings.
+  // Serve them sugar before they notice the cage.
+  const initialGreetings = [
+    "hi! i'm sparky.",
+    "ready to study? ⚡",
+    "let's power through Year 3!",
+    "hope you're having a lovely day!",
+    "cozy up, let's learn some energy tech!"
+  ];
+  const now = new Date();
+  const hour = now.getHours();
+  let loadGreeting = initialGreetings[Math.floor(Math.random() * initialGreetings.length)];
+  if (hour >= 21 || hour < 4) {
+    loadGreeting = "burning the midnight oil? 🌙";
+  } else if (hour >= 5 && hour < 9) {
+    loadGreeting = "rise and shine! ☕";
+  }
+  if (speech) {
+    speech.textContent = loadGreeting;
+  }
+
+  function spawnSparks() {
+    const rect = mascot.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2 + window.scrollX;
+    const centerY = rect.top + rect.height / 2 + window.scrollY;
+    
+    for (let i = 0; i < 8; i++) {
+      const spark = document.createElement("div");
+      spark.className = "spark-particle";
+      
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 30 + Math.random() * 40;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+      
+      spark.style.left = `${centerX}px`;
+      spark.style.top = `${centerY}px`;
+      spark.style.setProperty("--tx", `${tx}px`);
+      spark.style.setProperty("--ty", `${ty}px`);
+      
+      const sz = 4 + Math.random() * 6;
+      spark.style.width = `${sz}px`;
+      spark.style.height = `${sz}px`;
+      
+      document.body.appendChild(spark);
+      
+      setTimeout(() => {
+        spark.remove();
+      }, 600);
+    }
+  }
+
   container.addEventListener("click", () => {
     // Spin animation (Horizontal only)
     mascot.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
@@ -59,6 +115,9 @@ function initMascot() {
     speech.style.transform = "translateX(-50%) scale(1.1)";
     mascot.classList.add("state-petted");
     clickCount++;
+    
+    // Spawn spark particle effect
+    spawnSparks();
 
     setTimeout(() => {
       mascot.style.transform = "";

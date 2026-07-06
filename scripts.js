@@ -19,13 +19,51 @@ const linksData = {
     }
   },
   courses: {
-    "AENL226 (Power Electronics)": { credits: 4,   ltp: "3-1-0", links: {} },
-    "AENL228 (Measurement & Instr)": { credits: 3,   ltp: "2-0-2", links: {} },
-    "AENP200 (Energy Tech Lab)":     { credits: 1.5, ltp: "0-0-3", links: {} },
-    "AENP225 (Elec Energy Lab)":     { credits: 1.5, ltp: "0-0-3", links: {} },
-    "AHUL256 (Critical Thinking)":   { credits: 4,   ltp: "3-1-0", links: {} },
-    "AHUL261 (Intro to Psychology)": { credits: 4,   ltp: "3-1-0", links: {} },
-    "ASBL100 (Intro Biology)":       { credits: 4,   ltp: "3-0-2", links: {} }
+    /* 
+      FUTURE MODEL SKELETON: 
+      Fill in actual teacher names, office locations, classrooms, and course links 
+      here once the Semester 5 schedule is finalized.
+    */
+    "AENL226 (Power Electronics)": { 
+      credits: 4, ltp: "3-1-0", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      links: {
+        // "Lecture Slides": "url",
+        // "Blackboard": "url"
+      } 
+    },
+    "AENL228 (Measurement & Instr)": { 
+      credits: 3, ltp: "2-0-2", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      links: {
+        // "Lecture Slides": "url"
+      } 
+    },
+    "AENP200 (Energy Tech Lab)": { 
+      credits: 1.5, ltp: "0-0-3", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Lab Room]", 
+      links: {} 
+    },
+    "AENP225 (Elec Energy Lab)": { 
+      credits: 1.5, ltp: "0-0-3", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Lab Room]", 
+      links: {} 
+    },
+    "AHUL256 (Critical Thinking)": { 
+      credits: 4, ltp: "3-1-0", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      links: {} 
+    },
+    "AHUL261 (Intro to Psychology)": { 
+      credits: 4, ltp: "3-1-0", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      links: {} 
+    },
+    "ASBL100 (Intro Biology)": { 
+      credits: 4, ltp: "3-0-2", 
+      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      links: {} 
+    }
   }
 };
 
@@ -110,11 +148,32 @@ function buildHeroSub() {
 
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("--- SCRIPTS.JS FORCE LOAD V11 ---");
+  console.log("--- SCRIPTS.JS FORCE LOAD V12 ---");
   renderGeneralLinks(".general", linksData.general);
   renderCourseLinks(".links", linksData.courses);
   renderUpdates();
   renderLocalClips();
   buildHeroSub();
   if (typeof initMascot === "function") initMascot();
+
+  // Timetable Modal logic
+  const openTimeBtn = document.getElementById("timetable-box");
+  const timeModal = document.getElementById("timetable-modal");
+  const closeTimeBtn = document.getElementById("close-timetable-modal");
+  
+  if (openTimeBtn && timeModal) {
+    openTimeBtn.addEventListener("click", () => {
+      timeModal.style.display = "block";
+    });
+  }
+  if (closeTimeBtn && timeModal) {
+    closeTimeBtn.addEventListener("click", () => {
+      timeModal.style.display = "none";
+    });
+  }
+  window.addEventListener("click", (event) => {
+    if (event.target === timeModal) {
+      timeModal.style.display = "none";
+    }
+  });
 });

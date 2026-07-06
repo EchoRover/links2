@@ -1503,3 +1503,150 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
     radial-gradient(900px 520px at 90% -10%, color-mix(in srgb, var(--accent-warm) 15%, transparent), transparent 55%),
     radial-gradient(720px 500px at -8% 110%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 52%);
 }
+
+/* ===================================================== */
+/* ADDITIVE: Timetable Modal, Course Tooltips & Sparks   */
+/* ===================================================== */
+
+/* Course code tooltip */
+.course-code {
+  position: relative;
+  cursor: help;
+}
+.course-code[data-prof]::after {
+  content: "Prof: " attr(data-prof) "\a Room: " attr(data-room) "\a Cabin: " attr(data-cabin);
+  white-space: pre;
+  position: absolute;
+  bottom: 135%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: var(--surface-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: none;
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px -10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-left: 3px solid var(--accent);
+  text-align: left;
+}
+.course-code[data-prof]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Timetable box hint */
+.timetable-hint {
+  font-size: 0.78rem;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-style: italic;
+  color: var(--accent);
+  margin-top: 2px !important;
+}
+
+/* Timetable Modal Specifics */
+.timetable-modal-content {
+  max-width: 800px !important;
+  width: 90%;
+  padding: 1.5rem 2rem;
+}
+.timetable-modal-content h2 {
+  font-family: "Caveat", "Source Serif 4", Georgia, serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--accent-strong);
+  text-align: center;
+}
+:root[data-theme="dark"] .timetable-modal-content h2 {
+  color: var(--accent);
+}
+.timetable-scroller {
+  overflow-x: auto;
+  margin-top: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+}
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
+  background: var(--surface);
+  margin: 0 !important;
+}
+.timetable-table th, .timetable-table td {
+  border: 1px solid var(--border-soft);
+  padding: 10px 8px;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--text);
+}
+.timetable-table th {
+  background: var(--surface-elevated);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.timetable-table td.time-slot {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  background: var(--surface-elevated);
+  font-weight: 500;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+.timetable-table td.course-slot {
+  transition: background-color 0.2s, color 0.2s;
+  line-height: 1.3;
+}
+.timetable-table td.course-slot[data-code="AENL226"] { background: rgba(74, 156, 63, 0.08); }
+.timetable-table td.course-slot[data-code="AENL228"] { background: rgba(44, 62, 80, 0.08); }
+.timetable-table td.course-slot[data-code="AENP200"] { background: rgba(52, 152, 219, 0.08); }
+.timetable-table td.course-slot[data-code="AENP225"] { background: rgba(241, 196, 15, 0.08); }
+.timetable-table td.course-slot[data-code="AHUL256"] { background: rgba(139, 233, 253, 0.08); }
+.timetable-table td.course-slot[data-code="AHUL261"] { background: rgba(255, 121, 198, 0.08); }
+.timetable-table td.course-slot[data-code="ASBL100"] { background: rgba(80, 250, 123, 0.08); }
+
+.timetable-table td.course-slot:hover {
+  background: var(--accent-soft) !important;
+  color: var(--accent-strong) !important;
+  cursor: pointer;
+}
+.lunch-break {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--text-subtle);
+  background: var(--surface-sunken);
+}
+.lab-slot {
+  font-weight: 500;
+}
+
+/* Mascot Click Sparks */
+.spark-particle {
+  position: absolute;
+  background: var(--accent-warm);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  animation: spark-fly 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+@keyframes spark-fly {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0);
+    opacity: 0;
+  }
+}

@@ -67,14 +67,17 @@ function splitCourseLabel(label) {
 //   "CODE (Title)": { Blackboard: "url", OneDrive: "url" }     (legacy flat)
 //   "CODE (Title)": { credits: 4, ltp: "3-1-0", links: {...} } (new with meta)
 function normalizeCourseEntry(value) {
-  if (value && typeof value === "object" && (value.links || value.credits || value.ltp)) {
+  if (value && typeof value === "object" && (value.links || value.credits || value.ltp || value.prof || value.cabin || value.room)) {
     return {
       credits: value.credits ?? null,
       ltp: value.ltp ?? null,
+      prof: value.prof ?? null,
+      cabin: value.cabin ?? null,
+      room: value.room ?? null,
       links: value.links || {}
     };
   }
-  return { credits: null, ltp: null, links: value || {} };
+  return { credits: null, ltp: null, prof: null, cabin: null, room: null, links: value || {} };
 }
 
 function renderCourseLinks(selector, data) {
@@ -82,7 +85,7 @@ function renderCourseLinks(selector, data) {
   if (!container) return;
 
   for (const [course, raw] of Object.entries(data)) {
-    const { credits, ltp, links } = normalizeCourseEntry(raw);
+    const { credits, ltp, prof, cabin, room, links } = normalizeCourseEntry(raw);
     const { code, title } = splitCourseLabel(course);
 
     const card = document.createElement("article");
@@ -95,6 +98,9 @@ function renderCourseLinks(selector, data) {
       const codeEl = document.createElement("span");
       codeEl.className = "course-code";
       codeEl.textContent = code;
+      if (prof) codeEl.setAttribute("data-prof", prof);
+      if (cabin) codeEl.setAttribute("data-cabin", cabin);
+      if (room) codeEl.setAttribute("data-room", room);
       head.appendChild(codeEl);
     }
     if (ltp || credits != null) {
