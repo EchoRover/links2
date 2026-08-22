@@ -70,7 +70,7 @@ const ITINERARIES = {
             dirId: "toCampus",
             originOffset: 0,
             destOffset: 15,
-            desc: "Dorms → Campus Shuttle"
+            desc: "Dorms ➔ Campus Shuttle"
         }
     ],
     "kca1->kca3": [
@@ -78,7 +78,7 @@ const ITINERARIES = {
             dirId: "toCampus",
             originOffset: 0,
             destOffset: 3,
-            desc: "Dorms → Campus Shuttle (stops at KCA 3)"
+            desc: "Dorms ➔ Campus Shuttle (stops at KCA 3)"
         },
         {
             dirId: "kca3Loop",
@@ -94,7 +94,7 @@ const ITINERARIES = {
             dirId: "toCampus",
             originOffset: 3,
             destOffset: 15,
-            desc: "Dorms → Campus Shuttle"
+            desc: "Dorms ➔ Campus Shuttle"
         }
     ],
     "kca3->kca1": [
@@ -118,7 +118,7 @@ const ITINERARIES = {
             dirId: "toDorms",
             originOffset: 0,
             destOffset: 15,
-            desc: "Campus → Dorms Shuttle"
+            desc: "Campus ➔ Dorms Shuttle"
         }
     ],
     "campus->kca3": [
@@ -126,7 +126,7 @@ const ITINERARIES = {
             dirId: "toDorms",
             originOffset: 0,
             destOffset: 18,
-            desc: "Campus → Dorms Shuttle"
+            desc: "Campus ➔ Dorms Shuttle"
         }
     ]
 };
@@ -365,7 +365,7 @@ function getVehicleDetail(vehicle) {
     };
 }
 
-// Get the unified list of trips matching the active location -> destination itinerary
+// Get the list of trips matching the active location -> destination itinerary
 function getItineraryTrips(sched, loc, dest) {
     const key = `${loc}->${dest}`;
     const configs = ITINERARIES[key] || [];
@@ -572,30 +572,37 @@ function renderLiveBoard(now) {
     } else {
         html = upcoming.map((t) => {
             const until = t.tomorrow ? "tomorrow" : untilLabel(t.departMins, now);
-            let vehTag = "";
             const vDetail = getVehicleDetail(t.vehicle);
-            if (vDetail) {
-                vehTag = `<span class="board-veh-tag tag ${vDetail.className}">${vDetail.icon} ${vDetail.name} <small style="opacity: 0.85; font-weight: 500;">(${vDetail.type})</small></span>`;
-            } else if (t.assumed) {
-                vehTag = `<span class="board-veh-tag tag tag-soft">❓ Assumed Shuttle</span>`;
-            }
             
+            let iconClass = "assumed";
+            let iconEmoji = "❓";
+            let vehicleLabel = "Assumed Shuttle";
+            
+            if (vDetail) {
+                iconEmoji = vDetail.icon;
+                vehicleLabel = `${vDetail.name} (${vDetail.type})`;
+                if (vDetail.type === "Coaster") iconClass = "coaster";
+                else if (vDetail.type === "Van") iconClass = "van";
+                else if (vDetail.type === "Large Bus") iconClass = "bus";
+            }
+
             const originLabel = currentLoc === "kca1" ? "KCA 1&2" : currentLoc === "kca3" ? "KCA 3" : "Campus";
             const destLabel = currentDest === "kca1" ? "KCA 1&2" : currentDest === "kca3" ? "KCA 3" : "Campus";
 
             return `
-            <div class="board-item">
-                <div class="item-time-eta">
-                    <span class="item-eta">${until}</span>
-                    <span class="item-time">${to12h(t.departTime)}</span>
-                </div>
-                <div class="item-details">
-                    <div class="item-route-line">
-                        <span class="item-dest">Departs ${originLabel} ➔ Arrives ${destLabel} at ${to12hSimple(t.arriveTime)}</span>
-                        ${vehTag}
+            <div class="board-item-card">
+                <div class="veh-icon-circle ${iconClass}">${iconEmoji}</div>
+                <div class="card-body">
+                    <div class="card-title-row">
+                        <span class="card-route-title">Departs ${originLabel} ➔ Arrives ${destLabel}</span>
+                        <span class="card-eta">${until}</span>
                     </div>
-                    <div class="item-timeline" style="margin-top: 0.25rem; color: var(--fg-soft); font-size: 0.72rem;">
-                        ${t.desc}
+                    <div class="card-subtitle-row">
+                        <span class="card-veh-name">${vehicleLabel}</span>
+                        <span class="card-time-badge">⏱️ ${to12h(t.departTime)} &ndash; ${to12hSimple(t.arriveTime)}</span>
+                    </div>
+                    <div class="card-timeline-desc">
+                        🧭 ${t.desc}
                     </div>
                 </div>
             </div>`;
@@ -840,18 +847,25 @@ function swapLocationAndDestination() {
 }
 
 function scrollToNext() {
-    const target = document.getElementById("next-row");
-    if (!target) return;
+    const details = document.querySelector(".timetable-details");
+    if (details) {
+        details.open = true; // Auto-expand collapsible full timetable if closed
+    }
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rect = target.getBoundingClientRect();
-    const y = rect.top + window.pageYOffset - window.innerHeight / 2 + rect.height / 2;
+    requestAnimationFrame(() => {
+        const target = document.getElementById("next-row");
+        if (!target) return;
 
-    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const rect = target.getBoundingClientRect();
+        const y = rect.top + window.pageYOffset - window.innerHeight / 2 + rect.height / 2;
 
-    target.classList.remove("flash");
-    void target.offsetWidth;
-    target.classList.add("flash");
+        window.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
+
+        target.classList.remove("flash");
+        void target.offsetWidth;
+        target.classList.add("flash");
+    });
 }
 
 populateDestinations();
