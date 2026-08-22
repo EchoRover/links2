@@ -6,24 +6,16 @@
 // so "Dorms to Campus" departs KCA 1&2 and "Campus to Dorms"
 // departs Campus. KCA 3 is the middle stop on BOTH legs.
 //
+// Dedicated Dorm Shuttle:
+//   Mon-Fri night shift includes a dedicated KCA 3 ⇄ KCA 1 shuttle
+//   operated by Coaster 4 from 7:00 PM to 11:40 PM (KCA3 -> KCA1 -> KCA3).
+//
 // TWO SERVICES, and they are not the same timetable:
 //
 //   Mon–Fri  the printed shift poster (photographed 2026-08-19).
 //            A 7-vehicle day rota, then a two-van night shift.
 //
-//   Sat–Sun  the campus notice of 2026-08-22, verbatim: "Saturdays and
-//            Sundays, vehicles will operate between the campus and
-//            KCA 1,2 & 3 every 30 minutes in both directions, starting
-//            from 7:30 AM."
-//            CONFIRMED by that notice: the 7:30 AM start, the 30-minute
-//            interval, both directions, the same three stops.
-//            NOT in it: a LAST departure, and which vehicle runs which
-//            trip. So the weekend list is split — everything up to
-//            6:30 PM follows the notice, and the later runs are kept in
-//            their own block, labelled as assumed, because a guessed
-//            time that renders like a confirmed one is how someone ends
-//            up standing at a stop at 11 PM for nothing.
-//            When someone reads the actual board: fix WEEKEND_LAST.
+//   Sat–Sun  the campus notice of 2026-08-22.
 //
 // Friday Prayer:
 //   Between 12:30 PM and 1:15 PM (inclusive) on Fridays, no shuttle service runs.
@@ -33,16 +25,16 @@
 
 const DAY_ROTA = ["Coaster 1", "Coaster 2", "Coaster 3", "Bus 1", "Bus 2", "Bus 3", "Coaster 4"];
 
-// Weekend: start + interval are from the notice. The cut and the last
-// departure are not.
+// Weekend: start + interval are from the notice.
 const WEEKEND_START = "07:30";
 const WEEKEND_NOTICE_UNTIL = "18:30";   // where the confirmed block ends
-const WEEKEND_LAST = "23:30";           // ASSUMED, not from the notice
+const WEEKEND_LAST = "23:30";           // ASSUMED
 const WEEKEND_STEP = 30;
 
 // Location timing offsets (in minutes) relative to base departures:
 // toCampus base departs KCA 1&2 (kca1)
 // toDorms base departs Campus (campus)
+// kca3Loop base departs KCA 3 (kca3)
 const OFFSETS = {
     toCampus: {
         kca1: 0,
@@ -53,27 +45,37 @@ const OFFSETS = {
         campus: 0,
         kca1: 15,
         kca3: 18
+    },
+    kca3Loop: {
+        kca3: 0,
+        kca1: 10
     }
 };
 
 let currentLoc = localStorage.getItem("bus-perspective") || "kca1";
 
-// The two directions share their stops across both services.
 const DIRS = {
     toCampus: {
         id: "toCampus",
         label: "Dorms → Campus",
-        short: "To Campus",
+        short: "➔ Campus",
         from: "KCA 1&2",
         stops: ["KCA 1&2", "KCA 3", "Campus"],
     },
     toDorms: {
         id: "toDorms",
         label: "Campus → Dorms",
-        short: "To Dorms",
+        short: "➔ Dorms",
         from: "Campus",
         stops: ["Campus", "KCA 1&2", "KCA 3"],
     },
+    kca3Loop: {
+        id: "kca3Loop",
+        label: "KCA 3 ⇄ KCA 1 Shuttle",
+        short: "➔ KCA 1 / 3",
+        from: "KCA 3",
+        stops: ["KCA 3", "KCA 1&2", "KCA 3"],
+    }
 };
 
 // "07:30" .. "18:30" every 30 -> ["07:30", "08:00", ...]
@@ -160,6 +162,19 @@ const SCHEDULES = {
                     },
                 ],
             },
+            kca3Loop: {
+                ...DIRS.kca3Loop,
+                blocks: [
+                    {
+                        title: "KCA 3 ⇄ KCA 1 Shuttle", tag: "dorms shuttle", tagTone: "night", dashed: true,
+                        rota: ["Coaster 4"],
+                        times: [
+                            "19:00", "19:20", "19:40", "20:00", "20:20", "20:40", "21:00",
+                            "21:40", "22:00", "22:20", "22:40", "23:00", "23:20", "23:40"
+                        ]
+                    }
+                ]
+            }
         },
     },
 
@@ -168,7 +183,7 @@ const SCHEDULES = {
         key: "weekend",
         label: "Sat & Sun",
         short: "Sat & Sun",
-        numbering: "continuous",     // one service, so the numbers just run on
+        numbering: "continuous",
         caveat: "The campus notice gives the start (7:30 AM), the 30-minute interval and both directions. " +
             "It does not give a last departure, and it says nothing about which vehicle runs which trip. " +
             "Everything through 6:30 PM below is the notice; the later block is an assumption that the " +
@@ -262,14 +277,20 @@ function tomorrowKey() {
 function trips(sched, dir) {
     let n = 0;
     const isFriday = new Date().getDay() === 5;
-    const offset = OFFSETS[dir.id][currentLoc] || 0;
+    const offset = OFFSETS[dir.id][currentLoc];
+
+    // If this route does not serve the selected location, return empty
+    if (offset === undefined) {
+        return { blocks: [], all: [] };
+    }
+
     const isToCampus = dir.id === "toCampus";
 
     const blocks = dir.blocks.map((b) => {
         if (sched.numbering !== "continuous") n = 0;
         let times = b.times;
 
-        // Filter out Friday prayer times (12:30 PM to 1:15 PM inclusive => 750 to 795 mins) on Fridays:
+        // Filter out Friday prayer times (12:30 PM to 1:15 PM inclusive) on Fridays:
         if (isFriday && sched.key === "weekday") {
             times = times.filter(t => {
                 const mins = toMinutes(t);
@@ -292,12 +313,23 @@ function trips(sched, dir) {
             }
 
             // Generate compact route timing sequence:
-            const t1 = to12hSimple(t);
-            const t2 = to12hSimple(addMins(t, isToCampus ? 3 : 15));
-            const t3 = to12hSimple(addMins(t, isToCampus ? 15 : 18));
-            const timelineText = isToCampus
-                ? `${vehPrefix}KCA1: ${t1} ➔ KCA3: ${t2} ➔ Campus: ${t3}`
-                : `${vehPrefix}Campus: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
+            let timelineText = "";
+            if (dir.id === "toCampus") {
+                const t1 = to12hSimple(t);
+                const t2 = to12hSimple(addMins(t, 3));
+                const t3 = to12hSimple(addMins(t, 15));
+                timelineText = `${vehPrefix}KCA1: ${t1} ➔ KCA3: ${t2} ➔ Campus: ${t3}`;
+            } else if (dir.id === "toDorms") {
+                const t1 = to12hSimple(t);
+                const t2 = to12hSimple(addMins(t, 15));
+                const t3 = to12hSimple(addMins(t, 18));
+                timelineText = `${vehPrefix}Campus: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
+            } else if (dir.id === "kca3Loop") {
+                const t1 = to12hSimple(t);
+                const t2 = to12hSimple(addMins(t, 10));
+                const t3 = to12hSimple(addMins(t, 20));
+                timelineText = `${vehPrefix}KCA3: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
+            }
 
             return {
                 no: ++n,
@@ -332,67 +364,117 @@ function untilLabel(mins, now) {
     if (delta < 60) return `${delta} min`;
     const h = Math.floor(delta / 60);
     const m = delta % 60;
-    return m ? `${h} h ${m} m` : `${h} h`;
+    return m ? `${h}h ${m}m` : `${h}h`;
+}
+
+// ---------- live departures gatherer ----------
+
+function getUpcomingDepartures(now) {
+    const sched = SCHEDULES[todayKey()];
+    let allTrips = [];
+
+    // Gather trips from all active directions for today
+    for (const dirId in sched.dirs) {
+        const dir = sched.dirs[dirId];
+        const data = trips(sched, dir);
+        
+        data.all.forEach(t => {
+            let destLabel = "";
+            if (dirId === "toCampus") destLabel = "➔ Campus";
+            else if (dirId === "toDorms") destLabel = "➔ Dorms";
+            else if (dirId === "kca3Loop") {
+                destLabel = currentLoc === "kca3" ? "➔ KCA 1&2" : "➔ KCA 3";
+            }
+
+            allTrips.push({
+                ...t,
+                dirId: dirId,
+                dirLabel: dir.label,
+                destLabel: destLabel,
+                tomorrow: false
+            });
+        });
+    }
+
+    // Filter out past departures
+    let upcoming = allTrips.filter((t) => t.mins >= now);
+
+    // If no departures left today, fetch tomorrow's starting trips
+    if (upcoming.length === 0) {
+        const tom = tomorrowKey();
+        const tomSched = SCHEDULES[tom];
+        let tomTrips = [];
+
+        for (const dirId in tomSched.dirs) {
+            const dir = tomSched.dirs[dirId];
+            const data = trips(tomSched, dir);
+            
+            data.all.forEach(t => {
+                let destLabel = "";
+                if (dirId === "toCampus") destLabel = "➔ Campus";
+                else if (dirId === "toDorms") destLabel = "➔ Dorms";
+                else if (dirId === "kca3Loop") {
+                    destLabel = currentLoc === "kca3" ? "➔ KCA 1&2" : "➔ KCA 3";
+                }
+
+                tomTrips.push({
+                    ...t,
+                    dirId: dirId,
+                    dirLabel: dir.label,
+                    destLabel: destLabel,
+                    tomorrow: true
+                });
+            });
+        }
+        upcoming = tomTrips;
+    }
+
+    // Sort chronologically by minutes
+    upcoming.sort((a, b) => a.mins - b.mins);
+    return upcoming.slice(0, 4); // return next 4
 }
 
 // ---------- rendering ----------
 
-function renderNext(dirId, now) {
-    let sched = SCHEDULES[todayKey()];
-    let dir = sched.dirs[dirId];
-    let data = trips(sched, dir);
-    let upcoming = data.all.filter((t) => t.mins >= now).slice(0, 3);
-    let tomorrow = false;
+function renderLiveBoard(now) {
+    if (!elNext) return;
+    const upcoming = getUpcomingDepartures(now);
 
-    if (!upcoming.length) {
-        sched = SCHEDULES[tomorrowKey()];
-        dir = sched.dirs[dirId];
-        data = trips(sched, dir);
-        upcoming = data.all.slice(0, 3);
-        tomorrow = true;
-    }
-
-    const head = upcoming[0];
-    const rest = upcoming.slice(1);
-
-    // Context label showing what stop timing is rendered:
-    let locationLabel = "";
-    if (dirId === "toCampus") {
-        if (currentLoc === "kca1") locationLabel = "at KCA 1&2";
-        else if (currentLoc === "kca3") locationLabel = "at KCA 3";
-        else if (currentLoc === "campus") locationLabel = "at Campus";
+    let html = "";
+    if (upcoming.length === 0) {
+        html = `<div class="board-empty">No departures scheduled.</div>`;
     } else {
-        if (currentLoc === "campus") locationLabel = "at Campus";
-        else if (currentLoc === "kca1") locationLabel = "at KCA 1&2";
-        else if (currentLoc === "kca3") locationLabel = "at KCA 3";
+        html = upcoming.map((t) => {
+            const until = t.tomorrow ? "tomorrow" : untilLabel(t.mins, now);
+            let vehTag = "";
+            if (t.vehicle) {
+                const isVan = t.vehicle.toLowerCase().includes("van");
+                const tagClass = isVan ? "tag-night" : "tag-day";
+                vehTag = `<span class="board-veh-tag tag ${tagClass}">${t.vehicle}</span>`;
+            } else if (t.assumed) {
+                vehTag = `<span class="board-veh-tag tag tag-soft">assumed</span>`;
+            }
+            
+            return `
+            <div class="board-item">
+                <div class="item-time-eta">
+                    <span class="item-eta">${until}</span>
+                    <span class="item-time">${to12h(t.time)}</span>
+                </div>
+                <div class="item-details">
+                    <div class="item-route-line">
+                        <span class="item-dest">${t.destLabel}</span>
+                        ${vehTag}
+                    </div>
+                    <div class="item-timeline">
+                        ${t.timeline}
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
     }
 
-    return `
-    <article class="next-card" data-dir="${dir.id}">
-        <header class="next-head">
-            <span class="next-dir">${dir.label}</span>
-            <span class="next-from">${locationLabel} · ${sched.label}</span>
-        </header>
-        <div class="next-lead">
-            <span class="next-eta">${tomorrow ? "tomorrow" : untilLabel(head.mins, now)}</span>
-            <span class="next-time">${to12h(head.time)}</span>
-        </div>
-        <div class="next-timeline" style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-soft); margin: 0.35rem 0 0.15rem; letter-spacing: -0.01em;">
-            ${head.timeline}
-        </div>
-        <div class="next-meta">
-            ${head.tag ? `<span class="tag tag-${head.tagTone}">${head.tag}</span>` : ""}
-            ${head.vehicle ? `<span class="next-veh">${head.vehicle}</span>` : ""}
-        </div>
-        <ul class="next-then">
-            ${rest.map((t) => `
-                <li>
-                    <span class="then-time">${to12h(t.time)}</span>
-                    <span class="then-eta">${tomorrow ? "&nbsp;" : untilLabel(t.mins, now)}</span>
-                    <span class="then-veh">${t.vehicle || (t.assumed ? "assumed" : "")}</span>
-                </li>`).join("")}
-        </ul>
-    </article>`;
+    elNext.innerHTML = html;
 }
 
 function renderTable(dir, block, now, showVeh, nextMins) {
@@ -401,10 +483,13 @@ function renderTable(dir, block, now, showVeh, nextMins) {
         if (currentLoc === "kca1") timeHeader = "Departs KCA 1&2";
         else if (currentLoc === "kca3") timeHeader = "Departs KCA 3";
         else if (currentLoc === "campus") timeHeader = "Arrives Campus";
-    } else {
+    } else if (dir.id === "toDorms") {
         if (currentLoc === "campus") timeHeader = "Departs Campus";
         else if (currentLoc === "kca1") timeHeader = "Arrives KCA 1&2";
         else if (currentLoc === "kca3") timeHeader = "Arrives KCA 3";
+    } else if (dir.id === "kca3Loop") {
+        if (currentLoc === "kca3") timeHeader = "Departs KCA 3";
+        else if (currentLoc === "kca1") timeHeader = "Departs KCA 1&2";
     }
 
     return `
@@ -450,7 +535,7 @@ let viewKey = todayKey();
 
 function nextKey(now) {
     const sched = SCHEDULES[todayKey()];
-    return ["toCampus", "toDorms"]
+    return Object.keys(sched.dirs)
         .map((id) => {
             const up = trips(sched, sched.dirs[id]).all.find((t) => t.mins >= now);
             return up ? up.time : "end";
@@ -458,23 +543,22 @@ function nextKey(now) {
         .join("|");
 }
 
-function renderNextCards(now) {
-    if (!elNext) return;
-    elNext.innerHTML = ["toCampus", "toDorms"].map((id) => renderNext(id, now)).join("");
-}
-
 function renderTables(now) {
     if (!elSched) return;
     const sched = SCHEDULES[viewKey];
     const markNext = viewKey === todayKey();
 
-    elSched.innerHTML = ["toCampus", "toDorms"]
+    elSched.innerHTML = Object.keys(sched.dirs)
         .map((id) => {
             const dir = sched.dirs[id];
             const data = trips(sched, dir);
             const showVeh = hasVehicles(dir);
             const up = markNext ? data.all.find((t) => t.mins >= now) : null;
             const nextMins = up ? up.mins : null;
+
+            // If this location isn't served by this route, return empty string
+            if (data.blocks.length === 0) return "";
+
             return `
             <section class="sched-col" data-dir="${dir.id}">
                 <header class="sched-head">
@@ -507,7 +591,7 @@ function tick(force) {
     lastMinute = now;
 
     renderClock();
-    renderNextCards(now);
+    renderLiveBoard(now);
 
     const key = nextKey(now);
     if (force || key !== lastNextKey) {
@@ -535,6 +619,26 @@ function setRoad(dirId) {
         rest.map((s) => `<span class="arw">→</span><span class="via">${s}</span>`).join("");
 }
 
+function updateRouteSelectorVisibility() {
+    const loopBtn = document.querySelector('[data-show="kca3Loop"]');
+    if (!loopBtn) return;
+    
+    // Hide loop shuttle on weekends or if location perspective is Campus
+    if (currentLoc === "campus" || viewKey === "weekend") {
+        loopBtn.style.display = "none";
+        if (document.body.dataset.dir === "kca3Loop") {
+            document.body.dataset.dir = "toCampus";
+            const campusBtn = document.querySelector('[data-show="toCampus"]');
+            if (campusBtn) {
+                const btns = document.querySelectorAll("[data-show]");
+                btns.forEach((b) => b.classList.toggle("on", b === campusBtn));
+            }
+        }
+    } else {
+        loopBtn.style.display = "inline-flex";
+    }
+}
+
 function bindDirToggle() {
     const btns = document.querySelectorAll("[data-show]");
     btns.forEach((btn) => {
@@ -553,14 +657,15 @@ function bindDayToggle() {
         btns.forEach((b) => b.classList.toggle("on", b.dataset.day === viewKey));
         if (elToday) {
             elToday.textContent = viewKey === todayKey()
-                ? "today"
-                : `today is ${SCHEDULES[todayKey()].label}`;
+                ? "Showing today's schedule"
+                : `Showing ${SCHEDULES[viewKey].label} schedule (today is ${SCHEDULES[todayKey()].label})`;
         }
     };
     btns.forEach((btn) => {
         btn.addEventListener("click", () => {
             viewKey = btn.dataset.day;
             paint();
+            updateRouteSelectorVisibility();
             renderTables(nowMinutes());
         });
     });
@@ -577,6 +682,7 @@ function bindLocationToggle() {
             currentLoc = btn.dataset.loc;
             localStorage.setItem("bus-perspective", currentLoc);
             paint();
+            updateRouteSelectorVisibility();
             tick(true);
         });
     });
@@ -584,14 +690,8 @@ function bindLocationToggle() {
 }
 
 function scrollToNext() {
-    const visible = (el) => el && el.offsetParent !== null;
-
-    const rows = Array.from(document.querySelectorAll(".sched tr.next"));
-    let target = rows.find(visible);
-
-    if (!target) {
-        target = Array.from(document.querySelectorAll(".sched-col")).find(visible);
-    }
+    const activeDir = document.body.dataset.dir || "toCampus";
+    const target = document.querySelector(`.sched-col[data-dir="${activeDir}"] tr.next`);
     if (!target) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -609,6 +709,7 @@ renderAll();
 bindDirToggle();
 bindDayToggle();
 bindLocationToggle();
+updateRouteSelectorVisibility();
 document.getElementById("jump-next")?.addEventListener("click", scrollToNext);
 
 setInterval(tick, 1000);
