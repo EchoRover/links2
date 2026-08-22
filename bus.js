@@ -25,17 +25,38 @@
 //            up standing at a stop at 11 PM for nothing.
 //            When someone reads the actual board: fix WEEKEND_LAST.
 //
+// Friday Prayer:
+//   Between 12:30 PM and 1:15 PM (inclusive) on Fridays, no shuttle service runs.
+//
 // Times are stored as "HH:MM" 24h for math, rendered as 12h.
 // ============================================================
 
 const DAY_ROTA = ["Coaster 1", "Coaster 2", "Coaster 3", "Bus 1", "Bus 2", "Bus 3", "Coaster 4"];
 
 // Weekend: start + interval are from the notice. The cut and the last
-// departure are not — see the header comment.
+// departure are not.
 const WEEKEND_START = "07:30";
 const WEEKEND_NOTICE_UNTIL = "18:30";   // where the confirmed block ends
 const WEEKEND_LAST = "23:30";           // ASSUMED, not from the notice
 const WEEKEND_STEP = 30;
+
+// Location timing offsets (in minutes) relative to base departures:
+// toCampus base departs KCA 1&2 (kca1)
+// toDorms base departs Campus (campus)
+const OFFSETS = {
+    toCampus: {
+        kca1: 0,
+        kca3: 3,
+        campus: 15
+    },
+    toDorms: {
+        campus: 0,
+        kca1: 15,
+        kca3: 18
+    }
+};
+
+let currentLoc = localStorage.getItem("bus-perspective") || "kca1";
 
 // The two directions share their stops across both services.
 const DIRS = {
@@ -187,7 +208,7 @@ const SCHEDULES = {
 
 // ---------- helpers ----------
 
-// "13:45" -> 825. "24:00" -> 1440.
+// "13:45" -> 825.
 function toMinutes(hhmm) {
     const [h, m] = hhmm.split(":").map(Number);
     return h * 60 + m;
@@ -201,6 +222,23 @@ function to12h(hhmm) {
     let display = h % 12;
     if (display === 0) display = 12;
     return `${display}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
+// 825 -> "1:45" (without AM/PM)
+function to12hSimple(hhmm) {
+    let [h, m] = hhmm.split(":").map(Number);
+    h = h % 24;
+    let display = h % 12;
+    if (display === 0) display = 12;
+    return `${display}:${String(m).padStart(2, "0")}`;
+}
+
+// Add minutes to HH:MM time and return HH:MM
+function addMins(hhmm, offset) {
+    const mins = toMinutes(hhmm) + offset;
+    const h = Math.floor(mins / 60) % 24;
+    const m = mins % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
 // Which service runs on a given date.
@@ -219,20 +257,53 @@ function tomorrowKey() {
     return dayKey(d);
 }
 
-// Number the trips of one direction.
+// Number the trips of one direction, adjusting for location perspective,
+// filtering out Friday prayer suspensions, and generating the stop timelines.
 function trips(sched, dir) {
     let n = 0;
+    const isFriday = new Date().getDay() === 5;
+    const offset = OFFSETS[dir.id][currentLoc] || 0;
+    const isToCampus = dir.id === "toCampus";
+
     const blocks = dir.blocks.map((b) => {
         if (sched.numbering !== "continuous") n = 0;
-        const rows = b.times.map((t, i) => ({
-            no: ++n,
-            time: t,
-            mins: toMinutes(t),
-            vehicle: b.rota ? b.rota[i % b.rota.length] : null,
-            tag: b.tag || null,
-            tagTone: b.tagTone || "day",
-            assumed: !!b.assumed,
-        }));
+        let times = b.times;
+
+        // Filter out Friday prayer times (12:30 PM to 1:15 PM inclusive => 750 to 795 mins) on Fridays:
+        if (isFriday && sched.key === "weekday") {
+            times = times.filter(t => {
+                const mins = toMinutes(t);
+                return mins < 750 || mins > 795;
+            });
+        }
+
+        const rows = times.map((t, i) => {
+            const baseMins = toMinutes(t);
+            const adjustedMins = baseMins + offset;
+            const h = Math.floor(adjustedMins / 60) % 24;
+            const m = adjustedMins % 60;
+            const adjustedTime = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+
+            // Generate compact route timing sequence:
+            const t1 = to12hSimple(t);
+            const t2 = to12hSimple(addMins(t, isToCampus ? 3 : 15));
+            const t3 = to12hSimple(addMins(t, isToCampus ? 15 : 18));
+            const timelineText = isToCampus
+                ? `KCA1: ${t1} ➔ KCA3: ${t2} ➔ Campus: ${t3}`
+                : `Campus: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
+
+            return {
+                no: ++n,
+                baseTime: t,
+                time: adjustedTime,
+                mins: adjustedMins,
+                timeline: timelineText,
+                vehicle: b.rota ? b.rota[i % b.rota.length] : null,
+                tag: b.tag || null,
+                tagTone: b.tagTone || "day",
+                assumed: !!b.assumed,
+            };
+        });
         return { ...b, rows };
     });
     return { blocks, all: blocks.reduce((acc, b) => acc.concat(b.rows), []) };
@@ -277,15 +348,30 @@ function renderNext(dirId, now) {
     const head = upcoming[0];
     const rest = upcoming.slice(1);
 
+    // Context label showing what stop timing is rendered:
+    let locationLabel = "";
+    if (dirId === "toCampus") {
+        if (currentLoc === "kca1") locationLabel = "at KCA 1&2";
+        else if (currentLoc === "kca3") locationLabel = "at KCA 3";
+        else if (currentLoc === "campus") locationLabel = "at Campus";
+    } else {
+        if (currentLoc === "campus") locationLabel = "at Campus";
+        else if (currentLoc === "kca1") locationLabel = "at KCA 1&2";
+        else if (currentLoc === "kca3") locationLabel = "at KCA 3";
+    }
+
     return `
     <article class="next-card" data-dir="${dir.id}">
         <header class="next-head">
             <span class="next-dir">${dir.label}</span>
-            <span class="next-from">from ${dir.from} · ${sched.label}</span>
+            <span class="next-from">${locationLabel} · ${sched.label}</span>
         </header>
         <div class="next-lead">
             <span class="next-eta">${tomorrow ? "tomorrow" : untilLabel(head.mins, now)}</span>
             <span class="next-time">${to12h(head.time)}</span>
+        </div>
+        <div class="next-timeline" style="font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-soft); margin: 0.35rem 0 0.15rem; letter-spacing: -0.01em;">
+            ${head.timeline}
         </div>
         <div class="next-meta">
             ${head.tag ? `<span class="tag tag-${head.tagTone}">${head.tag}</span>` : ""}
@@ -303,6 +389,17 @@ function renderNext(dirId, now) {
 }
 
 function renderTable(dir, block, now, showVeh, nextMins) {
+    let timeHeader = "";
+    if (dir.id === "toCampus") {
+        if (currentLoc === "kca1") timeHeader = "Departs KCA 1&2";
+        else if (currentLoc === "kca3") timeHeader = "Departs KCA 3";
+        else if (currentLoc === "campus") timeHeader = "Arrives Campus";
+    } else {
+        if (currentLoc === "campus") timeHeader = "Departs Campus";
+        else if (currentLoc === "kca1") timeHeader = "Arrives KCA 1&2";
+        else if (currentLoc === "kca3") timeHeader = "Arrives KCA 3";
+    }
+
     return `
     <div class="sched-block${block.dashed ? " sched-dashed" : ""}">
         <h3 class="sched-title">${block.title}</h3>
@@ -311,7 +408,7 @@ function renderTable(dir, block, now, showVeh, nextMins) {
                 <thead>
                     <tr>
                         <th class="c-no">#</th>
-                        <th class="c-time">Departs ${dir.from}</th>
+                        <th class="c-time">${timeHeader}</th>
                         <th class="c-route">Route</th>
                         ${showVeh ? '<th class="c-veh">Vehicle</th>' : ""}
                     </tr>
@@ -324,7 +421,12 @@ function renderTable(dir, block, now, showVeh, nextMins) {
                         return `
                         <tr class="${cls}"${isNext ? ' id="next-' + dir.id + '"' : ""}>
                             <td class="c-no">${t.no}</td>
-                            <td class="c-time">${to12h(t.time)}</td>
+                            <td class="c-time">
+                                <div style="font-size: 0.85rem; font-weight: 600; color: var(--fg);">${to12h(t.time)}</div>
+                                <div style="font-size: 0.68rem; color: var(--fg-soft); font-weight: 500; margin-top: 2px; font-family: var(--font-mono); letter-spacing: -0.01em;">
+                                    ${t.timeline}
+                                </div>
+                            </td>
                             <td class="c-route">${dir.stops.join(" → ")}</td>
                             ${showVeh ? `<td class="c-veh">${t.vehicle || ""}</td>` : ""}
                         </tr>`;
@@ -458,6 +560,22 @@ function bindDayToggle() {
     paint();
 }
 
+function bindLocationToggle() {
+    const btns = Array.from(document.querySelectorAll("[data-loc]"));
+    const paint = () => {
+        btns.forEach((b) => b.classList.toggle("on", b.dataset.loc === currentLoc));
+    };
+    btns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            currentLoc = btn.dataset.loc;
+            localStorage.setItem("bus-perspective", currentLoc);
+            paint();
+            tick(true);
+        });
+    });
+    paint();
+}
+
 function scrollToNext() {
     const visible = (el) => el && el.offsetParent !== null;
 
@@ -483,6 +601,7 @@ function scrollToNext() {
 renderAll();
 bindDirToggle();
 bindDayToggle();
+bindLocationToggle();
 document.getElementById("jump-next")?.addEventListener("click", scrollToNext);
 
 setInterval(tick, 1000);

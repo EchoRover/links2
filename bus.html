@@ -519,7 +519,7 @@
             border-style: dashed;
         }
 
-        /* ---------- weekday / weekend switch ---------- */
+        /* ---------- weekday / weekend switch & location switch ---------- */
         .day-switch {
             display: flex;
             align-items: center;
@@ -534,14 +534,17 @@
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--fg-soft);
+            min-width: 5.5rem;
         }
 
-        .seg.seg-day {
+        .seg.seg-day,
+        .seg.seg-location {
             display: inline-flex;
             flex: 0 0 auto;
         }
 
-        .seg.seg-day button {
+        .seg.seg-day button,
+        .seg.seg-location button {
             flex: 0 0 auto;
             font-size: 0.8rem;
             padding: 0.42rem 0.8rem;
@@ -710,6 +713,16 @@
                     <div class="road" id="road" aria-live="polite"></div>
                 </div>
 
+                <!-- LOCATION SELECTOR -->
+                <div class="day-switch" style="margin-bottom: 1.25rem;">
+                    <span class="day-switch-label">My Location</span>
+                    <div class="seg seg-location" id="location-seg">
+                        <button type="button" data-loc="kca1">KCA 1&amp;2</button>
+                        <button type="button" data-loc="kca3">KCA 3</button>
+                        <button type="button" data-loc="campus">Campus</button>
+                    </div>
+                </div>
+
                 <!-- WHICH TIMETABLE — defaults to today's -->
                 <div class="day-switch">
                     <span class="day-switch-label">Timetable</span>
@@ -726,6 +739,8 @@
                 <div class="sched-wrap" id="sched-wrap"></div>
 
                 <p class="bus-note">
+                    <strong>Friday Prayer.</strong> No shuttle service operates between 12:30 PM and 1:15 PM on Fridays.
+                    <br><br>
                     <strong>Sources.</strong> Mon&ndash;Fri comes from the printed shift poster, transcribed 19 Aug 2026.
                     Sat &amp; Sun comes from the campus notice of 22 Aug 2026: <em>&ldquo;Saturdays and Sundays, vehicles
                     will operate between the campus and KCA 1,2 &amp; 3 every 30 minutes in both directions, starting
@@ -742,7 +757,7 @@
     </div>
 
     <script src="shared.js?v=12"></script>
-    <script src="bus.js?v=1" defer></script>
+    <script src="bus.js?v=2" defer></script>
 </body>
 
 </html>
