@@ -74,32 +74,51 @@ const linksData = {
 };
 
 const updatesData = [];
-const localClips = Array.from({ length: 16 }, (_, i) => `idk${i + 1}.mp4`);
+const videoPool = [
+  "tgbNym0li-I", // Lofi rain on window
+  "5WqG_9OQ4_o", // Satisfying kinetic sand loop
+  "f3j-Xh9D_3Q", // Mechanical factory loop
+  "Sg184B06mEw", // Calming mountain drone flight
+  "V_g7u_N-qFI", // 3D abstract satisfying physics loop
+  "n61CLEEsYDM", // Rainy cyberpunk city alleyway
+  "Sf32z2A5U4s", // Space flight travel tunnel
+  "p_2kYqJ4YkU", // Fluid paint color mixing loop
+  "3gK_V2H-YhI", // Ocean shore waves aerial view
+  "2yJ29kMh-2M", // Retro synthwave sunset drive loop
+  "Lg1X4vV9f2w", // Abstract water ripples reflection
+  "E3pWJbC6e9o", // satisfying domino falling loop
+  "hK3t-VbA2K4", // Calming snow in the woods
+  "a_4cM2x9IeQ", // Abstract neon geometric lines loop
+  "w4M_O7M-kUo"  // CNC machinery steel carving loop
+];
 
-function pickRandomClips(count) {
-  const pool = [...localClips];
-  const result = [];
-  for (let i = 0; i < count && pool.length; i++) {
-    const idx = Math.floor(Math.random() * pool.length);
-    result.push(pool.splice(idx, 1)[0]);
+function getDailyReels() {
+  const today = new Date();
+  const dateSeed = today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
+  
+  // Simple deterministic hash based on date seed
+  let index1 = dateSeed % videoPool.length;
+  let index2 = (dateSeed * 7 + 13) % videoPool.length;
+  
+  // Ensure they are not the same video
+  if (index1 === index2) {
+    index2 = (index1 + 1) % videoPool.length;
   }
-  return result;
+  
+  return [videoPool[index1], videoPool[index2]];
 }
 
 function renderLocalClips() {
-  const leftVid = document.getElementById("local-clip-left");
-  const rightVid = document.getElementById("local-clip-right");
-  if (!leftVid || !rightVid || localClips.length === 0) return;
-  const [leftSrc, rightSrc] = pickRandomClips(2);
-  [leftVid, rightVid].forEach((vid, idx) => {
-    vid.src = idx === 0 ? leftSrc : rightSrc;
-    vid.muted = true;
-    vid.playsInline = true;
-    vid.loop = true;
-    vid.autoplay = true;
-    vid.load();
-    vid.play().catch(() => {});
-  });
+  const [vid1, vid2] = getDailyReels();
+  const leftIframe = document.getElementById("local-clip-left");
+  const rightIframe = document.getElementById("local-clip-right");
+  
+  if (leftIframe) {
+    leftIframe.src = `https://www.youtube.com/embed/${vid1}?autoplay=1&mute=1&loop=1&playlist=${vid1}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
+  }
+  if (rightIframe) {
+    rightIframe.src = `https://www.youtube.com/embed/${vid2}?autoplay=1&mute=1&loop=1&playlist=${vid2}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
+  }
 }
 
 function addUpdate(category, text, expiry) { updatesData.push([category, text, expiry]); }

@@ -873,10 +873,12 @@ body #open-games-modal:hover {
   background: var(--surface-sunken);
   border: 1px solid var(--border-soft);
 }
-.reel-frame video {
+.reel-frame video,
+.reel-frame iframe {
   width: 100%; height: 100%;
   object-fit: cover;
   display: block;
+  border: none;
 }
 
 /* ---------- Footer ---------- */
