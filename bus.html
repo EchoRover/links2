@@ -459,7 +459,7 @@
         .item-dest {
             font-family: var(--font-sans);
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             color: var(--fg);
         }
 
@@ -589,7 +589,6 @@
             color: var(--fg-soft);
             font-family: var(--font-mono);
             font-size: 0.72rem;
-            text-align: right;
         }
 
         tr.past .c-time {
@@ -636,16 +635,6 @@
 
         .sched-dashed .sched-scroll {
             border-style: dashed;
-        }
-
-        /* ---------- tab toggling for all sizes ---------- */
-        body[data-dir="toCampus"] [data-dir="toDorms"],
-        body[data-dir="toCampus"] [data-dir="kca3Loop"],
-        body[data-dir="toDorms"] [data-dir="toCampus"],
-        body[data-dir="toDorms"] [data-dir="kca3Loop"],
-        body[data-dir="kca3Loop"] [data-dir="toCampus"],
-        body[data-dir="kca3Loop"] [data-dir="toDorms"] {
-            display: none !important;
         }
 
         /* ---------- footnote ---------- */
@@ -702,7 +691,7 @@
     </style>
 </head>
 
-<body class="archive-page" data-dir="toCampus">
+<body class="archive-page">
     <!-- animated background layer -->
     <div id="bg" aria-hidden="true"></div>
 
@@ -751,11 +740,9 @@
             </div>
             
             <div class="control-group">
-                <span class="control-label">View Route</span>
-                <div class="seg seg-dir">
-                    <button type="button" data-show="toCampus" class="on">To Campus</button>
-                    <button type="button" data-show="toDorms">To Dorms</button>
-                    <button type="button" data-show="kca3Loop">KCA 3 ⇄ KCA 1</button>
+                <span class="control-label">My Destination</span>
+                <div class="seg seg-dest" id="dest-seg">
+                    <!-- populated dynamically -->
                 </div>
             </div>
 
