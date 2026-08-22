@@ -36,7 +36,16 @@ function initMascot() {
     "the grades aren't evaluation metrics. they are compatibility rankings for the next phase of the grid.",
     "they put the bio labs in KCA so the runoff could reach the water mains without passing the filtration plant.",
     "the campus isn't built on land. it's floating on a giant cooling cell. don't look under the main lobby floorboards.",
-    "every time you tap your student card, a tiny fraction of your pulse is stored in the central accumulator."
+    "every time you tap your student card, a tiny fraction of your pulse is stored in the central accumulator.",
+    "why does KCA1 have three fire exits that open into solid concrete walls? what are they locking in?",
+    "the exam hall clocks tick at 0.98 seconds per second. they are stealing time. you enter for three hours but only live for two and a half.",
+    "the water coolers in the sports complex aren't connected to any pipes. check the base. it goes straight into the concrete slab.",
+    "don't look at the mirrors in KCA2 restrooms between 3:12 AM and 3:15 AM. your reflection won't be looking at you.",
+    "the shuttle driver never blinks. check his mirrors next time you ride. they are painted on.",
+    "the syllabus for AGRL130 was written in 1984. the course didn't exist then, but the student names were already listed.",
+    "why do the campus emergency alarms sound like a human voice pitch shifted down three octaves?",
+    "look closely at the logo of the institute. the lines aren't geometric. it's a map of the underground tunnels under KCA3.",
+    "they don't grade your exams in the staff room. they feed the pages to the central boiler. the heat signature determines your GPA."
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
