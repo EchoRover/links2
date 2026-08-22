@@ -99,6 +99,12 @@ const ITINERARIES = {
     ],
     "kca3->kca1": [
         {
+            dirId: "toDorms",
+            originOffset: 18,
+            destOffset: 21,
+            desc: "Campus ➔ Dorms Shuttle (returning to KCA 1&2)"
+        },
+        {
             dirId: "kca3Loop",
             originOffset: 0,
             destOffset: 10,
