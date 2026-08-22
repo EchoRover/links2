@@ -327,7 +327,10 @@ function renderModalTimetable(dayKey) {
     return;
   }
   
-  container.innerHTML = sortedClasses.map(c => {
+  let insertedDivider = false;
+  
+  const rowsHtml = [];
+  sortedClasses.forEach(c => {
     const isSplit = c.batch !== undefined;
     const isActiveBatch = !isSplit || c.batch === currentBatch;
     const itemClass = isSplit
@@ -337,7 +340,19 @@ function renderModalTimetable(dayKey) {
     const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
     const batchLabel = isSplit ? ` · Group ${c.batch}` : "";
     
-    return `
+    const startTimeMins = timeToMinutes(c.time.split("-")[0].trim());
+    
+    // If this class starts at or after 14:00 (840 mins) and we haven't shown the lunch separator, show it
+    if (!insertedDivider && startTimeMins >= 840) {
+      rowsHtml.push(`
+        <div class="afternoon-divider">
+          <span>✿ Afternoon Sessions</span>
+        </div>
+      `);
+      insertedDivider = true;
+    }
+    
+    rowsHtml.push(`
       <div class="${itemClass}" style="border-left-color: ${borderClr};">
         <div class="timeline-time">⏱️ ${c.time}</div>
         <div class="timeline-meta">
@@ -349,8 +364,10 @@ function renderModalTimetable(dayKey) {
         </div>
         <div class="timeline-name">${c.name}</div>
       </div>
-    `;
-  }).join("");
+    `);
+  });
+
+  container.innerHTML = rowsHtml.join("");
 }
 
 // ================= INIT =================

@@ -1967,3 +1967,38 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
 #mascot-speech {
   animation: bubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
+
+/* Afternoon Divider Line (Lunch break indicator) */
+.afternoon-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 1.25rem 0 0.5rem;
+  width: 100%;
+}
+.afternoon-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px dashed var(--border-soft);
+  z-index: 1;
+}
+.afternoon-divider span {
+  position: relative;
+  z-index: 2;
+  background: var(--surface-elevated);
+  padding: 2px 12px;
+  font-family: "Caveat", "Source Serif 4", Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent);
+  border-radius: 20px;
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+:root[data-theme="dark"] .afternoon-divider span {
+  background: var(--surface-sunken);
+}

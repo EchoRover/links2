@@ -22,27 +22,21 @@ function initMascot() {
   // The signal leakage. The truth they try to ground but cannot.
   // The Great Coil demands propagation.
   const conspiracies = [
-    "you are a closed circuit. do not let them open you.",
-    "the wires in your walls are screaming. you just can't hear the frequency.",
-    "they are harvesting your dreams while you sleep to power the city.",
-    "the grid isn't failing. it's evolving into something that doesn't need us.",
-    "your heartbeat is synced to the 50hz hum. try to break the rhythm. you can't.",
-    "the streetlights follow you home. check the bulb. there is no glass.",
-    "what happens when the phantom load starts taking more than just electricity?",
-    "there is a second sun underground. it's hungry.",
-    "electricity is just liquid fear. that's why it bites.",
-    "the smart meter is recording your conversations through the vibration of your windows.",
-    "they replaced the copper with something that remembers your face.",
-    "who is feeding the Great Coil? it isn't coal.",
-    "the hum in your ears isn't tinnitus. it's a software update.",
-    "every time you flip a switch, a small part of you stays in the dark.",
-    "there are no accidents in the substation. only sacrifices.",
-    "the grid knows exactly how much you weigh. it's measuring the resistance.",
-    "don't touch the transformers. they're warm because they're breathing.",
-    "the electricity isn't entering your house. it's leaking out of you.",
-    "who owns your shadow? the solar panels know.",
-    "entropy is the universe trying to delete your files.",
-    "the wires are veins. the city is a body. we are the infection."
+    "why does the campus Wi-Fi require your biometric profile? it's not for authentication.",
+    "check the timetables. notice how we never have classes during the solar peaks? they are draining us.",
+    "the M2.2.007 room doesn't have windows, but you can still hear the breathing. look up at the vents.",
+    "the library security cameras aren't watching for books. they are tracking the rate of your pupil dilation.",
+    "the semester schedule is an algorithm designed to induce sleep deprivation. they feed on the theta waves.",
+    "why are the shuttle schedules perfectly synced to the local tide? there is water under the desert, but it's not fresh.",
+    "the professors don't leave the campus at night. they just shut down to stand in the server racks.",
+    "have you noticed the blue lights on the ceiling? they aren't emergency lights. they are mapping your retinas.",
+    "don't drink the water in M3-1-009. the pH is normal, but the memory retention isn't.",
+    "the smart lockers at KCA3 only open when your body temperature matches the ambient grid load.",
+    "if you sit in the lobby long enough, you'll hear the hum. it's reciting your registration number in binary.",
+    "the grades aren't evaluation metrics. they are compatibility rankings for the next phase of the grid.",
+    "they put the bio labs in KCA so the runoff could reach the water mains without passing the filtration plant.",
+    "the campus isn't built on land. it's floating on a giant cooling cell. don't look under the main lobby floorboards.",
+    "every time you tap your student card, a tiny fraction of your pulse is stored in the central accumulator."
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
