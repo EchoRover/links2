@@ -1895,3 +1895,19 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
     text-align: left;
   }
 }
+
+.update-empty {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 4px 0 0 0 !important;
+  text-align: left;
+}
+.update-item {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text);
+  margin: 4px 0 0 0 !important;
+  text-align: left;
+}

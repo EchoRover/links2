@@ -111,10 +111,20 @@ function renderUpdates() {
     if (!grouped[category]) grouped[category] = [];
     grouped[category].push([text, expiry]);
   });
-  for (const [category, items] of Object.entries(grouped)) {
-    items.sort((a, b) => new Date(a[1]) - new Date(b[1]));
-    const container = document.getElementById(category + "-box");
-    if (!container) continue;
+  
+  const categories = ["assignments", "quizzes"];
+  categories.forEach(cat => {
+    const container = document.getElementById(cat + "-box");
+    if (!container) return;
+    
+    // Clear old elements except the header
+    const header = container.querySelector("h2");
+    container.innerHTML = "";
+    if (header) container.appendChild(header);
+    
+    const items = grouped[cat] || [];
+    let activeCount = 0;
+    
     items.forEach(([text, expiry]) => {
       const parts = String(expiry).split("-").map(Number);
       if (parts.length !== 3) return;
@@ -122,11 +132,20 @@ function renderUpdates() {
       const expiryExclusive = new Date(y, m - 1, d + 1);
       if (now < expiryExclusive) {
         const p = document.createElement("p");
+        p.className = "update-item";
         p.textContent = text;
         container.appendChild(p);
+        activeCount++;
       }
     });
-  }
+    
+    if (activeCount === 0) {
+      const p = document.createElement("p");
+      p.className = "update-empty";
+      p.innerHTML = "✨ All caught up! No tasks.";
+      container.appendChild(p);
+    }
+  });
 }
 
 const SEM_CONFIG = { number: 5, startDate: "2026-08-03" };
@@ -326,7 +345,7 @@ function renderModalTimetable(dayKey) {
       : "timeline-row";
       
     const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
-    const batchLabel = isSplit ? ` · Batch ${c.batch}` : "";
+    const batchLabel = isSplit ? ` · Group ${c.batch}` : "";
     
     return `
       <div class="${itemClass}" style="border-left-color: ${borderClr};">
