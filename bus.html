@@ -49,9 +49,12 @@
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .layout {
-            max-width: 960px !important;
+        .page {
+            position: relative;
+            z-index: 5;
+            max-width: 960px;
             margin: 0 auto;
+            padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1.1rem, 4vw, 2.5rem) 4rem;
         }
 
         .bus-hero {
@@ -669,9 +672,7 @@
     <!-- animated background layer -->
     <div id="bg" aria-hidden="true"></div>
 
-    <div class="layout">
-        <div class="main-content">
-            <div class="container">
+    <main class="page">
                 <!-- Top bar -->
                 <header class="topbar">
                     <div class="brand">
@@ -757,9 +758,7 @@
                     about public holidays. Trips 16 and 17 on the Campus &rarr; Dorms weekday leg are both printed as
                     10:00 AM; that is reproduced as printed, not corrected.
                 </p>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <script src="shared.js?v=12"></script>
     <script src="bus.js?v=2" defer></script>
