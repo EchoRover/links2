@@ -4,6 +4,17 @@
 // Loaded BEFORE scripts.js / archive.js on each page.
 // ============================================================
 
+const COURSE_COLORS = {
+  AENL226: "#2ecc71",
+  AENL228: "#546e7a",
+  ASBL100: "#8e44ad",
+  AHUL256: "#00bcd4",
+  AHUL261: "#e91e63",
+  AGRL130: "#ff9800",
+  AENP225: "#f1c40f",
+  AENP200: "#3498db"
+};
+
 // ================= THEME (apply early to avoid flash) =================
 (function applySavedTheme() {
   const saved = localStorage.getItem("theme");
@@ -90,6 +101,11 @@ function renderCourseLinks(selector, data) {
 
     const card = document.createElement("article");
     card.className = "course-card";
+    
+    // Set custom CSS variables for course-specific borders and glows
+    const courseColor = COURSE_COLORS[code] || "var(--accent)";
+    card.style.setProperty("--course-color", courseColor);
+    card.style.borderLeft = `4.5px solid ${courseColor}`;
 
     // header row: code pill (left) + spec [ltp + credits badge] (right)
     const head = document.createElement("div");
@@ -98,6 +114,10 @@ function renderCourseLinks(selector, data) {
       const codeEl = document.createElement("span");
       codeEl.className = "course-code";
       codeEl.textContent = code;
+      // Tint the code pill's font, background, and borders
+      codeEl.style.color = courseColor;
+      codeEl.style.background = `color-mix(in srgb, ${courseColor} 9%, transparent)`;
+      codeEl.style.borderColor = `color-mix(in srgb, ${courseColor} 20%, transparent)`;
       if (prof) codeEl.setAttribute("data-prof", prof);
       if (cabin) codeEl.setAttribute("data-cabin", cabin);
       if (room) codeEl.setAttribute("data-room", room);

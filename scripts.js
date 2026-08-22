@@ -210,16 +210,6 @@ const WEEKLY_CLASSES = {
   ]
 };
 
-const COURSE_COLORS = {
-  AENL226: "#2ecc71",
-  AENL228: "#546e7a",
-  ASBL100: "#8e44ad",
-  AHUL256: "#00bcd4",
-  AHUL261: "#e91e63",
-  AGRL130: "#ff9800",
-  AENP225: "#f1c40f",
-  AENP200: "#3498db"
-};
 
 function timeToMinutes(timeStr) {
   const [h, m] = timeStr.split(":").map(Number);

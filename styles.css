@@ -563,14 +563,24 @@ body #open-games-modal:hover {
   gap: 7px;
   min-width: 0;
   box-shadow: 0 1px 0 var(--border-soft), 0 2px 6px -4px rgba(0,0,0,0.12);
-  transition: transform 0.2s ease, border-color 0.18s, box-shadow 0.2s;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, box-shadow 0.3s;
 }
-.box:hover, .course-card:hover {
-  transform: translateY(-2px) rotate(-0.4deg);
+.box:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
   border-color: var(--accent);
   box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--accent) 50%, transparent);
 }
-.course-card:nth-child(2n):hover { transform: translateY(-2px) rotate(0.4deg); }
+.course-card {
+  --card-accent: var(--course-color, var(--accent));
+}
+.course-card:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  border-color: var(--card-accent) !important;
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--card-accent) 50%, transparent) !important;
+}
+.course-card:nth-child(2n):hover {
+  transform: translateY(-3px) rotate(0.4deg);
+}
 /* --- header row: code pill (left) + spec: ltp + credits badge (right) --- */
 .course-head {
   display: flex;
@@ -696,11 +706,14 @@ body #open-games-modal:hover {
   transition: opacity 0.15s, transform 0.15s;
 }
 .course-links a:hover {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
+  color: var(--card-accent, var(--accent-strong));
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 8%, transparent);
   padding-left: 7px;
 }
-:root[data-theme="dark"] .course-links a:hover { color: var(--text); }
+:root[data-theme="dark"] .course-links a:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 12%, transparent);
+}
 .course-links a:hover::before { transform: scale(1.35); }
 .course-links a:hover::after { opacity: 1; transform: translateX(0); }
 
@@ -1910,4 +1923,47 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   color: var(--text);
   margin: 4px 0 0 0 !important;
   text-align: left;
+}
+
+/* ---------- Entrance Animations ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.course-card, .box, .reel-panel {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delays to create a gorgeous waterfall loading ripple */
+.course-card:nth-child(1) { animation-delay: 0.04s; }
+.course-card:nth-child(2) { animation-delay: 0.08s; }
+.course-card:nth-child(3) { animation-delay: 0.12s; }
+.course-card:nth-child(4) { animation-delay: 0.16s; }
+.course-card:nth-child(5) { animation-delay: 0.2s; }
+.course-card:nth-child(6) { animation-delay: 0.24s; }
+.course-card:nth-child(7) { animation-delay: 0.28s; }
+.course-card:nth-child(8) { animation-delay: 0.32s; }
+
+#timetable-box { animation-delay: 0.2s; }
+#assignments-box { animation-delay: 0.26s; }
+#quizzes-box { animation-delay: 0.32s; }
+
+.left-reel { animation-delay: 0.15s; }
+.right-reel { animation-delay: 0.25s; }
+
+/* Mascot speech bubble bounce keyframe */
+@keyframes bubbleBounce {
+  0% { transform: translateX(-50%) scale(0.85); opacity: 0; }
+  70% { transform: translateX(-50%) scale(1.04); }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+#mascot-speech {
+  animation: bubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }

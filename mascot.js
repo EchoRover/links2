@@ -112,7 +112,12 @@ function initMascot() {
     }
     
     speech.textContent = chosenQuip;
-    speech.style.transform = "translateX(-50%) scale(1.1)";
+    
+    // Re-trigger speech bubble bounce animation
+    speech.style.animation = 'none';
+    speech.offsetHeight; /* trigger reflow */
+    speech.style.animation = 'bubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both';
+    
     mascot.classList.add("state-petted");
     clickCount++;
     
@@ -121,7 +126,6 @@ function initMascot() {
 
     setTimeout(() => {
       mascot.style.transform = "";
-      speech.style.transform = "";
       mascot.classList.remove("state-petted");
     }, 600);
   });
