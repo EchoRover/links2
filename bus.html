@@ -599,6 +599,21 @@
             color: var(--coral);
             line-height: 1.1;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .card-eta.urgent {
+            color: var(--red-bright);
+            animation: urgentPulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .card-subtitle-row {

@@ -581,6 +581,10 @@ function renderLiveBoard(now) {
                 ? `Vehicle Coming: ${vDetail.name} (${vDetail.type})`
                 : `Vehicle Coming: Shuttle (${vDetail.type})`;
 
+            const delta = t.departMins - now;
+            const isUrgent = !t.tomorrow && delta >= 0 && delta <= 5;
+            const etaClass = isUrgent ? "card-eta urgent" : "card-eta";
+
             const originLabel = currentLoc === "kca1" ? "KCA 1&2" : currentLoc === "kca3" ? "KCA 3" : "Campus";
             const destLabel = currentDest === "kca1" ? "KCA 1&2" : currentDest === "kca3" ? "KCA 3" : "Campus";
 
@@ -590,7 +594,7 @@ function renderLiveBoard(now) {
                 <div class="card-body">
                     <div class="card-title-row">
                         <span class="card-route-title">Departs ${originLabel} ➔ Arrives ${destLabel}</span>
-                        <span class="card-eta">${until}</span>
+                        <span class="${etaClass}">${until}</span>
                     </div>
                     <div class="card-subtitle-row">
                         <span class="card-veh-name">${vehicleLabel}</span>
