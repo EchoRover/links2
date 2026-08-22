@@ -1661,3 +1661,65 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
     opacity: 0;
   }
 }
+
+/* ---------- Live Class Tracker Styles ---------- */
+.timetable-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.live-class-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+.live-class-dot.dot-active {
+  background: var(--coral);
+  box-shadow: 0 0 8px var(--coral-glow);
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+.live-class-dot.dot-lunch {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-soft);
+}
+.live-class-dot.dot-free {
+  background: var(--text-muted);
+  opacity: 0.6;
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+.live-class-status {
+  margin: 8px 0 4px;
+  text-align: left;
+}
+.live-class-status p {
+  margin: 0 !important;
+  line-height: 1.45 !important;
+}
+.class-active {
+  font-family: var(--font-sans);
+  color: var(--text);
+  font-size: 0.88rem;
+}
+.class-lunch {
+  font-family: var(--font-sans);
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+.class-free {
+  font-family: var(--font-sans);
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+.class-next {
+  font-size: 0.78rem !important;
+  color: var(--text-subtle);
+  margin-top: 4px !important;
+}

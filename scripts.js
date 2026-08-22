@@ -10,7 +10,7 @@ const linksData = {
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
-    TimeTable: "https://iitdabudhabi.ac.ae/",
+    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/2026/Year%203%20%20Semester%205%20%20B.%20TECH%20Energy%20Engineering.pdf",
     Bus: {
       url: "bus",
       className: "bus-link",
@@ -25,49 +25,49 @@ const linksData = {
     }
   },
   courses: {
-    /* 
-      FUTURE MODEL SKELETON: 
-      Fill in actual teacher names, office locations, classrooms, and course links 
-      here once the Semester 5 schedule is finalized.
-    */
     "AENL226 (Power Electronics)": { 
       credits: 4, ltp: "3-1-0", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007", 
       links: {
-        // "Lecture Slides": "url",
-        // "Blackboard": "url"
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
       } 
     },
     "AENL228 (Measurement & Instr)": { 
       credits: 3, ltp: "2-0-2", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2.2.007 / M2.2.031", 
       links: {
-        // "Lecture Slides": "url"
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login"
       } 
     },
     "AENP200 (Energy Tech Lab)": { 
       credits: 1.5, ltp: "0-0-3", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Lab Room]", 
+      prof: "Prof. Dibakar Rakshit", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {} 
     },
     "AENP225 (Elec Energy Lab)": { 
       credits: 1.5, ltp: "0-0-3", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Lab Room]", 
+      prof: "Prof. Anandarup Das", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {} 
     },
     "AHUL256 (Critical Thinking)": { 
       credits: 4, ltp: "3-1-0", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      prof: "Prof. Arjun Ghosh", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {} 
     },
     "AHUL261 (Intro to Psychology)": { 
       credits: 4, ltp: "3-1-0", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {} 
     },
     "ASBL100 (Intro Biology)": { 
       credits: 4, ltp: "3-0-2", 
-      prof: "[Professor Name]", cabin: "[Office Cabin]", room: "[Classroom]", 
+      prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
+      links: {} 
+    },
+    "AGRL130 (Innovation & Sust)": { 
+      credits: 3, ltp: "3-0-0", 
+      prof: "Prof. Joby Joseph, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M4-0-011", 
       links: {} 
     }
   }
@@ -152,6 +152,118 @@ function buildHeroSub() {
   sub.textContent = `${greeting} · ${counter}`;
 }
 
+const WEEKLY_CLASSES = {
+  1: [ // Monday
+    { code: "AENL226", name: "Power Electronics and Systems", time: "09:00-10:00", room: "M2.2.007", type: "Tutorial" },
+    { code: "AENL228", name: "Measurement & Instrumentation", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
+    { code: "AGRL130", name: "Innovation & Sustainability", time: "16:00-17:30", room: "M4-0-011", type: "Lecture" }
+  ],
+  2: [ // Tuesday
+    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL256", name: "Critical Thinking", time: "15:30-17:00", room: "M4-1-017", type: "Tutorial" },
+    { code: "AENP225", name: "Electrical Energy Lab (Batch 1)", time: "16:00-19:00", room: "M3-1-009", type: "Lab" },
+    { code: "AENL228", name: "Measurement Lab (Batch 2)", time: "16:00-19:00", room: "M2.2.031", type: "Lab" }
+  ],
+  3: [ // Wednesday
+    { code: "AENL228", name: "Measurement & Instrumentation", time: "08:00-09:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AENP200", name: "Energy Technology Lab (Batch 1)", time: "09:00-12:00", room: "M3-1-009", type: "Lab" },
+    { code: "AENL226", name: "Power Electronics and Systems", time: "10:00-11:00", room: "M2.2.007", type: "Tutorial" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-12:00", room: "M4-1-017", type: "Tutorial" },
+    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:30", room: "M4-1-017", type: "Tutorial" },
+    { code: "AENP200", name: "Energy Technology Lab (Batch 2)", time: "15:30-18:30", room: "M3-1-009", type: "Lab" },
+    { code: "AHUL256", name: "Critical Thinking", time: "16:30-17:30", room: "M4-1-017", type: "Tutorial" }
+  ],
+  4: [ // Thursday
+    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
+    { code: "AENP225", name: "Electrical Energy Lab (Batch 2)", time: "16:00-19:00", room: "M3-1-009", type: "Lab" },
+    { code: "AENL228", name: "Measurement Lab (Batch 1)", time: "16:00-19:00", room: "M2.2.031", type: "Lab" }
+  ],
+  5: [ // Friday
+    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "08:00-09:30", room: "M2.2.007", type: "Lecture" },
+    { code: "ASBL100", name: "Introductory Biology Lab", time: "10:00-12:00", room: "M3-1-031", type: "Lab" }
+  ]
+};
+
+function timeToMinutes(timeStr) {
+  const [h, m] = timeStr.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function updateLiveClassStatus() {
+  const statusEl = document.getElementById("live-class-status");
+  const dotEl = document.getElementById("live-class-dot");
+  if (!statusEl) return;
+  
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+  const currentMins = now.getHours() * 60 + now.getMinutes();
+  
+  // Weekend check
+  if (day === 0 || day === 6) {
+    statusEl.innerHTML = `<p class="class-free">☀️ Weekend — No classes scheduled today</p>`;
+    if (dotEl) dotEl.className = "live-class-dot dot-free";
+    return;
+  }
+  
+  const dayClasses = WEEKLY_CLASSES[day] || [];
+  
+  // Find current class
+  let currentClass = null;
+  let nextClass = null;
+  
+  for (const c of dayClasses) {
+    const [startStr, endStr] = c.time.split("-");
+    const startMins = timeToMinutes(startStr);
+    const endMins = timeToMinutes(endStr);
+    
+    if (currentMins >= startMins && currentMins < endMins) {
+      currentClass = c;
+    } else if (currentMins < startMins) {
+      if (!nextClass || startMins < timeToMinutes(nextClass.time.split("-")[0])) {
+        nextClass = c;
+      }
+    }
+  }
+  
+  // Lunch break check: between 12:00 and 14:00 (720 and 840 mins)
+  if (!currentClass && currentMins >= 720 && currentMins < 840) {
+    statusEl.innerHTML = `
+      <p class="class-lunch">✿ Lunch Break · 12:00 - 14:00</p>
+      ${nextClass ? `<p class="class-next">⏱️ Next: ${nextClass.code} (${nextClass.room}) · at ${nextClass.time.split("-")[0]}</p>` : ""}
+    `;
+    if (dotEl) dotEl.className = "live-class-dot dot-lunch";
+    return;
+  }
+  
+  if (currentClass) {
+    statusEl.innerHTML = `
+      <p class="class-active">🟢 Now: <strong>${currentClass.code}</strong> (${currentClass.room})<br>
+      <span style="font-size: 0.8rem; opacity: 0.85;">${currentClass.name} · ${currentClass.time}</span></p>
+      ${nextClass ? `<p class="class-next">⏱️ Next: ${nextClass.code} (${nextClass.room}) · at ${nextClass.time.split("-")[0]}</p>` : ""}
+    `;
+    if (dotEl) dotEl.className = "live-class-dot dot-active";
+  } else {
+    // Free time
+    if (nextClass) {
+      statusEl.innerHTML = `
+        <p class="class-free">🌴 Free Time / Study Slot</p>
+        <p class="class-next">⏱️ Next: <strong>${nextClass.code}</strong> (${nextClass.room}) · at ${nextClass.time.split("-")[0]}</p>
+      `;
+      if (dotEl) dotEl.className = "live-class-dot dot-free";
+    } else {
+      statusEl.innerHTML = `<p class="class-free">🌴 Done with classes for today!</p>`;
+      if (dotEl) dotEl.className = "live-class-dot dot-free";
+    }
+  }
+}
+
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {
   console.log("--- SCRIPTS.JS FORCE LOAD V12 ---");
@@ -160,6 +272,8 @@ window.addEventListener("DOMContentLoaded", () => {
   renderUpdates();
   renderLocalClips();
   buildHeroSub();
+  updateLiveClassStatus();
+  setInterval(updateLiveClassStatus, 30000);
   if (typeof initMascot === "function") initMascot();
 
   // Timetable Modal logic
