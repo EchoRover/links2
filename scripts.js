@@ -75,21 +75,14 @@ const linksData = {
 
 const updatesData = [];
 const videoPool = [
-  "tgbNym0li-I", // Lofi rain on window
-  "5WqG_9OQ4_o", // Satisfying kinetic sand loop
-  "f3j-Xh9D_3Q", // Mechanical factory loop
-  "Sg184B06mEw", // Calming mountain drone flight
-  "V_g7u_N-qFI", // 3D abstract satisfying physics loop
-  "n61CLEEsYDM", // Rainy cyberpunk city alleyway
-  "Sf32z2A5U4s", // Space flight travel tunnel
-  "p_2kYqJ4YkU", // Fluid paint color mixing loop
-  "3gK_V2H-YhI", // Ocean shore waves aerial view
-  "2yJ29kMh-2M", // Retro synthwave sunset drive loop
-  "Lg1X4vV9f2w", // Abstract water ripples reflection
-  "E3pWJbC6e9o", // satisfying domino falling loop
-  "hK3t-VbA2K4", // Calming snow in the woods
-  "a_4cM2x9IeQ", // Abstract neon geometric lines loop
-  "w4M_O7M-kUo"  // CNC machinery steel carving loop
+  "ScMzIvxBSi4", // Lofi hip hop study loop
+  "jfKfPfyJRdk", // Relaxing rain on window loop
+  "tNkZsLk7dfc", // Calming ocean waves loop
+  "9Fv5d1dQ3cg", // Satisfying kinetic loop
+  "W0LHTWG-OrQ", // Cozy fireplace study loop
+  "7Hn7T0kG7uI", // Satisfying kinetic sand loop
+  "X8zLPlhaG4E", // Satisfying marble run loop
+  "5qap5aO4i9A"  // Calming autumn rain loop
 ];
 
 function getDailyReels() {

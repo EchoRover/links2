@@ -2084,3 +2084,15 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
     margin-top: 0.2rem !important;
   }
 }
+
+/* Click-shield overlay to make YouTube iframes un-interactive */
+.reel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: transparent;
+  cursor: default;
+}
