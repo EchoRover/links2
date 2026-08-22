@@ -434,7 +434,107 @@ function getUpcomingDepartures(now) {
     return upcoming.slice(0, 4); // return next 4
 }
 
+// ---------- active transit tracker ----------
+
+function getActiveTransitTrip(now) {
+    const today = todayKey();
+    const sched = SCHEDULES[today];
+    if (sched.key === "weekend") return null;
+
+    for (const dirId in sched.dirs) {
+        const dir = sched.dirs[dirId];
+        const data = trips(sched, dir);
+        
+        for (const t of data.all) {
+            const startMins = toMinutes(t.baseTime);
+            let duration = 0;
+            if (dirId === "toCampus") duration = 15;
+            else if (dirId === "toDorms") duration = 18;
+            else if (dirId === "kca3Loop") duration = 20;
+            
+            const endMins = startMins + duration;
+            if (now >= startMins && now < endMins) {
+                return {
+                    ...t,
+                    dirId: dirId,
+                    startMins: startMins,
+                    endMins: endMins,
+                    duration: duration,
+                    progress: ((now - startMins) / duration) * 100,
+                    dirLabel: dir.label
+                };
+            }
+        }
+    }
+    return null;
+}
+
 // ---------- rendering ----------
+
+function renderActiveTracker(now) {
+    const active = getActiveTransitTrip(now);
+    const container = document.getElementById("active-tracker-wrap");
+    if (!container) return;
+
+    if (!active) {
+        container.innerHTML = "";
+        container.style.display = "none";
+        return;
+    }
+
+    container.style.display = "block";
+    let stops = [];
+    if (active.dirId === "toCampus") {
+        stops = [
+            { name: "KCA 1&2", time: active.baseTime, offset: 0 },
+            { name: "KCA 3", time: addMins(active.baseTime, 3), offset: 3 },
+            { name: "Campus", time: addMins(active.baseTime, 15), offset: 15 }
+        ];
+    } else if (active.dirId === "toDorms") {
+        stops = [
+            { name: "Campus", time: active.baseTime, offset: 0 },
+            { name: "KCA 1&2", time: addMins(active.baseTime, 15), offset: 15 },
+            { name: "KCA 3", time: addMins(active.baseTime, 18), offset: 18 }
+        ];
+    } else if (active.dirId === "kca3Loop") {
+        stops = [
+            { name: "KCA 3", time: active.baseTime, offset: 0 },
+            { name: "KCA 1&2", time: addMins(active.baseTime, 10), offset: 10 },
+            { name: "KCA 3", time: addMins(active.baseTime, 20), offset: 20 }
+        ];
+    }
+
+    const stopsHtml = stops.map((s) => {
+        const stopMins = active.startMins + s.offset;
+        let cls = "";
+        if (now > stopMins) cls = "passed";
+        else if (now === stopMins || (now < stopMins && now >= stopMins - 2)) cls = "active";
+        
+        return `
+        <div class="map-stop ${cls}">
+            <span class="stop-dot"></span>
+            <span class="stop-name">${s.name}</span>
+            <span class="stop-time">${to12hSimple(s.time)}</span>
+        </div>`;
+    }).join("");
+
+    container.innerHTML = `
+    <div class="tracker-card">
+        <div class="tracker-status">
+            <span class="pulse-dot"></span>
+            <span class="status-text">Active: ${active.vehicle || "Shuttle"} in transit (${active.dirLabel})</span>
+        </div>
+        <div class="tracker-map">
+            <div class="map-line">
+                <div class="map-progress" style="width: ${active.progress}%;"></div>
+                <div class="map-bus" style="left: ${active.progress}%;">🚌</div>
+            </div>
+            <div class="map-stops">
+                ${stopsHtml}
+            </div>
+        </div>
+    </div>`;
+}
 
 function renderLiveBoard(now) {
     if (!elNext) return;
@@ -591,6 +691,7 @@ function tick(force) {
     lastMinute = now;
 
     renderClock();
+    renderActiveTracker(now);
     renderLiveBoard(now);
 
     const key = nextKey(now);
@@ -621,21 +722,42 @@ function setRoad(dirId) {
 
 function updateRouteSelectorVisibility() {
     const loopBtn = document.querySelector('[data-show="kca3Loop"]');
-    if (!loopBtn) return;
+    const toCampusBtn = document.querySelector('[data-show="toCampus"]');
+    const toDormsBtn = document.querySelector('[data-show="toDorms"]');
     
-    // Hide loop shuttle on weekends or if location perspective is Campus
-    if (currentLoc === "campus" || viewKey === "weekend") {
-        loopBtn.style.display = "none";
-        if (document.body.dataset.dir === "kca3Loop") {
-            document.body.dataset.dir = "toCampus";
-            const campusBtn = document.querySelector('[data-show="toCampus"]');
-            if (campusBtn) {
-                const btns = document.querySelectorAll("[data-show]");
-                btns.forEach((b) => b.classList.toggle("on", b === campusBtn));
-            }
+    if (!toCampusBtn || !toDormsBtn) return;
+
+    // If location is Campus, you cannot go "To Campus"
+    if (currentLoc === "campus") {
+        toCampusBtn.style.display = "none";
+        toDormsBtn.style.display = "inline-flex";
+        if (loopBtn) loopBtn.style.display = "none";
+        
+        // If the active view was toCampus or kca3Loop, force fallback to toDorms
+        if (document.body.dataset.dir === "toCampus" || document.body.dataset.dir === "kca3Loop") {
+            document.body.dataset.dir = "toDorms";
+            const btns = document.querySelectorAll("[data-show]");
+            btns.forEach((b) => b.classList.toggle("on", b === toDormsBtn));
+            setRoad("toDorms");
         }
     } else {
-        loopBtn.style.display = "inline-flex";
+        toCampusBtn.style.display = "inline-flex";
+        toDormsBtn.style.display = "inline-flex";
+        
+        // Hide loop shuttle on weekends
+        if (loopBtn) {
+            if (viewKey === "weekend") {
+                loopBtn.style.display = "none";
+                if (document.body.dataset.dir === "kca3Loop") {
+                    document.body.dataset.dir = "toCampus";
+                    const btns = document.querySelectorAll("[data-show]");
+                    btns.forEach((b) => b.classList.toggle("on", b === toCampusBtn));
+                    setRoad("toCampus");
+                }
+            } else {
+                loopBtn.style.display = "inline-flex";
+            }
+        }
     }
 }
 

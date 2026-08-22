@@ -252,6 +252,144 @@
             color: var(--coral);
         }
 
+        /* ---------- active shuttle tracker ---------- */
+        .tracker-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--surface-sunken));
+            border: 1px solid var(--rule);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .tracker-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--coral);
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--coral);
+            box-shadow: 0 0 0 0 var(--coral-glow);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 var(--coral-glow);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(44, 106, 38, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(44, 106, 38, 0);
+            }
+        }
+
+        .tracker-map {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 0.5rem 0.75rem 0;
+        }
+
+        .map-line {
+            position: relative;
+            height: 6px;
+            background: var(--rule-faint);
+            border-radius: 999px;
+            margin: 0 0.5rem;
+        }
+
+        .map-progress {
+            position: absolute;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 999px;
+            top: 0;
+            left: 0;
+        }
+
+        .map-bus {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.25rem;
+            transition: left 0.5s linear;
+        }
+
+        .map-stops {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .map-stop {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 5.5rem;
+            text-align: center;
+        }
+
+        .stop-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--rule);
+            margin-top: -24px;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .map-stop.passed .stop-dot {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .map-stop.active .stop-dot {
+            background: var(--coral);
+            border-color: var(--coral);
+            transform: scale(1.25);
+            box-shadow: 0 0 8px var(--coral-glow);
+        }
+
+        .stop-name {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: var(--fg-soft);
+            margin-top: 0.5rem;
+        }
+
+        .map-stop.active .stop-name,
+        .map-stop.passed .stop-name {
+            color: var(--fg);
+        }
+
+        .stop-time {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--fg-soft);
+            margin-top: 0.15rem;
+        }
+
         /* ---------- live departures board ---------- */
         .board-card {
             background: var(--bg-card);
@@ -545,6 +683,10 @@
             .sched-route {
                 display: none;
             }
+            
+            .map-stop {
+                width: 4.8rem;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -629,6 +771,9 @@
                 <button type="button" class="link-btn" id="jump-next">jump to next departure</button>
             </div>
         </section>
+
+        <!-- ACTIVE TRANSIT SHUTTLE TRACKER -->
+        <div id="active-tracker-wrap" style="display: none;"></div>
 
         <!-- LIVE BOARD — next departures -->
         <section class="board-card">
