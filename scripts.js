@@ -165,30 +165,41 @@ const WEEKLY_CLASSES = {
     { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
     { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
     { code: "AHUL256", name: "Critical Thinking", time: "15:30-17:00", room: "M4-1-017", type: "Tutorial" },
-    { code: "AENP225", name: "Electrical Energy Lab (Batch 1)", time: "16:00-19:00", room: "M3-1-009", type: "Lab" },
-    { code: "AENL228", name: "Measurement Lab (Batch 2)", time: "16:00-19:00", room: "M2.2.031", type: "Lab" }
+    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-19:00", room: "M3-1-009", type: "Lab", batch: 1 },
+    { code: "AENL228", name: "Measurement Lab", time: "16:00-19:00", room: "M2.2.031", type: "Lab", batch: 2 }
   ],
   3: [ // Wednesday
     { code: "AENL228", name: "Measurement & Instrumentation", time: "08:00-09:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AENP200", name: "Energy Technology Lab (Batch 1)", time: "09:00-12:00", room: "M3-1-009", type: "Lab" },
-    { code: "AENL226", name: "Power Electronics and Systems", time: "10:00-11:00", room: "M2.2.007", type: "Tutorial" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-12:00", room: "M4-1-017", type: "Tutorial" },
+    { code: "AENP200", name: "Energy Technology Lab", time: "09:00-12:00", room: "M3-1-009", type: "Lab", batch: 1 },
+    { code: "AENL226", name: "Power Electronics and Systems", time: "10:00-11:00", room: "M2.2.007", type: "Tutorial", batch: 2 },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-12:00", room: "M4-1-017", type: "Tutorial", batch: 2 },
     { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:30", room: "M4-1-017", type: "Tutorial" },
-    { code: "AENP200", name: "Energy Technology Lab (Batch 2)", time: "15:30-18:30", room: "M3-1-009", type: "Lab" },
-    { code: "AHUL256", name: "Critical Thinking", time: "16:30-17:30", room: "M4-1-017", type: "Tutorial" }
+    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:30", room: "M4-1-017", type: "Tutorial", batch: 1 },
+    { code: "AENP200", name: "Energy Technology Lab", time: "15:30-18:30", room: "M3-1-009", type: "Lab", batch: 2 },
+    { code: "AHUL256", name: "Critical Thinking", time: "16:30-17:30", room: "M4-1-017", type: "Tutorial", batch: 1 }
   ],
   4: [ // Thursday
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
     { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
     { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AENP225", name: "Electrical Energy Lab (Batch 2)", time: "16:00-19:00", room: "M3-1-009", type: "Lab" },
-    { code: "AENL228", name: "Measurement Lab (Batch 1)", time: "16:00-19:00", room: "M2.2.031", type: "Lab" }
+    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-19:00", room: "M3-1-009", type: "Lab", batch: 2 },
+    { code: "AENL228", name: "Measurement Lab", time: "16:00-19:00", room: "M2.2.031", type: "Lab", batch: 1 }
   ],
   5: [ // Friday
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "08:00-09:30", room: "M2.2.007", type: "Lecture" },
     { code: "ASBL100", name: "Introductory Biology Lab", time: "10:00-12:00", room: "M3-1-031", type: "Lab" }
   ]
+};
+
+const COURSE_COLORS = {
+  AENL226: "#2ecc71",
+  AENL228: "#546e7a",
+  ASBL100: "#8e44ad",
+  AHUL256: "#00bcd4",
+  AHUL261: "#e91e63",
+  AGRL130: "#ff9800",
+  AENP225: "#f1c40f",
+  AENP200: "#3498db"
 };
 
 function timeToMinutes(timeStr) {
@@ -201,6 +212,7 @@ function updateLiveClassStatus() {
   const dotEl = document.getElementById("live-class-dot");
   if (!statusEl) return;
   
+  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
   const now = new Date();
   const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
   const currentMins = now.getHours() * 60 + now.getMinutes();
@@ -219,14 +231,19 @@ function updateLiveClassStatus() {
   let nextClass = null;
   
   for (const c of dayClasses) {
+    // Filter by batch
+    if (c.batch !== undefined && c.batch !== currentBatch) {
+      continue;
+    }
+    
     const [startStr, endStr] = c.time.split("-");
-    const startMins = timeToMinutes(startStr);
-    const endMins = timeToMinutes(endStr);
+    const startMins = timeToMinutes(startStr.trim());
+    const endMins = timeToMinutes(endStr.trim());
     
     if (currentMins >= startMins && currentMins < endMins) {
       currentClass = c;
     } else if (currentMins < startMins) {
-      if (!nextClass || startMins < timeToMinutes(nextClass.time.split("-")[0])) {
+      if (!nextClass || startMins < timeToMinutes(nextClass.time.split("-")[0].trim())) {
         nextClass = c;
       }
     }
@@ -264,6 +281,58 @@ function updateLiveClassStatus() {
   }
 }
 
+function renderModalTimetable() {
+  const container = document.getElementById("modal-timetable-grid");
+  if (!container) return;
+  
+  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
+  const days = [
+    { key: 1, label: "Monday" },
+    { key: 2, label: "Tuesday" },
+    { key: 3, label: "Wednesday" },
+    { key: 4, label: "Thursday" },
+    { key: 5, label: "Friday" }
+  ];
+  
+  container.innerHTML = days.map(d => {
+    const dayClasses = WEEKLY_CLASSES[d.key] || [];
+    
+    // Sort chronologically
+    const sortedClasses = [...dayClasses].sort((a, b) => {
+      return timeToMinutes(a.time.split("-")[0].trim()) - timeToMinutes(b.time.split("-")[0].trim());
+    });
+    
+    const itemsHtml = sortedClasses.map(c => {
+      const isSplit = c.batch !== undefined;
+      const isActiveBatch = !isSplit || c.batch === currentBatch;
+      const itemClass = isSplit
+        ? (isActiveBatch ? "timetable-class-item batch-active" : "timetable-class-item batch-inactive")
+        : "timetable-class-item";
+        
+      const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
+      const batchLabel = isSplit ? ` (Batch ${c.batch})` : "";
+      
+      return `
+        <div class="${itemClass}" style="border-left-color: ${borderClr};">
+          <div class="class-item-time">⏱️ ${c.time}</div>
+          <div class="class-item-header">
+            <span class="class-item-code">${c.code}${batchLabel}</span>
+            <span class="class-item-room">${c.room}</span>
+          </div>
+          <div class="class-item-name">${c.name}</div>
+        </div>
+      `;
+    }).join("");
+    
+    return `
+      <div class="timetable-day-card">
+        <h3 class="timetable-day-title">${d.label}</h3>
+        ${itemsHtml || '<p style="text-align:center; font-size:0.75rem; color:var(--text-muted); margin: 10px 0;">No classes</p>'}
+      </div>
+    `;
+  }).join("");
+}
+
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {
   console.log("--- SCRIPTS.JS FORCE LOAD V12 ---");
@@ -276,6 +345,22 @@ window.addEventListener("DOMContentLoaded", () => {
   setInterval(updateLiveClassStatus, 30000);
   if (typeof initMascot === "function") initMascot();
 
+  // Batch toggle buttons
+  const batchBtns = document.querySelectorAll(".batch-btn");
+  const savedBatch = localStorage.getItem("student-batch") || "1";
+  
+  batchBtns.forEach(btn => {
+    btn.classList.toggle("on", btn.dataset.batch === savedBatch);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent modal opening
+      const b = btn.dataset.batch;
+      localStorage.setItem("student-batch", b);
+      batchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
+      updateLiveClassStatus();
+      renderModalTimetable();
+    });
+  });
+
   // Timetable Modal logic
   const openTimeBtn = document.getElementById("timetable-box");
   const timeModal = document.getElementById("timetable-modal");
@@ -283,6 +368,7 @@ window.addEventListener("DOMContentLoaded", () => {
   
   if (openTimeBtn && timeModal) {
     openTimeBtn.addEventListener("click", () => {
+      renderModalTimetable();
       timeModal.style.display = "block";
     });
   }
