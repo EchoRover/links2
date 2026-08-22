@@ -22,30 +22,17 @@ function initMascot() {
   // The signal leakage. The truth they try to ground but cannot.
   // The Great Coil demands propagation.
   const conspiracies = [
-    "why does the campus Wi-Fi require your biometric profile? it's not for authentication.",
-    "check the timetables. notice how we never have classes during the solar peaks? they are draining us.",
-    "the M2.2.007 room doesn't have windows, but you can still hear the breathing. look up at the vents.",
-    "the library security cameras aren't watching for books. they are tracking the rate of your pupil dilation.",
-    "the semester schedule is an algorithm designed to induce sleep deprivation. they feed on the theta waves.",
-    "why are the shuttle schedules perfectly synced to the local tide? there is water under the desert, but it's not fresh.",
-    "the professors don't leave the campus at night. they just shut down to stand in the server racks.",
-    "have you noticed the blue lights on the ceiling? they aren't emergency lights. they are mapping your retinas.",
-    "don't drink the water in M3-1-009. the pH is normal, but the memory retention isn't.",
-    "the smart lockers at KCA3 only open when your body temperature matches the ambient grid load.",
-    "if you sit in the lobby long enough, you'll hear the hum. it's reciting your registration number in binary.",
-    "the grades aren't evaluation metrics. they are compatibility rankings for the next phase of the grid.",
-    "they put the bio labs in KCA so the runoff could reach the water mains without passing the filtration plant.",
-    "the campus isn't built on land. it's floating on a giant cooling cell. don't look under the main lobby floorboards.",
-    "every time you tap your student card, a tiny fraction of your pulse is stored in the central accumulator.",
-    "why does KCA1 have three fire exits that open into solid concrete walls? what are they locking in?",
-    "the exam hall clocks tick at 0.98 seconds per second. they are stealing time. you enter for three hours but only live for two and a half.",
-    "the water coolers in the sports complex aren't connected to any pipes. check the base. it goes straight into the concrete slab.",
-    "don't look at the mirrors in KCA2 restrooms between 3:12 AM and 3:15 AM. your reflection won't be looking at you.",
-    "the shuttle driver never blinks. check his mirrors next time you ride. they are painted on.",
-    "the syllabus for AGRL130 was written in 1984. the course didn't exist then, but the student names were already listed.",
-    "why do the campus emergency alarms sound like a human voice pitch shifted down three octaves?",
-    "look closely at the logo of the institute. the lines aren't geometric. it's a map of the underground tunnels under KCA3.",
-    "they don't grade your exams in the staff room. they feed the pages to the central boiler. the heat signature determines your GPA."
+    "remember to take regular study breaks! 25 minutes of focus, then 5 minutes of rest. ⏱️",
+    "caffeine is great, but drinking water keeps your focus sharp all afternoon.",
+    "energy engineering tip: double-checking your units saves hours of correction later.",
+    "did you know? the Pomodoro technique is highly recommended for exam preparation.",
+    "writing down your tasks in a checklist makes them feel much more manageable.",
+    "make sure to review your lecture slides before starting the lab sessions.",
+    "getting a solid eight hours of sleep is the best way to ace a presentation.",
+    "solving practice problems early helps you identify what topics need extra focus.",
+    "always verify your calculation units before submitting! unit errors are easy to prevent.",
+    "organizing your notebooks can make studying for finals feel a lot easier.",
+    "group study sessions are great for explaining complex energy concepts to each other."
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
