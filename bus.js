@@ -430,7 +430,7 @@ function renderTable(dir, block, now, showVeh, nextMins) {
                             <td class="c-no">${t.no}</td>
                             <td class="c-time">
                                 <div style="font-size: 0.85rem; font-weight: 600; color: var(--fg);">${to12h(t.time)}</div>
-                                <div style="font-size: 0.68rem; color: var(--fg-soft); font-weight: 500; margin-top: 2px; font-family: var(--font-mono); letter-spacing: -0.01em;">
+                                <div style="font-size: 0.68rem; color: var(--fg-soft); font-weight: 500; margin-top: 2px; font-family: var(--font-mono); letter-spacing: -0.01em; white-space: normal;">
                                     ${t.timeline}
                                 </div>
                             </td>
