@@ -337,9 +337,8 @@ function untilLabel(mins, now) {
 
 // Get structured vehicle attributes (name, type, icon)
 function getVehicleDetail(vehicle) {
-    if (!vehicle) return null;
-    const v = vehicle.toLowerCase();
-    let type = "Shuttle";
+    const v = (vehicle || "Shuttle").toLowerCase();
+    let type = vehicle ? "Scheduled Shuttle" : "Weekend Shuttle";
     let icon = "🚍";
     let className = "tag-day";
     
@@ -358,7 +357,7 @@ function getVehicleDetail(vehicle) {
     }
     
     return {
-        name: vehicle,
+        name: vehicle || "Shuttle",
         type: type,
         icon: icon,
         className: className
@@ -574,24 +573,20 @@ function renderLiveBoard(now) {
             const until = t.tomorrow ? "tomorrow" : untilLabel(t.departMins, now);
             const vDetail = getVehicleDetail(t.vehicle);
             
-            let iconClass = "assumed";
-            let iconEmoji = "❓";
-            let vehicleLabel = "Assumed Shuttle";
-            
-            if (vDetail) {
-                iconEmoji = vDetail.icon;
-                vehicleLabel = `${vDetail.name} (${vDetail.type})`;
-                if (vDetail.type === "Coaster") iconClass = "coaster";
-                else if (vDetail.type === "Van") iconClass = "van";
-                else if (vDetail.type === "Large Bus") iconClass = "bus";
-            }
+            let iconClass = "coaster";
+            if (vDetail.type === "Van") iconClass = "van";
+            else if (vDetail.type === "Large Bus") iconClass = "bus";
+
+            const vehicleLabel = t.vehicle 
+                ? `Vehicle Coming: ${vDetail.name} (${vDetail.type})`
+                : `Vehicle Coming: Shuttle (${vDetail.type})`;
 
             const originLabel = currentLoc === "kca1" ? "KCA 1&2" : currentLoc === "kca3" ? "KCA 3" : "Campus";
             const destLabel = currentDest === "kca1" ? "KCA 1&2" : currentDest === "kca3" ? "KCA 3" : "Campus";
 
             return `
             <div class="board-item-card">
-                <div class="veh-icon-circle ${iconClass}">${iconEmoji}</div>
+                <div class="veh-icon-circle ${iconClass}">${vDetail.icon}</div>
                 <div class="card-body">
                     <div class="card-title-row">
                         <span class="card-route-title">Departs ${originLabel} ➔ Arrives ${destLabel}</span>
