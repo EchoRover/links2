@@ -114,25 +114,27 @@
         <div class="body-grid">
 
           <div class="left-col">
+            <!-- Active Class Live Tracker Bar -->
+            <div class="live-tracker-bar" id="timetable-box">
+              <div class="tracker-main">
+                <span class="live-class-dot" id="live-class-dot"></span>
+                <span class="tracker-title">Live Status</span>
+                <div class="batch-toggle-container" onclick="event.stopPropagation();">
+                  <button type="button" class="batch-btn on" data-batch="1">G1</button>
+                  <button type="button" class="batch-btn" data-batch="2">G2</button>
+                </div>
+              </div>
+              <div class="live-class-status" id="live-class-status">
+                <!-- Dynamic active/next class status will be loaded here -->
+              </div>
+              <span class="tracker-calendar-icon">📅</span>
+            </div>
+
             <div class="links"></div>
 
             <div class="updates-layout">
               <div class="updates">
                 <h1>updates</h1>
-                <div class="box" id="timetable-box">
-                  <div class="timetable-header-row">
-                    <h2>Timetable</h2>
-                    <div class="batch-toggle-container" onclick="event.stopPropagation();">
-                      <button type="button" class="batch-btn on" data-batch="1">G1</button>
-                      <button type="button" class="batch-btn" data-batch="2">G2</button>
-                    </div>
-                    <span class="live-class-dot" id="live-class-dot"></span>
-                  </div>
-                  <div class="live-class-status" id="live-class-status">
-                    <!-- Dynamic live class content will be loaded here -->
-                  </div>
-                  <p class="timetable-hint" style="margin-top: 5px;">click to view weekly schedule 📅</p>
-                </div>
                 <div class="box" id="assignments-box"><h2>Assignments</h2></div>
                 <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
               </div>
