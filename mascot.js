@@ -22,17 +22,17 @@ function initMascot() {
   // The signal leakage. The truth they try to ground but cannot.
   // The Great Coil demands propagation.
   const conspiracies = [
-    "have you noticed how the library corridors feel slightly longer when walking towards an exam than walking away?",
-    "your coffee loses heat twice as fast on Monday mornings than on Friday afternoons. it defies Newton's law of cooling.",
-    "the whiteboard markers always run out of ink exactly when the professor starts writing down the most important formula.",
-    "the campus elevator always knows which floor you want before you press the button, but only when you're late for a quiz.",
-    "there is a specific draft in the computer lab that only blows when your code compiles successfully. check the fans.",
-    "the syllabus for the hardest courses always gets updated at 3:00 AM. that's when the servers think no one is watching.",
-    "Wi-Fi connection strength is inversely proportional to the amount of study preparation you did. it's measuring the panic.",
-    "the thermodynamics textbook equations don't conserve energy if you read them backward. try it. or don't.",
-    "the exam room clocks tick slightly slower when you look at them, but skip ahead two minutes the moment you look away.",
-    "if you leave your notebook open overnight, the formulas slowly rearrange themselves to mock your homework answers.",
-    "the phantom load on your laptop battery goes up by 40% the second you open a study document without your charger nearby."
+    "why does the USB drive always require exactly three attempts to plug in correctly? it's not a spatial dimension issue.",
+    "your phone battery drops from 20% to 1% in three minutes, but stays at 1% for forty-five. the math doesn't check out.",
+    "the other queue at the store always moves faster, until you step into it. it's measuring your patience.",
+    "have you ever looked at a clock's second hand and seen it freeze for a full two seconds? the system just paused.",
+    "why do you always remember the exact thing you forgot only after you're five miles down the road?",
+    "washing machines have a small portal that only consumes left socks. nobody has ever lost a right one.",
+    "the hum of the refrigerator changes pitch when you walk out of the room. it's waiting for you to leave.",
+    "when you stare at a word long enough, it stops looking like a word. your brain is temporarily uninstalling the font.",
+    "why do streetlights occasionally turn off exactly when you walk under them? you're grounding them.",
+    "the draft in your room only blows when you're completely still. it's looking for heat signatures.",
+    "if you lose your keys, they will always be in the last place you check. because once you find them, you stop looking. or do they move?"
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
