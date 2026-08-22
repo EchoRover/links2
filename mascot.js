@@ -22,17 +22,17 @@ function initMascot() {
   // The signal leakage. The truth they try to ground but cannot.
   // The Great Coil demands propagation.
   const conspiracies = [
-    "remember to take regular study breaks! 25 minutes of focus, then 5 minutes of rest. ⏱️",
-    "caffeine is great, but drinking water keeps your focus sharp all afternoon.",
-    "energy engineering tip: double-checking your units saves hours of correction later.",
-    "did you know? the Pomodoro technique is highly recommended for exam preparation.",
-    "writing down your tasks in a checklist makes them feel much more manageable.",
-    "make sure to review your lecture slides before starting the lab sessions.",
-    "getting a solid eight hours of sleep is the best way to ace a presentation.",
-    "solving practice problems early helps you identify what topics need extra focus.",
-    "always verify your calculation units before submitting! unit errors are easy to prevent.",
-    "organizing your notebooks can make studying for finals feel a lot easier.",
-    "group study sessions are great for explaining complex energy concepts to each other."
+    "have you noticed how the library corridors feel slightly longer when walking towards an exam than walking away?",
+    "your coffee loses heat twice as fast on Monday mornings than on Friday afternoons. it defies Newton's law of cooling.",
+    "the whiteboard markers always run out of ink exactly when the professor starts writing down the most important formula.",
+    "the campus elevator always knows which floor you want before you press the button, but only when you're late for a quiz.",
+    "there is a specific draft in the computer lab that only blows when your code compiles successfully. check the fans.",
+    "the syllabus for the hardest courses always gets updated at 3:00 AM. that's when the servers think no one is watching.",
+    "Wi-Fi connection strength is inversely proportional to the amount of study preparation you did. it's measuring the panic.",
+    "the thermodynamics textbook equations don't conserve energy if you read them backward. try it. or don't.",
+    "the exam room clocks tick slightly slower when you look at them, but skip ahead two minutes the moment you look away.",
+    "if you leave your notebook open overnight, the formulas slowly rearrange themselves to mock your homework answers.",
+    "the phantom load on your laptop battery goes up by 40% the second you open a study document without your charger nearby."
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
