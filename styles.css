@@ -435,8 +435,9 @@ body #open-games-modal:hover {
 }
 .general:hover { transform: none; }
 
-/* linkCS pill */
-.general a.cs-link {
+/* linkCS & Bus pills */
+.general a.cs-link,
+.general a.bus-link {
   position: relative;
   background: var(--accent-warm-soft);
   color: var(--accent-warm);
@@ -448,27 +449,33 @@ body #open-games-modal:hover {
   gap: 4px;
   z-index: 100;
 }
-.general a.cs-link:hover { z-index: 200; }
-:root[data-theme="dark"] .general a.cs-link { color: var(--accent-warm); }
+.general a.cs-link:hover,
+.general a.bus-link:hover { z-index: 200; }
+:root[data-theme="dark"] .general a.cs-link,
+:root[data-theme="dark"] .general a.bus-link { color: var(--accent-warm); }
 .general a.cs-link .cs-arrow {
   font-size: 0.72rem;
   opacity: 0.85;
   transition: transform 0.25s ease;
   display: inline-block;
 }
-.general a.cs-link:hover {
+.general a.cs-link:hover,
+.general a.bus-link:hover {
   background: var(--accent-warm);
   color: var(--surface);
   border-color: var(--accent-warm);
   border-style: solid;
   transform: translateY(-2px) rotate(2deg);
 }
-:root[data-theme="dark"] .general a.cs-link:hover { color: var(--accent-warm-soft); }
+:root[data-theme="dark"] .general a.cs-link:hover,
+:root[data-theme="dark"] .general a.bus-link:hover { color: var(--accent-warm-soft); }
 .general a.cs-link:hover .cs-arrow { transform: translate(2px, -2px) rotate(15deg); }
 
 /* shared bubble look — applied to ::before (top) and ::after (bottom) */
 .general a.cs-link::before,
-.general a.cs-link::after {
+.general a.cs-link::after,
+.general a.bus-link::before,
+.general a.bus-link::after {
   position: absolute;
   right: 0;
   background: var(--surface-elevated);
@@ -488,24 +495,28 @@ body #open-games-modal:hover {
   z-index: 300;
 }
 
-/* TOP bubble — "you and i are polar opposites" */
-.general a.cs-link::before {
+/* TOP bubble — "you and i are polar opposites" / "don't miss the coaster!" */
+.general a.cs-link::before,
+.general a.bus-link::before {
   content: attr(data-quip-top);
   bottom: calc(100% + 8px);
   transform: translateY(4px) rotate(-2deg);
 }
-.general a.cs-link:hover::before {
+.general a.cs-link:hover::before,
+.general a.bus-link:hover::before {
   opacity: 1;
   transform: translateY(0) rotate(-2deg);
 }
 
-/* BOTTOM bubble — "the other side of town ↗" */
-.general a.cs-link::after {
+/* BOTTOM bubble — "the other side of town ↗" / "campus shuttle schedule 🚌" */
+.general a.cs-link::after,
+.general a.bus-link::after {
   content: attr(data-quip);
   top: calc(100% + 8px);
   transform: translateY(-4px) rotate(2deg);
 }
-.general a.cs-link:hover::after {
+.general a.cs-link:hover::after,
+.general a.bus-link:hover::after {
   opacity: 1;
   transform: translateY(0) rotate(2deg);
 }

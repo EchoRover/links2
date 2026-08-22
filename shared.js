@@ -380,6 +380,7 @@ function initEnergySprite() {
     if (id === "open-games-modal" || klass.includes("game-choice-btn")) form = "sprite-orb form-ghost";
     else if (id === "archive-btn" || rawText.includes("archive")) form = "sprite-orb form-old";
     else if (klass.includes("cs-link") || rawText.includes("linkcs")) form = "sprite-orb form-computer";
+    else if (klass.includes("bus-link") || rawText.includes("bus")) form = "sprite-orb form-clock";
     else if (id === "theme-toggle") {
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
       form = isDark ? "sprite-orb form-sun" : "sprite-orb form-moon";

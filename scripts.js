@@ -11,6 +11,12 @@ const linksData = {
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
     TimeTable: "https://iitdabudhabi.ac.ae/",
+    Bus: {
+      url: "bus",
+      className: "bus-link",
+      quip: "campus shuttle schedule 🚌",
+      quipTop: "don't miss the coaster!"
+    },
     linkCS: {
       url: "https://linkcs.vercel.app",
       className: "cs-link",
