@@ -103,14 +103,14 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Page shell — flexible ---------- */
 .layout {
-  max-width: 1240px;
+  max-width: 100%;
   min-height: 100vh;
   height: auto;
   margin: 0 auto;
-  padding: 24px 22px 40px;
+  padding: 24px clamp(1.25rem, 3vw, 3.5rem) 40px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 .main-content { display: contents; }
 .container {
