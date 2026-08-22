@@ -281,53 +281,64 @@ function updateLiveClassStatus() {
   }
 }
 
-function renderModalTimetable() {
-  const container = document.getElementById("modal-timetable-grid");
+let activeTimetableTab = null;
+
+function renderModalTimetable(dayKey) {
+  const container = document.getElementById("modal-timetable-list");
   if (!container) return;
   
-  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
-  const days = [
-    { key: 1, label: "Monday" },
-    { key: 2, label: "Tuesday" },
-    { key: 3, label: "Wednesday" },
-    { key: 4, label: "Thursday" },
-    { key: 5, label: "Friday" }
-  ];
+  // Determine which day to render
+  if (dayKey === undefined) {
+    if (activeTimetableTab === null) {
+      // Default to today's day (Mon-Fri)
+      const today = new Date().getDay();
+      activeTimetableTab = (today >= 1 && today <= 5) ? today : 1;
+    }
+    dayKey = activeTimetableTab;
+  } else {
+    activeTimetableTab = dayKey;
+  }
   
-  container.innerHTML = days.map(d => {
-    const dayClasses = WEEKLY_CLASSES[d.key] || [];
-    
-    // Sort chronologically
-    const sortedClasses = [...dayClasses].sort((a, b) => {
-      return timeToMinutes(a.time.split("-")[0].trim()) - timeToMinutes(b.time.split("-")[0].trim());
-    });
-    
-    const itemsHtml = sortedClasses.map(c => {
-      const isSplit = c.batch !== undefined;
-      const isActiveBatch = !isSplit || c.batch === currentBatch;
-      const itemClass = isSplit
-        ? (isActiveBatch ? "timetable-class-item batch-active" : "timetable-class-item batch-inactive")
-        : "timetable-class-item";
-        
-      const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
-      const batchLabel = isSplit ? ` (Batch ${c.batch})` : "";
+  // Highlight active tab
+  const tabBtns = document.querySelectorAll(".modal-tab-btn");
+  tabBtns.forEach(btn => {
+    btn.classList.toggle("active", Number(btn.dataset.dayTab) === dayKey);
+  });
+  
+  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
+  const dayClasses = WEEKLY_CLASSES[dayKey] || [];
+  
+  // Sort chronologically
+  const sortedClasses = [...dayClasses].sort((a, b) => {
+    return timeToMinutes(a.time.split("-")[0].trim()) - timeToMinutes(b.time.split("-")[0].trim());
+  });
+  
+  if (sortedClasses.length === 0) {
+    container.innerHTML = `<p style="text-align:center; font-size:0.85rem; color:var(--text-muted); padding: 24px 0;">🌴 No classes scheduled for this day!</p>`;
+    return;
+  }
+  
+  container.innerHTML = sortedClasses.map(c => {
+    const isSplit = c.batch !== undefined;
+    const isActiveBatch = !isSplit || c.batch === currentBatch;
+    const itemClass = isSplit
+      ? (isActiveBatch ? "timeline-row batch-active" : "timeline-row batch-inactive")
+      : "timeline-row";
       
-      return `
-        <div class="${itemClass}" style="border-left-color: ${borderClr};">
-          <div class="class-item-time">⏱️ ${c.time}</div>
-          <div class="class-item-header">
-            <span class="class-item-code">${c.code}${batchLabel}</span>
-            <span class="class-item-room">${c.room}</span>
-          </div>
-          <div class="class-item-name">${c.name}</div>
-        </div>
-      `;
-    }).join("");
+    const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
+    const batchLabel = isSplit ? ` · Batch ${c.batch}` : "";
     
     return `
-      <div class="timetable-day-card">
-        <h3 class="timetable-day-title">${d.label}</h3>
-        ${itemsHtml || '<p style="text-align:center; font-size:0.75rem; color:var(--text-muted); margin: 10px 0;">No classes</p>'}
+      <div class="${itemClass}" style="border-left-color: ${borderClr};">
+        <div class="timeline-time">⏱️ ${c.time}</div>
+        <div class="timeline-meta">
+          <div class="timeline-code-row">
+            <span class="timeline-code">${c.code}</span>
+            <span class="timeline-type">${c.type}</span>
+          </div>
+          <div class="timeline-room">📍 Room ${c.room}${batchLabel}</div>
+        </div>
+        <div class="timeline-name">${c.name}</div>
       </div>
     `;
   }).join("");
@@ -357,7 +368,16 @@ window.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("student-batch", b);
       batchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
       updateLiveClassStatus();
-      renderModalTimetable();
+      renderModalTimetable(activeTimetableTab);
+    });
+  });
+
+  // Modal Tab Bar buttons
+  const modalTabBtns = document.querySelectorAll(".modal-tab-btn");
+  modalTabBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const d = Number(btn.dataset.dayTab);
+      renderModalTimetable(d);
     });
   });
 

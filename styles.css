@@ -1756,92 +1756,142 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   color: var(--bg);
 }
 
-/* ---------- Kanban Weekly Schedule Grid ---------- */
-.timetable-grid {
+/* ---------- Timetable Modal Redesign (Tabbed Timeline) ---------- */
+.timetable-modal-content {
+  max-width: 680px !important;
+  width: 92%;
+  padding: 1.25rem 1.5rem !important;
   display: flex;
-  gap: 1.25rem;
-  padding: 0.5rem 0.25rem;
-  min-width: 850px;
+  flex-direction: column;
+  gap: 1rem;
 }
-.timetable-day-card {
-  flex: 1;
+.modal-tab-bar {
+  display: flex;
   background: var(--surface-sunken);
   border: 1px solid var(--border-soft);
-  border-radius: 12px;
-  padding: 0.85rem;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+  width: 100%;
+}
+.modal-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.modal-tab-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+.modal-timetable-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-width: 160px;
+  width: 100%;
+  margin-top: 0.5rem;
 }
-.timetable-day-title {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--accent-strong);
-  border-bottom: 1.5px solid var(--border-soft);
-  padding-bottom: 0.5rem;
-  margin: 0 0 0.25rem 0;
-  text-align: center;
-}
-:root[data-theme="dark"] .timetable-day-title {
-  color: var(--accent);
-}
-.timetable-class-item {
+
+/* Timeline row styling */
+.timeline-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border-soft);
-  border-left: 4.5px solid var(--text-muted);
-  border-radius: 8px;
-  padding: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 5px solid var(--text-muted);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  transition: all 0.25s ease;
   text-align: left;
 }
-.timetable-class-item.batch-inactive {
+.timeline-row.batch-inactive {
   opacity: 0.35;
   filter: grayscale(40%);
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
-.timetable-class-item.batch-active {
+.timeline-row.batch-active {
   border-color: var(--border);
   box-shadow: 0 4px 12px -5px rgba(0,0,0,0.05);
-  transform: translateY(-1px);
 }
-.class-item-time {
+.timeline-time {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 700;
+  min-width: 100px;
+  flex-shrink: 0;
 }
-.class-item-header {
+.timeline-meta {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 130px;
+  flex-shrink: 0;
 }
-.class-item-code {
+.timeline-code-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.timeline-code {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--text);
-  line-height: 1.2;
 }
-.class-item-room {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--text-subtle);
-  font-weight: 700;
-  white-space: nowrap;
-  background: var(--surface-sunken);
+.timeline-type {
+  font-family: var(--font-sans);
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   padding: 1px 5px;
   border-radius: 4px;
+  background: var(--surface-sunken);
+  color: var(--text-muted);
   border: 1px solid var(--border-soft);
 }
-.class-item-name {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
+.timeline-room {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   color: var(--text-subtle);
+  font-weight: 600;
+}
+.timeline-name {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  flex: 1;
+  text-align: left;
   line-height: 1.35;
+}
+
+@media (max-width: 580px) {
+  .timeline-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.65rem 0.85rem;
+  }
+  .timeline-time {
+    min-width: auto;
+  }
+  .timeline-meta {
+    min-width: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .timeline-name {
+    text-align: left;
+  }
 }
