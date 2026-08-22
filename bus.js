@@ -284,13 +284,20 @@ function trips(sched, dir) {
             const m = adjustedMins % 60;
             const adjustedTime = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 
+            const vehicle = b.rota ? b.rota[i % b.rota.length] : null;
+            let vehPrefix = "";
+            if (vehicle) {
+                const isVan = vehicle.toLowerCase().includes("van");
+                vehPrefix = isVan ? `🚐 ${vehicle} | ` : `🚍 ${vehicle} | `;
+            }
+
             // Generate compact route timing sequence:
             const t1 = to12hSimple(t);
             const t2 = to12hSimple(addMins(t, isToCampus ? 3 : 15));
             const t3 = to12hSimple(addMins(t, isToCampus ? 15 : 18));
             const timelineText = isToCampus
-                ? `KCA1: ${t1} ➔ KCA3: ${t2} ➔ Campus: ${t3}`
-                : `Campus: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
+                ? `${vehPrefix}KCA1: ${t1} ➔ KCA3: ${t2} ➔ Campus: ${t3}`
+                : `${vehPrefix}Campus: ${t1} ➔ KCA1: ${t2} ➔ KCA3: ${t3}`;
 
             return {
                 no: ++n,
@@ -298,7 +305,7 @@ function trips(sched, dir) {
                 time: adjustedTime,
                 mins: adjustedMins,
                 timeline: timelineText,
-                vehicle: b.rota ? b.rota[i % b.rota.length] : null,
+                vehicle: vehicle,
                 tag: b.tag || null,
                 tagTone: b.tagTone || "day",
                 assumed: !!b.assumed,
