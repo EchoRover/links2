@@ -74,43 +74,46 @@ const linksData = {
 };
 
 const updatesData = [];
-const videoPool = [
-  "ScMzIvxBSi4", // Lofi hip hop study loop
-  "jfKfPfyJRdk", // Relaxing rain on window loop
-  "tNkZsLk7dfc", // Calming ocean waves loop
-  "9Fv5d1dQ3cg", // Satisfying kinetic loop
-  "W0LHTWG-OrQ", // Cozy fireplace study loop
-  "7Hn7T0kG7uI", // Satisfying kinetic sand loop
-  "X8zLPlhaG4E", // Satisfying marble run loop
-  "5qap5aO4i9A"  // Calming autumn rain loop
-];
+const localClips = Array.from({ length: 16 }, (_, i) => `idk${i + 1}.mp4`);
 
 function getDailyReels() {
   const today = new Date();
   const dateSeed = today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
   
   // Simple deterministic hash based on date seed
-  let index1 = dateSeed % videoPool.length;
-  let index2 = (dateSeed * 7 + 13) % videoPool.length;
+  let index1 = dateSeed % localClips.length;
+  let index2 = (dateSeed * 7 + 13) % localClips.length;
   
   // Ensure they are not the same video
   if (index1 === index2) {
-    index2 = (index1 + 1) % videoPool.length;
+    index2 = (index1 + 1) % localClips.length;
   }
   
-  return [videoPool[index1], videoPool[index2]];
+  return [localClips[index1], localClips[index2]];
 }
 
 function renderLocalClips() {
   const [vid1, vid2] = getDailyReels();
-  const leftIframe = document.getElementById("local-clip-left");
-  const rightIframe = document.getElementById("local-clip-right");
+  const leftVid = document.getElementById("local-clip-left");
+  const rightVid = document.getElementById("local-clip-right");
   
-  if (leftIframe) {
-    leftIframe.src = `https://www.youtube.com/embed/${vid1}?autoplay=1&mute=1&loop=1&playlist=${vid1}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
+  if (leftVid) {
+    leftVid.src = vid1;
+    leftVid.muted = true;
+    leftVid.playsInline = true;
+    leftVid.loop = true;
+    leftVid.autoplay = true;
+    leftVid.load();
+    leftVid.play().catch(() => {});
   }
-  if (rightIframe) {
-    rightIframe.src = `https://www.youtube.com/embed/${vid2}?autoplay=1&mute=1&loop=1&playlist=${vid2}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`;
+  if (rightVid) {
+    rightVid.src = vid2;
+    rightVid.muted = true;
+    rightVid.playsInline = true;
+    rightVid.loop = true;
+    rightVid.autoplay = true;
+    rightVid.load();
+    rightVid.play().catch(() => {});
   }
 }
 
