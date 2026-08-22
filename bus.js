@@ -353,7 +353,7 @@ function getVehicleDetail(vehicle) {
     } else if (v.includes("bus")) {
         type = "Large Bus";
         icon = "🚌";
-        className = "tag-day";
+        className = "tag-bus";
     }
     
     return {
