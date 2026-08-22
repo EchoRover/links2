@@ -335,6 +335,36 @@ function untilLabel(mins, now) {
     return m ? `${h}h ${m}m` : `${h}h`;
 }
 
+// Get structured vehicle attributes (name, type, icon)
+function getVehicleDetail(vehicle) {
+    if (!vehicle) return null;
+    const v = vehicle.toLowerCase();
+    let type = "Shuttle";
+    let icon = "🚍";
+    let className = "tag-day";
+    
+    if (v.includes("coaster")) {
+        type = "Coaster";
+        icon = "🚍";
+        className = "tag-day";
+    } else if (v.includes("van")) {
+        type = "Van";
+        icon = "🚐";
+        className = "tag-night";
+    } else if (v.includes("bus")) {
+        type = "Large Bus";
+        icon = "🚌";
+        className = "tag-day";
+    }
+    
+    return {
+        name: vehicle,
+        type: type,
+        icon: icon,
+        className: className
+    };
+}
+
 // Get the unified list of trips matching the active location -> destination itinerary
 function getItineraryTrips(sched, loc, dest) {
     const key = `${loc}->${dest}`;
@@ -511,11 +541,14 @@ function renderActiveTracker(now) {
         </div>`;
     }).join("");
 
+    const vDetail = getVehicleDetail(active.vehicle);
+    const vehName = vDetail ? `${vDetail.icon} ${vDetail.name} (${vDetail.type})` : "Shuttle";
+
     container.innerHTML = `
     <div class="tracker-card">
         <div class="tracker-status">
             <span class="pulse-dot"></span>
-            <span class="status-text">Active: ${active.vehicle || "Shuttle"} in transit (${active.dirLabel})</span>
+            <span class="status-text">Active: ${vehName} in transit (${active.dirLabel})</span>
         </div>
         <div class="tracker-map">
             <div class="map-line">
@@ -540,12 +573,11 @@ function renderLiveBoard(now) {
         html = upcoming.map((t) => {
             const until = t.tomorrow ? "tomorrow" : untilLabel(t.departMins, now);
             let vehTag = "";
-            if (t.vehicle) {
-                const isVan = t.vehicle.toLowerCase().includes("van");
-                const tagClass = isVan ? "tag-night" : "tag-day";
-                vehTag = `<span class="board-veh-tag tag ${tagClass}">${t.vehicle}</span>`;
+            const vDetail = getVehicleDetail(t.vehicle);
+            if (vDetail) {
+                vehTag = `<span class="board-veh-tag tag ${vDetail.className}">${vDetail.icon} ${vDetail.name} <small style="opacity: 0.85; font-weight: 500;">(${vDetail.type})</small></span>`;
             } else if (t.assumed) {
-                vehTag = `<span class="board-veh-tag tag tag-soft">assumed</span>`;
+                vehTag = `<span class="board-veh-tag tag tag-soft">❓ Assumed Shuttle</span>`;
             }
             
             const originLabel = currentLoc === "kca1" ? "KCA 1&2" : currentLoc === "kca3" ? "KCA 3" : "Campus";
@@ -612,12 +644,21 @@ function renderTables(now) {
                                 const past = nextMins !== null && t.departMins < now;
                                 const isNext = nextMins !== null && t.departMins === nextMins;
                                 const cls = [past ? "past" : "", isNext ? "next" : ""].filter(Boolean).join(" ");
+                                
+                                const vDetail = getVehicleDetail(t.vehicle);
+                                let vehHtml = "—";
+                                if (vDetail) {
+                                    vehHtml = `<span class="tag ${vDetail.className}" style="font-family: var(--font-sans); font-weight: 600; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.25rem;">${vDetail.icon} ${vDetail.name} <small style="opacity: 0.85; font-weight: 500;">(${vDetail.type})</small></span>`;
+                                } else if (t.assumed) {
+                                    vehHtml = `<span class="tag tag-soft" style="font-size: 0.68rem; padding: 0.2rem 0.5rem; border-radius: 6px;">Assumed</span>`;
+                                }
+
                                 return `
                                 <tr class="${cls}"${isNext ? ' id="next-row"' : ""}>
                                     <td class="c-no">${idx + 1}</td>
                                     <td class="c-time">${to12h(t.departTime)}</td>
                                     <td class="c-time">${to12h(t.arriveTime)}</td>
-                                    <td class="c-veh">${t.vehicle || "—"}</td>
+                                    <td class="c-veh">${vehHtml}</td>
                                     <td class="c-route" style="font-size: 0.72rem;">${t.desc}</td>
                                 </tr>`;
                             }).join("")}
@@ -634,6 +675,57 @@ function renderTables(now) {
         elCaveat.innerHTML = sched.caveat || "";
         elCaveat.hidden = !sched.caveat;
     }
+}
+
+// Compute active status chip values
+function getServiceStatus(now) {
+    const today = todayKey();
+    const isFriday = new Date().getDay() === 5;
+    
+    if (isFriday && now >= 750 && now <= 795) {
+        return {
+            text: "Friday Prayer Break",
+            class: "prayer-break"
+        };
+    }
+    
+    if (today === "weekend") {
+        if (now < 450 || now > 1410) {
+            return {
+                text: "Off Duty",
+                class: "off-duty"
+            };
+        }
+        return {
+            text: "Weekend Service Active",
+            class: "active-day"
+        };
+    } else {
+        if (now < 420 || now > 1440) {
+            return {
+                text: "Off Duty",
+                class: "off-duty"
+            };
+        }
+        if (now >= 1140) {
+            return {
+                text: "Night Shuttle Active",
+                class: "active-night"
+            };
+        }
+        return {
+            text: "Day Service Active",
+            class: "active-day"
+        };
+    }
+}
+
+function updateStatusChip(now) {
+    const el = document.getElementById("status-chip");
+    if (!el) return;
+    const status = getServiceStatus(now);
+    el.textContent = status.text;
+    el.className = `status-chip ${status.class}`;
 }
 
 let elNext, elSched, elClock, elCaveat, elToday;
@@ -654,6 +746,7 @@ function tick(force) {
     lastMinute = now;
 
     renderClock();
+    updateStatusChip(now);
     renderActiveTracker(now);
     renderLiveBoard(now);
     renderTables(now);
@@ -729,6 +822,23 @@ function bindLocationToggle() {
     paint();
 }
 
+function swapLocationAndDestination() {
+    const temp = currentLoc;
+    currentLoc = currentDest;
+    currentDest = temp;
+    localStorage.setItem("bus-perspective", currentLoc);
+    localStorage.setItem("bus-destination", currentDest);
+    
+    // Repaint Location
+    const locBtns = document.querySelectorAll("[data-loc]");
+    locBtns.forEach(b => b.classList.toggle("on", b.dataset.loc === currentLoc));
+    
+    // Repopulate Destination
+    populateDestinations();
+    
+    tick(true);
+}
+
 function scrollToNext() {
     const target = document.getElementById("next-row");
     if (!target) return;
@@ -748,6 +858,7 @@ populateDestinations();
 renderAll();
 bindDayToggle();
 bindLocationToggle();
+document.getElementById("swap-btn")?.addEventListener("click", swapLocationAndDestination);
 document.getElementById("jump-next")?.addEventListener("click", scrollToNext);
 
 setInterval(tick, 1000);

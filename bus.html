@@ -13,7 +13,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=12">
     <style>
         /* ============================================================
@@ -93,11 +93,12 @@
 
         .bus-now {
             display: inline-flex;
-            align-items: baseline;
+            align-items: center;
             gap: 0.5rem;
             font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--fg-soft);
+            flex-wrap: wrap;
         }
 
         .bus-now #clock {
@@ -106,26 +107,41 @@
             color: var(--fg);
         }
 
-        .live-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--red-bright);
-            align-self: center;
-            animation: livePulse 2.4s ease-in-out infinite;
+        .status-chip {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.22rem 0.65rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-right: 0.4rem;
+            border: 1px solid transparent;
         }
 
-        @keyframes livePulse {
-            0%,
-            100% {
-                opacity: 1;
-                box-shadow: 0 0 0 0 var(--red-glow);
-            }
+        .status-chip.active-day {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .status-chip.active-night {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366F1;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
 
-            50% {
-                opacity: 0.55;
-                box-shadow: 0 0 0 4px transparent;
-            }
+        .status-chip.prayer-break {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .status-chip.off-duty {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.2);
         }
 
         /* ---------- route strip ---------- */
@@ -167,32 +183,92 @@
             font-style: italic;
         }
 
-        /* ---------- dashboard controls ---------- */
-        .board-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
+        /* ---------- premium search card ---------- */
+        .search-card {
             background: var(--bg-card);
             border: 1px solid var(--rule);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 1.25rem;
+            margin-bottom: 1.5rem;
             box-shadow: var(--shadow-sm);
-        }
-
-        .control-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 1.25rem;
         }
 
-        .control-label {
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .search-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .swap-btn {
+                transform: rotate(90deg);
+                align-self: center;
+                margin: -0.25rem 0;
+            }
+        }
+
+        .search-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            flex: 1;
+        }
+
+        .search-label {
             font-family: var(--font-mono);
             font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--fg-soft);
             font-weight: 600;
+            padding-left: 0.25rem;
+        }
+
+        .swap-btn {
+            background: var(--surface);
+            border: 1px solid var(--rule);
+            color: var(--fg);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.15rem;
+            transition: all 0.2s ease;
+            margin-top: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .swap-btn {
+                margin-top: 0;
+            }
+        }
+
+        .swap-btn:hover {
+            border-color: var(--coral);
+            color: var(--coral);
+            transform: scale(1.08) rotate(180deg);
+        }
+
+        .search-row-meta {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            border-top: 1px solid var(--rule-faint);
+            padding-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .seg {
@@ -224,21 +300,16 @@
             color: var(--bg);
         }
 
-        .jump-btn-container {
-            display: flex;
-            align-items: flex-end;
-        }
-
-        .link-btn {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.5rem 0.85rem;
+        .jump-action-btn {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.1rem;
             min-height: 38px;
-            width: 100%;
-            background: transparent;
-            border: 1px dashed var(--rule);
+            background: var(--coral-soft);
+            border: 1px solid var(--coral);
             border-radius: 999px;
-            color: var(--fg-soft);
+            color: var(--coral);
             cursor: pointer;
             transition: all 0.2s ease;
             display: inline-flex;
@@ -246,10 +317,10 @@
             justify-content: center;
         }
 
-        .link-btn:hover {
-            border-style: solid;
-            border-color: var(--coral);
-            color: var(--coral);
+        .jump-action-btn:hover {
+            background: var(--coral);
+            color: var(--bg);
+            box-shadow: 0 0 10px var(--coral-glow);
         }
 
         /* ---------- active shuttle tracker ---------- */
@@ -465,9 +536,10 @@
 
         .board-veh-tag {
             font-size: 0.68rem;
-            padding: 0.2rem 0.55rem;
+            padding: 0.22rem 0.6rem;
             border-radius: 6px;
             font-family: var(--font-mono);
+            font-weight: 600;
         }
 
         .item-timeline {
@@ -713,7 +785,7 @@
                     Mon&ndash;Fri runs the poster timetable; Sat &amp; Sun runs every 30 minutes from 7:30 AM.</p>
             </div>
             <div class="bus-now">
-                <span class="live-dot" aria-hidden="true"></span>
+                <span class="status-chip" id="status-chip">...</span>
                 <span>now</span><span id="clock">—</span>
             </div>
         </section>
@@ -728,34 +800,40 @@
             <span class="route-loop">back to KCA 1&amp;2</span>
         </div>
 
-        <!-- DASHBOARD CONTROLS -->
-        <section class="board-controls">
-            <div class="control-group">
-                <span class="control-label">My Location</span>
-                <div class="seg seg-location" id="location-seg">
-                    <button type="button" data-loc="kca1">KCA 1&amp;2</button>
-                    <button type="button" data-loc="kca3">KCA 3</button>
-                    <button type="button" data-loc="campus">Campus</button>
+        <!-- SEARCH CARD CONTROLS -->
+        <section class="search-card">
+            <div class="search-row">
+                <div class="search-field">
+                    <span class="search-label">From</span>
+                    <div class="seg seg-location" id="location-seg">
+                        <button type="button" data-loc="kca1">KCA 1&amp;2</button>
+                        <button type="button" data-loc="kca3">KCA 3</button>
+                        <button type="button" data-loc="campus">Campus</button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="control-group">
-                <span class="control-label">My Destination</span>
-                <div class="seg seg-dest" id="dest-seg">
-                    <!-- populated dynamically -->
-                </div>
-            </div>
-
-            <div class="control-group">
-                <span class="control-label">Timetable</span>
-                <div class="seg seg-day">
-                    <button type="button" data-day="weekday">Mon &ndash; Fri</button>
-                    <button type="button" data-day="weekend">Sat &amp; Sun</button>
+                
+                <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap locations">⇄</button>
+                
+                <div class="search-field">
+                    <span class="search-label">To</span>
+                    <div class="seg seg-dest" id="dest-seg">
+                        <!-- Populated dynamically -->
+                    </div>
                 </div>
             </div>
 
-            <div class="jump-btn-container">
-                <button type="button" class="link-btn" id="jump-next">jump to next departure</button>
+            <div class="search-row-meta">
+                <div class="search-field">
+                    <span class="search-label">Timetable</span>
+                    <div class="seg seg-day">
+                        <button type="button" data-day="weekday">Mon &ndash; Fri</button>
+                        <button type="button" data-day="weekend">Sat &amp; Sun</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="jump-action-btn" id="jump-next">
+                    <span>⚡ Jump to next departure</span>
+                </button>
             </div>
         </section>
 
@@ -791,7 +869,7 @@
     </main>
 
     <script src="shared.js?v=12"></script>
-    <script src="bus.js?v=3" defer></script>
+    <script src="bus.js?v=4" defer></script>
 </body>
 
 </html>
