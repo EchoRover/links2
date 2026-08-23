@@ -223,6 +223,14 @@ function loadData() {
       }
     }
     
+    // MIGRATION: Update Semester 5 courses if they are outdated
+    if (loadedSemesters[4] && loadedSemesters[4].name === "Semester 5") {
+      const hasAI = loadedSemesters[4].courses.some(c => c.name.includes("Artificial Intelligence") || c.name.includes("Power Electronics (AENL226)"));
+      if (hasAI) {
+        loadedSemesters[4].courses = JSON.parse(JSON.stringify(PREPOPULATED_COURSES["Semester 5"]));
+      }
+    }
+    
     // Prevent messed up data where user deleted a semester: rebuild fresh 4 semesters (min) and copy over existing courses by matching index
     semesters = [];
     const count = Math.max(4, loadedSemesters.length);
