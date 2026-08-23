@@ -30,14 +30,15 @@ const linksData = {
       prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007 / M4-0-011", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_162_1/outline"
       } 
     },
     "AENL228 (Measurement & Instrumentation for Energy Systems)": { 
       credits: 3, ltp: "2-0-2", 
       prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2.2.007 / M2.2.031", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login"
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_163_1/outline"
       } 
     },
     "AENP200 (Energy Technology Lab)": { 
@@ -45,7 +46,7 @@ const linksData = {
       prof: "Prof. Dibakar Rakshit", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_164_1/outline"
       } 
     },
     "AENP225 (Electrical Energy Laboratory)": { 
@@ -53,7 +54,7 @@ const linksData = {
       prof: "Prof. Anandarup Das", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_165_1/outline"
       } 
     },
     "AHUL256 (Critical Thinking)": { 
@@ -61,7 +62,7 @@ const linksData = {
       prof: "Prof. Arjun Ghosh", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_182_1/outline"
       } 
     },
     "AHUL261 (Introduction to Psychology)": { 
@@ -69,7 +70,7 @@ const linksData = {
       prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_183_1/outline"
       } 
     },
     "ASBL100 (Introductory Biology for Engineers)": { 
@@ -77,7 +78,7 @@ const linksData = {
       prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_190_1/outline"
       } 
     },
     "AGRL130 (Innovation, Entrepreneurship, and Sustainability)": { 
