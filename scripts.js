@@ -43,32 +43,50 @@ const linksData = {
     "AENP200 (Energy Technology Lab)": { 
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Dibakar Rakshit", cabin: "Faculty Cabin", room: "M3-1-009", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     },
     "AENP225 (Electrical Energy Laboratory)": { 
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Anandarup Das", cabin: "Faculty Cabin", room: "M3-1-009", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     },
     "AHUL256 (Critical Thinking)": { 
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Arjun Ghosh", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     },
     "AHUL261 (Introduction to Psychology)": { 
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     },
     "ASBL100 (Introductory Biology for Engineers)": { 
       credits: 4, ltp: "3-0-2", 
       prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     },
     "AGRL130 (Innovation, Entrepreneurship, and Sustainability)": { 
       credits: 3, ltp: "3-0-0", 
       prof: "Prof. Joby Joseph, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M4-0-011", 
-      links: {} 
+      links: {
+        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
+        "Blackboard": "https://iida.blackboard.com/ultra/course"
+      } 
     }
   }
 };
