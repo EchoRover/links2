@@ -78,7 +78,7 @@ const linksData = {
       credits: 3, ltp: "3-0-0", 
       prof: "Prof. Joby Joseph, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M4-0-011", 
       links: {
-        "Blackboard": "https://iida.blackboard.com/ultra/course"
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_179_1/outline"
       } 
     }
   }
