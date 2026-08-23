@@ -10,7 +10,7 @@ const linksData = {
     Teams: "https://teams.microsoft.com/",
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
-    TimeTable: "https://iitdabudhabi.ac.ae/uploaded_files/semseter-schedule/2026/Year%203%20%20Semester%205%20%20B.%20TECH%20Energy%20Engineering.pdf",
+    TimeTable: "timetable.pdf",
     Bus: {
       url: "bus",
       className: "bus-link",
