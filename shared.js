@@ -5,14 +5,14 @@
 // ============================================================
 
 const COURSE_COLORS = {
-  AENL226: "#b69c68",
-  AENL228: "#68b69c",
-  AHUL256: "#e49edd",
-  AGRL130: "#ffffcc",
-  ASBL100: "#b67568",
-  AHUL261: "#a9b668",
-  AENP225: "#4194c7",
-  AENP200: "#dbe9f7"
+  AENL226: "#f59e0b",
+  AENL228: "#0d9488",
+  AENP200: "#38bdf8",
+  AENP225: "#6366f1",
+  AHUL256: "#ec4899",
+  AHUL261: "#8b5cf6",
+  ASBL100: "#10b981",
+  AGRL130: "#84cc16"
 };
 
 // ================= THEME (apply early to avoid flash) =================
