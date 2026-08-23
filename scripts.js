@@ -25,27 +25,27 @@ const linksData = {
     }
   },
   courses: {
-    "AENL226 (Power Electronics)": { 
+    "AENL226 (Power Electronics and Power Systems)": { 
       credits: 4, ltp: "3-1-0", 
-      prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007", 
+      prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007 / M4-0-011", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/course"
       } 
     },
-    "AENL228 (Measurement & Instr)": { 
+    "AENL228 (Measurement & Instrumentation for Energy Systems)": { 
       credits: 3, ltp: "2-0-2", 
       prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2.2.007 / M2.2.031", 
       links: {
         "ERP Link": "https://iitdadierp.iitd.ac.in/student/login"
       } 
     },
-    "AENP200 (Energy Tech Lab)": { 
+    "AENP200 (Energy Technology Lab)": { 
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Dibakar Rakshit", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {} 
     },
-    "AENP225 (Elec Energy Lab)": { 
+    "AENP225 (Electrical Energy Laboratory)": { 
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Anandarup Das", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {} 
@@ -55,17 +55,17 @@ const linksData = {
       prof: "Prof. Arjun Ghosh", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {} 
     },
-    "AHUL261 (Intro to Psychology)": { 
+    "AHUL261 (Introduction to Psychology)": { 
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {} 
     },
-    "ASBL100 (Intro Biology)": { 
+    "ASBL100 (Introductory Biology for Engineers)": { 
       credits: 4, ltp: "3-0-2", 
       prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
       links: {} 
     },
-    "AGRL130 (Innovation & Sust)": { 
+    "AGRL130 (Innovation, Entrepreneurship, and Sustainability)": { 
       credits: 3, ltp: "3-0-0", 
       prof: "Prof. Joby Joseph, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M4-0-011", 
       links: {} 
@@ -188,40 +188,39 @@ function buildHeroSub() {
 
 const WEEKLY_CLASSES = {
   1: [ // Monday
-    { code: "AENL226", name: "Power Electronics and Systems", time: "09:00-10:00", room: "M2.2.007", type: "Tutorial" },
-    { code: "AENL228", name: "Measurement & Instrumentation", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AGRL130", name: "Innovation & Sustainability", time: "16:00-17:30", room: "M4-0-011", type: "Lecture" }
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "10:00-11:00", room: "M2.2.007", type: "Help Session" },
+    { code: "AENL228", name: "Measurement & Instrumentation", time: "11:00-12:30", room: "M2.2.007", type: "Lecture" },
+    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AGRL130", name: "Innovation & Sustainability", time: "16:00-18:50", room: "M4-0-011", type: "Lecture" }
   ],
   2: [ // Tuesday
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AHUL256", name: "Critical Thinking", time: "15:30-17:00", room: "M4-1-017", type: "Tutorial" },
-    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-19:00", room: "M3-1-009", type: "Lab", batch: 1 },
-    { code: "AENL228", name: "Measurement Lab", time: "16:00-19:00", room: "M2.2.031", type: "Lab", batch: 2 }
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-12:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL256", name: "Critical Thinking", time: "15:30-16:20", room: "M4-1-017", type: "Tutorial" },
+    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-18:50", room: "M3-1-009", type: "Lab", batch: 1 }
   ],
   3: [ // Wednesday
     { code: "AENL228", name: "Measurement & Instrumentation", time: "08:00-09:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AENP200", name: "Energy Technology Lab", time: "09:00-12:00", room: "M3-1-009", type: "Lab", batch: 1 },
-    { code: "AENL226", name: "Power Electronics and Systems", time: "10:00-11:00", room: "M2.2.007", type: "Tutorial", batch: 2 },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-12:00", room: "M4-1-017", type: "Tutorial", batch: 2 },
-    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:30", room: "M4-1-017", type: "Tutorial", batch: 1 },
-    { code: "AENP200", name: "Energy Technology Lab", time: "15:30-18:30", room: "M3-1-009", type: "Lab", batch: 2 },
-    { code: "AHUL256", name: "Critical Thinking", time: "16:30-17:30", room: "M4-1-017", type: "Tutorial", batch: 1 }
+    { code: "AENP200", name: "Energy Technology Lab", time: "09:00-11:50", room: "M3-1-009", type: "Lab", batch: 1 },
+    { code: "AENL228", name: "Measurement Lab", time: "09:00-11:00", room: "M2.2.031", type: "Lab", batch: 2 },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-11:50", room: "M4-1-017", type: "Tutorial", batch: 2 },
+    { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:20", room: "M4-1-017", type: "Tutorial", batch: 1 },
+    { code: "AENP200", name: "Energy Technology Lab", time: "15:30-18:20", room: "M3-1-009", type: "Lab", batch: 2 },
+    { code: "AHUL256", name: "Critical Thinking", time: "17:00-17:50", room: "M4-1-017", type: "Tutorial", batch: 1 }
   ],
   4: [ // Thursday
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "09:00-10:00", room: "M2.2.007", type: "Tutorial" },
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-11:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AENL226", name: "Power Electronics and Systems", time: "11:00-12:00", room: "M2.2.007", type: "Lecture" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:30", room: "M4-0-011", type: "Lecture" },
-    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-19:00", room: "M3-1-009", type: "Lab", batch: 2 },
-    { code: "AENL228", name: "Measurement Lab", time: "16:00-19:00", room: "M2.2.031", type: "Lab", batch: 1 }
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-12:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AENL228", name: "Measurement Lab", time: "15:30-17:30", room: "M2.2.031", type: "Lab", batch: 1 },
+    { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-18:50", room: "M3-1-009", type: "Lab", batch: 2 }
   ],
   5: [ // Friday
-    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "08:00-09:30", room: "M2.2.007", type: "Lecture" },
-    { code: "ASBL100", name: "Introductory Biology Lab", time: "10:00-12:00", room: "M3-1-031", type: "Lab" }
+    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "08:00-09:00", room: "M2.2.007", type: "Lecture" },
+    { code: "ASBL100", name: "Introductory Biology Lab", time: "10:00-11:50", room: "M3-1-031", type: "Lab" }
   ]
 };
 

@@ -386,7 +386,8 @@ function initEnergySprite() {
     "aenp225": "form-volt", "elec energy": "form-volt",
     "ahul256": "form-think", "thinking": "form-think",
     "ahul261": "form-brain", "psych": "form-brain",
-    "asbl100": "form-dna", "bio": "form-dna"
+    "asbl100": "form-dna", "bio": "form-dna",
+    "agrl130": "form-leaf", "sust": "form-leaf", "innovation": "form-leaf"
   };
 
   document.addEventListener("mouseover", (e) => {

@@ -40,14 +40,14 @@ const PREPOPULATED_COURSES = {
     { name: "Open Elective: Data Science", credits: 4, grade: "A" }
   ],
   "Semester 5": [
-    { name: "Power Electronics (AENL226)", credits: 4, grade: "A" },
-    { name: "Measurement & Instr (AENL228)", credits: 3, grade: "A" },
-    { name: "Energy Tech Lab (AENP200)", credits: 1.5, grade: "A" },
-    { name: "Elec Energy Lab (AENP225)", credits: 1.5, grade: "A" },
-    { name: "Intro Biology (ASBL100)", credits: 4, grade: "A" },
-    { name: "HUL Elective: Critical Thinking (AHUL256)", credits: 4, grade: "A" },
-    { name: "HUL Elective: Psychology (AHUL261)", credits: 4, grade: "A" },
-    { name: "Open Elective: Artificial Intelligence", credits: 4, grade: "A" }
+    { name: "Power Electronics and Power Systems (AENL226)", credits: 4, grade: "A" },
+    { name: "Measurement and Instrumentation for Energy Systems (AENL228)", credits: 3, grade: "A" },
+    { name: "Energy Technology Lab (AENP200)", credits: 1.5, grade: "A" },
+    { name: "Electrical Energy Laboratory (AENP225)", credits: 1.5, grade: "A" },
+    { name: "Introductory Biology for Engineers (ASBL100)", credits: 4, grade: "A" },
+    { name: "Critical Thinking (AHUL256)", credits: 4, grade: "A" },
+    { name: "Introduction to Psychology (AHUL261)", credits: 4, grade: "A" },
+    { name: "Innovation, Entrepreneurship, and Sustainability (AGRL130)", credits: 3, grade: "A" }
   ]
 };
 
