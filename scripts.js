@@ -29,7 +29,6 @@ const linksData = {
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007 / M4-0-011", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_162_1/outline"
       } 
     },
@@ -37,7 +36,6 @@ const linksData = {
       credits: 3, ltp: "2-0-2", 
       prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2.2.007 / M2.2.031", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_163_1/outline"
       } 
     },
@@ -45,7 +43,6 @@ const linksData = {
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Dibakar Rakshit", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_164_1/outline"
       } 
     },
@@ -53,7 +50,6 @@ const linksData = {
       credits: 1.5, ltp: "0-0-3", 
       prof: "Prof. Anandarup Das", cabin: "Faculty Cabin", room: "M3-1-009", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_165_1/outline"
       } 
     },
@@ -61,7 +57,6 @@ const linksData = {
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Arjun Ghosh", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_182_1/outline"
       } 
     },
@@ -69,7 +64,6 @@ const linksData = {
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_183_1/outline"
       } 
     },
@@ -77,7 +71,6 @@ const linksData = {
       credits: 4, ltp: "3-0-2", 
       prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_190_1/outline"
       } 
     },
@@ -85,7 +78,6 @@ const linksData = {
       credits: 3, ltp: "3-0-0", 
       prof: "Prof. Joby Joseph, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M4-0-011", 
       links: {
-        "ERP Link": "https://iitdadierp.iitd.ac.in/student/login",
         "Blackboard": "https://iida.blackboard.com/ultra/course"
       } 
     }
