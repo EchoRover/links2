@@ -197,6 +197,37 @@ function buildHeroSub() {
   sub.textContent = `${greeting} · ${counter}`;
 }
 
+// Room codes -> what people actually call the room. These do NOT decode
+// arithmetically and it is not close: M4-1-017 is Classroom 7 while M4-0-011 is
+// Classroom 3. No string rule gives you both, so this is a lookup, and anything
+// missing keeps its raw code rather than a guessed number that walks you to the
+// wrong door. Names are read off the 23 Aug grid; the M2 rooms are unnamed there.
+const ROOM_NAMES = {
+  "M4-0-011": "Classroom 3",
+  "M4-1-017": "Classroom 7",
+  "M3-1-009": "Energy Lab",
+  "M3-1-031": "Biology Lab"
+};
+
+// "Classroom 3" when the sheet names it, the bare code when it doesn't.
+function roomShort(code) {
+  if (!code) return "";
+  return String(code).split("/").map(part => {
+    const raw = part.trim();
+    return ROOM_NAMES[raw] || raw;
+  }).join(" / ");
+}
+
+// Same, but keeps the code alongside: "Classroom 3 (M4-0-011)".
+function roomLabel(code) {
+  if (!code) return "";
+  return String(code).split("/").map(part => {
+    const raw = part.trim();
+    const name = ROOM_NAMES[raw];
+    return name ? `${name} (${raw})` : raw;
+  }).join(" / ");
+}
+
 const WEEKLY_CLASSES = {
   1: [ // Monday
     { code: "AENL226", name: "Power Electronics and Power Systems", time: "10:00-11:00", room: "M2.2.007", type: "Help Session" },
@@ -288,7 +319,7 @@ function updateLiveClassStatus() {
     statusEl.innerHTML = `
       <p>
         <span class="class-lunch">✿ Lunch Break · 12:00 - 14:00</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${nextClass.room}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
       </p>
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-lunch";
@@ -298,8 +329,8 @@ function updateLiveClassStatus() {
   if (currentClass) {
     statusEl.innerHTML = `
       <p>
-        <span class="class-active">🟢 Now: <strong>${currentClass.code} ${currentClass.type}</strong> (${currentClass.room}) · ${currentClass.time}</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${nextClass.room}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+        <span class="class-active">🟢 Now: <strong>${currentClass.code} ${currentClass.type}</strong> (${roomShort(currentClass.room)}) · ${currentClass.time}</span>
+        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
       </p>
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-active";
@@ -309,7 +340,7 @@ function updateLiveClassStatus() {
       statusEl.innerHTML = `
         <p>
           <span class="class-free">🌴 Free Time / Study Slot</span>
-          <span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${nextClass.room}) at ${nextClass.time.split("-")[0].trim()}</span>
+          <span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>
         </p>
       `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";
@@ -390,7 +421,7 @@ function renderModalTimetable(dayKey) {
             <span class="timeline-code">${c.code}</span>
             <span class="timeline-type">${c.type}</span>
           </div>
-          <div class="timeline-room">📍 Room ${c.room}${batchLabel}</div>
+          <div class="timeline-room">📍 ${roomLabel(c.room)}${batchLabel}</div>
         </div>
         <div class="timeline-name">${c.name}</div>
       </div>

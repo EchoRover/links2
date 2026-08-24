@@ -120,7 +120,7 @@ function renderCourseLinks(selector, data) {
       codeEl.style.borderColor = `color-mix(in srgb, ${courseColor} 20%, transparent)`;
       if (prof) codeEl.setAttribute("data-prof", prof);
       if (cabin) codeEl.setAttribute("data-cabin", cabin);
-      if (room) codeEl.setAttribute("data-room", room);
+      if (room) codeEl.setAttribute("data-room", typeof roomLabel === "function" ? roomLabel(room) : room);
       head.appendChild(codeEl);
     }
     if (ltp || credits != null) {
