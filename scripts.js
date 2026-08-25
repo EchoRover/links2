@@ -11,16 +11,11 @@ const linksData = {
     Outlook: "https://outlook.office.com/",
     Blackboard: "https://iida.blackboard.com/ultra/course",
     TimeTable: "timetable.pdf",
-    Bus: {
-      url: "bus",
-      className: "bus-link",
-      quip: "campus shuttle schedule 🚌",
-      quipTop: "don't miss the coaster!"
-    },
+    Bus: "bus",
     linkCS: {
       url: "https://linkcs.vercel.app",
       className: "cs-link",
-      quip: "the other side of town ↗",
+      quip: "If your code crashes, talk to them ↗",
       quipTop: "you and i are polar opposites"
     }
   },

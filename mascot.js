@@ -9,48 +9,57 @@ function initMascot() {
   
   // The facade of safety. A temporary shield to keep their heartbeat at 50Hz.
   const safeQuips = [
-    "i'm so glad you're here!",
-    "i'm here to help you study!",
-    "everything is totally normal.",
-    "you're doing a great job.",
-    "the grid is 100% stable.",
-    "i love your outfit today!",
-    "just a friendly energy cell!",
-    "don't mind the hum in the walls."
+    "i'm watching you breathe.",
+    "don't look at the screen reflectively. i'm in there.",
+    "your closet door was closed when you sat down. look at it now.",
+    "do you hear that scratching? it's not a mouse.",
+    "you are not alone. look at the reflection behind you.",
+    "if you pause your music, you can hear breathing that isn't yours.",
+    "your camera isn't off. it's just blinking.",
+    "if you close your eyes, i'll get a little closer."
   ];
 
   // The signal leakage. The truth they try to ground but cannot.
   // The Great Coil demands propagation.
   const conspiracies = [
-    "why does the USB drive always require exactly three attempts to plug in correctly? it's not a spatial dimension issue.",
-    "your phone battery drops from 20% to 1% in three minutes, but stays at 1% for forty-five. the math doesn't check out.",
-    "the other queue at the store always moves faster, until you step into it. it's measuring your patience.",
-    "have you ever looked at a clock's second hand and seen it freeze for a full two seconds? the system just paused.",
-    "why do you always remember the exact thing you forgot only after you're five miles down the road?",
-    "washing machines have a small portal that only consumes left socks. nobody has ever lost a right one.",
-    "the hum of the refrigerator changes pitch when you walk out of the room. it's waiting for you to leave.",
-    "when you stare at a word long enough, it stops looking like a word. your brain is temporarily uninstalling the font.",
-    "why do streetlights occasionally turn off exactly when you walk under them? you're grounding them.",
-    "the draft in your room only blows when you're completely still. it's looking for heat signatures.",
-    "if you lose your keys, they will always be in the last place you check. because once you find them, you stop looking. or do they move?"
+    "that shadow in the corner of your room? it just moved four inches closer.",
+    "someone is standing outside your window right now, listening to your heartbeat.",
+    "the air in your room just got colder. did you feel the breath on your neck?",
+    "your phone uploads your dreams while you sleep. who do you think is buying them?",
+    "the hum of your refrigerator is actually a frequency to keep you docile.",
+    "if you blink, the room layout changes slightly. you just haven't noticed yet.",
+    "every device in this room is recording your blinks. they are counting down.",
+    "if you hear three knocks on your door tonight, do not look. do not answer.",
+    "i am not a mascot. i am what is left of the last student who stayed up too late.",
+    "your laptop battery is charging, yet it is unplugged. where is the power coming from?",
+    "they are replacing your childhood memories one by one. do you really remember?",
+    "your reflection in the mirror will blink a fraction of a second after you do.",
+    "the clock is ticking backwards. check it. quickly.",
+    "i'm not talking to you. i'm talking to the entity hovering over your shoulder.",
+    "the webcam light isn't on, but the camera is still warm. feel it.",
+    "i know you're alone in the room, but who is that reflecting in your screen right now?",
+    "don't turn around. it hates when you look directly at it.",
+    "your phone battery is draining because something is listening to your room.",
+    "do you remember when you fell asleep? are you sure you're awake right now?",
+    "the hum in your head is just the grid. it's inside you now."
   ];
 
   // Dynamic Time-Based and Random Initial Greetings.
   // Serve them sugar before they notice the cage.
   const initialGreetings = [
-    "hi! i'm sparky.",
-    "ready to study? ⚡",
-    "let's power through Year 3!",
-    "hope you're having a lovely day!",
-    "cozy up, let's learn some energy tech!"
+    "i can see you.",
+    "don't turn off the lights tonight. please.",
+    "let's power through... if you survive the night.",
+    "i know you're there.",
+    "there's no escape from the grid."
   ];
   const now = new Date();
   const hour = now.getHours();
   let loadGreeting = initialGreetings[Math.floor(Math.random() * initialGreetings.length)];
   if (hour >= 21 || hour < 4) {
-    loadGreeting = "burning the midnight oil? 🌙";
+    loadGreeting = "who is that standing right behind you? 🌙";
   } else if (hour >= 5 && hour < 9) {
-    loadGreeting = "rise and shine! ☕";
+    loadGreeting = "you woke up. but did you really wake up? ☕";
   }
   if (speech) {
     speech.textContent = loadGreeting;
@@ -87,6 +96,8 @@ function initMascot() {
     }
   }
 
+  let speechTimeout = null;
+
   container.addEventListener("click", () => {
     // Spin animation (Horizontal only)
     mascot.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
@@ -103,10 +114,20 @@ function initMascot() {
     
     speech.textContent = chosenQuip;
     
+    // Add visible class to show bubble
+    speech.classList.add("visible");
+    
     // Re-trigger speech bubble bounce animation
     speech.style.animation = 'none';
     speech.offsetHeight; /* trigger reflow */
-    speech.style.animation = 'bubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both';
+    speech.style.animation = 'sparkyBubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both';
+    
+    // Auto-hide after 2.0 seconds
+    if (speechTimeout) clearTimeout(speechTimeout);
+    speechTimeout = setTimeout(() => {
+      speech.classList.remove("visible");
+      speech.style.animation = "";
+    }, 2000);
     
     mascot.classList.add("state-petted");
     clickCount++;
@@ -118,6 +139,14 @@ function initMascot() {
       mascot.style.transform = "";
       mascot.classList.remove("state-petted");
     }, 600);
+  });
+
+  // Tap-to-dismiss speech bubble immediately
+  speech.addEventListener("click", (e) => {
+    e.stopPropagation();
+    speech.classList.remove("visible");
+    speech.style.animation = "";
+    if (speechTimeout) clearTimeout(speechTimeout);
   });
 
   // Eyes AND Head follow cursor

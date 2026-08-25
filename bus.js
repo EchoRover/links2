@@ -77,7 +77,7 @@ const ITINERARIES = {
         {
             dirId: "toCampus",
             originOffset: 0,
-            destOffset: 3,
+            destOffset: 5,
             desc: "Dorms ➔ Campus Shuttle (stops at KCA 3)"
         },
         {
@@ -92,7 +92,7 @@ const ITINERARIES = {
     "kca3->campus": [
         {
             dirId: "toCampus",
-            originOffset: 3,
+            originOffset: 5,
             destOffset: 15,
             desc: "Dorms ➔ Campus Shuttle"
         }
@@ -100,8 +100,8 @@ const ITINERARIES = {
     "kca3->kca1": [
         {
             dirId: "toDorms",
-            originOffset: 18,
-            destOffset: 21,
+            originOffset: 20,
+            destOffset: 25,
             desc: "Campus ➔ Dorms Shuttle (returning to KCA 1&2)"
         },
         {
@@ -125,7 +125,7 @@ const ITINERARIES = {
         {
             dirId: "toDorms",
             originOffset: 0,
-            destOffset: 18,
+            destOffset: 20,
             desc: "Campus ➔ Dorms Shuttle"
         }
     ]
@@ -468,7 +468,7 @@ function getActiveTransitTrip(now) {
                 const startMins = toMinutes(t);
                 let duration = 0;
                 if (dirId === "toCampus") duration = 15;
-                else if (dirId === "toDorms") duration = 18;
+                else if (dirId === "toDorms") duration = 20;
                 else if (dirId === "kca3Loop") duration = 20;
 
                 const endMins = startMins + duration;
@@ -509,14 +509,14 @@ function renderActiveTracker(now) {
     if (active.dirId === "toCampus") {
         stops = [
             { name: "KCA 1&2", time: active.baseTime, offset: 0 },
-            { name: "KCA 3", time: addMins(active.baseTime, 3), offset: 3 },
+            { name: "KCA 3", time: addMins(active.baseTime, 5), offset: 5 },
             { name: "Campus", time: addMins(active.baseTime, 15), offset: 15 }
         ];
     } else if (active.dirId === "toDorms") {
         stops = [
             { name: "Campus", time: active.baseTime, offset: 0 },
             { name: "KCA 1&2", time: addMins(active.baseTime, 15), offset: 15 },
-            { name: "KCA 3", time: addMins(active.baseTime, 18), offset: 18 }
+            { name: "KCA 3", time: addMins(active.baseTime, 20), offset: 20 }
         ];
     } else if (active.dirId === "kca3Loop") {
         stops = [
@@ -585,24 +585,28 @@ function renderLiveBoard(now) {
             const isUrgent = !t.tomorrow && delta >= 0 && delta <= 5;
             const etaClass = isUrgent ? "card-eta urgent" : "card-eta";
 
+            const dirLabel = t.dirId === "toCampus" ? "Dorms ➔ Campus" : t.dirId === "toDorms" ? "Campus ➔ Dorms" : "KCA 3 ⇄ KCA 1";
+            const dirClass = t.dirId === "toCampus" ? "dir-to-campus" : t.dirId === "dir-to-dorms" ? "dir-to-dorms" : "dir-loop";
+
             const originLabel = currentLoc === "kca1" ? "KCA 1&2" : currentLoc === "kca3" ? "KCA 3" : "Campus";
             const destLabel = currentDest === "kca1" ? "KCA 1&2" : currentDest === "kca3" ? "KCA 3" : "Campus";
 
             return `
-            <div class="board-item-card">
+            <div class="board-item-card ${dirClass}">
                 <div class="veh-icon-circle ${iconClass}">${vDetail.icon}</div>
                 <div class="card-body">
                     <div class="card-title-row">
-                        <span class="card-route-title">Departs ${originLabel} ➔ Arrives ${destLabel}</span>
+                        <span class="card-route-title" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;">
+                            <span class="route-badge" style="font-size: 0.95rem; font-weight: 800;">${originLabel} <span style="color: var(--coral);">➔</span> ${destLabel}</span>
+                            <span class="route-direction-badge" style="font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; background: var(--bg-card); border: 1px solid var(--rule); padding: 0.15rem 0.45rem; border-radius: 4px; color: var(--fg); text-transform: uppercase; display: inline-flex; align-items: center;">📍 Leg: ${dirLabel}</span>
+                        </span>
                         <span class="${etaClass}">${until}</span>
                     </div>
                     <div class="card-subtitle-row">
                         <span class="card-veh-name">${vehicleLabel}</span>
                         <span class="card-time-badge">⏱️ ${to12h(t.departTime)} &ndash; ${to12hSimple(t.arriveTime)}</span>
                     </div>
-                    <div class="card-timeline-desc">
-                        🧭 ${t.desc}
-                    </div>
+                    <div class="card-timeline-desc" style="font-size: 0.7rem; color: var(--fg-soft); font-style: italic; margin-top: 0.15rem;">${t.desc}</div>
                 </div>
             </div>`;
         }).join("");
@@ -659,15 +663,21 @@ function renderTables(now) {
                                     vehHtml = `<span class="tag tag-soft" style="font-size: 0.68rem; padding: 0.2rem 0.5rem; border-radius: 6px;">Assumed</span>`;
                                 }
 
-                                return `
-                                <tr class="${cls}"${isNext ? ' id="next-row"' : ""}>
-                                    <td class="c-no">${idx + 1}</td>
-                                    <td class="c-time">${to12h(t.departTime)}</td>
-                                    <td class="c-time">${to12h(t.arriveTime)}</td>
-                                    <td class="c-veh">${vehHtml}</td>
-                                    <td class="c-route" style="font-size: 0.72rem;">${t.desc}</td>
-                                </tr>`;
-                            }).join("")}
+                                 const tblDirLabel = t.dirId === "toCampus" ? "Dorms ➔ Campus" : t.dirId === "toDorms" ? "Campus ➔ Dorms" : "KCA 3 ⇄ KCA 1";
+                                 const tblDirBadgeColor = t.dirId === "toCampus" ? "tag-day" : t.dirId === "toDorms" ? "tag-night" : "tag-bus";
+
+                                 return `
+                                 <tr class="${cls}"${isNext ? ' id="next-row"' : ""}>
+                                     <td class="c-no">${idx + 1}</td>
+                                     <td class="c-time">${to12h(t.departTime)}</td>
+                                     <td class="c-time">${to12h(t.arriveTime)}</td>
+                                     <td class="c-veh">${vehHtml}</td>
+                                     <td class="c-route" style="font-size: 0.72rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                                         <span class="tag ${tblDirBadgeColor}" style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.35rem; border-radius: 4px; display: inline-flex; width: max-content;">${tblDirLabel}</span>
+                                         <div style="font-size: 0.68rem; color: var(--fg-soft); font-weight: 500;">${t.desc}</div>
+                                     </td>
+                                 </tr>`;
+                             }).join("")}
                         </tbody>
                     </table>
                 </div>
