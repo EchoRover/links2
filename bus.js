@@ -598,15 +598,14 @@ function renderLiveBoard(now) {
                     <div class="card-title-row">
                         <span class="card-route-title" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;">
                             <span class="route-badge" style="font-size: 0.95rem; font-weight: 800;">${originLabel} <span style="color: var(--coral);">➔</span> ${destLabel}</span>
-                            <span class="route-direction-badge" style="font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; background: var(--bg-card); border: 1px solid var(--rule); padding: 0.15rem 0.45rem; border-radius: 4px; color: var(--fg); text-transform: uppercase; display: inline-flex; align-items: center;">📍 Leg: ${dirLabel}</span>
+                            <span class="route-direction-badge" style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; background: var(--bg-card); border: 1px solid var(--rule); padding: 0.1rem 0.35rem; border-radius: 4px; color: var(--fg); text-transform: uppercase;">${dirLabel}</span>
                         </span>
                         <span class="${etaClass}">${until}</span>
                     </div>
-                    <div class="card-subtitle-row">
-                        <span class="card-veh-name">${vehicleLabel}</span>
-                        <span class="card-time-badge">⏱️ ${to12h(t.departTime)} &ndash; ${to12hSimple(t.arriveTime)}</span>
+                    <div class="card-subtitle-row" style="font-size: 0.78rem; font-weight: 500;">
+                        <span>⏱️ <strong>${to12h(t.departTime)}</strong> (arrive ${to12hSimple(t.arriveTime)})</span>
+                        <span style="font-weight: 600; color: var(--coral);">${vDetail.icon} ${vDetail.name}</span>
                     </div>
-                    <div class="card-timeline-desc" style="font-size: 0.7rem; color: var(--fg-soft); font-style: italic; margin-top: 0.15rem;">${t.desc}</div>
                 </div>
             </div>`;
         }).join("");
@@ -672,9 +671,8 @@ function renderTables(now) {
                                      <td class="c-time">${to12h(t.departTime)}</td>
                                      <td class="c-time">${to12h(t.arriveTime)}</td>
                                      <td class="c-veh">${vehHtml}</td>
-                                     <td class="c-route" style="font-size: 0.72rem; display: flex; flex-direction: column; gap: 0.2rem;">
-                                         <span class="tag ${tblDirBadgeColor}" style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.35rem; border-radius: 4px; display: inline-flex; width: max-content;">${tblDirLabel}</span>
-                                         <div style="font-size: 0.68rem; color: var(--fg-soft); font-weight: 500;">${t.desc}</div>
+                                     <td class="c-route" style="font-size: 0.72rem;">
+                                         <span class="tag ${tblDirBadgeColor}" style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.35rem; border-radius: 4px;">${tblDirLabel}</span>
                                      </td>
                                  </tr>`;
                              }).join("")}
