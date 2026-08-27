@@ -58,7 +58,7 @@
       line-height: 1.5;
     }
 
-    .page { max-width: 760px; margin: 0 auto; padding: 0 16px 80px; }
+    .page { max-width: 800px; margin: 0 auto; padding: 0 16px 80px; }
 
     /* ── Top bar ── */
     .topbar {
@@ -107,50 +107,59 @@
     .card-title {
       font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em;
       text-transform: uppercase; color: var(--text-2); margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: center;
     }
 
-    /* ── Quick Add Groups ── */
-    .quick-groups {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
-    }
-    .group-btn {
-      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
-      padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border);
-      background: var(--bg-card); color: var(--text); cursor: pointer;
-      transition: all 0.15s;
-    }
-    .group-btn:hover {
-      border-color: var(--accent); background: var(--bg-input);
-    }
-
-    /* ── Search ── */
-    .search-wrap { position: relative; margin-bottom: 12px; }
-    .search-input {
-      width: 100%; padding: 10px 14px;
-      border-radius: 8px; border: 1.5px solid var(--border);
+    /* ── Search & Filter ── */
+    .filter-wrap { margin-bottom: 16px; display: flex; gap: 8px; }
+    .filter-input {
+      flex: 1; padding: 8px 12px;
+      border-radius: 6px; border: 1px solid var(--border);
       background: var(--bg-input); color: var(--text);
-      font-size: 0.95rem; font-family: 'Inter', sans-serif;
-      outline: none; transition: border-color 0.15s;
+      font-size: 0.88rem; font-family: 'Inter', sans-serif;
+      outline: none;
     }
-    .search-input::placeholder { color: var(--text-2); }
-    .search-input:focus { border-color: var(--accent); }
+    .add-custom-btn {
+      padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--accent); font-weight: 600;
+      font-size: 0.82rem; cursor: pointer; display: flex; align-items: center; gap: 4px;
+    }
+    .add-custom-btn:hover { background: var(--bg-input); border-color: var(--accent); }
 
-    .dropdown {
-      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-      background: var(--bg-card); border: 1.5px solid var(--border);
-      border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.13);
-      max-height: 220px; overflow-y: auto; z-index: 100; display: none;
+    /* ── Grid Columns for Branches ── */
+    .selection-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+      max-height: 280px; overflow-y: auto; padding-right: 4px;
     }
-    .dropdown.open { display: block; }
-    .dropdown-item {
-      padding: 9px 14px; cursor: pointer; font-size: 0.88rem;
-      display: flex; align-items: center; gap: 7px;
-      transition: background 0.1s;
+    @media (max-width: 600px) {
+      .selection-grid { grid-template-columns: 1fr; max-height: 400px; }
     }
-    .dropdown-item:hover { background: var(--bg-input); }
+
+    .branch-col { display: flex; flex-direction: column; gap: 6px; }
+    .branch-header {
+      font-size: 0.78rem; font-weight: 700; color: var(--text);
+      border-bottom: 1px solid var(--border); padding-bottom: 4px;
+      margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .branch-actions { display: flex; gap: 4px; }
+    .action-link {
+      font-size: 0.65rem; color: var(--accent); cursor: pointer; text-decoration: underline;
+      background: none; border: none; padding: 2px 4px; font-weight: 600;
+    }
+    .action-link:hover { color: var(--text); }
+
+    /* ── Checklist Items ── */
+    .check-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.84rem; cursor: pointer; padding: 4px 6px;
+      border-radius: 6px; transition: background 0.1s;
+    }
+    .check-item:hover { background: var(--bg-input); }
+    .check-item input { cursor: pointer; }
+    
     .d-badge {
-      font-size: 0.67rem; font-weight: 700; letter-spacing: 0.04em;
-      padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 1px 4px; border-radius: 3px; flex-shrink: 0;
     }
     .d-cs   { background: #dde3ff; color: #3730a3; }
     .d-een  { background: #dcf0dc; color: #1e5a29; }
@@ -160,39 +169,38 @@
     [data-theme="dark"] .d-een { background: #1a2e1a; color: #5ec471; }
     [data-theme="dark"] .d-g1  { background: #2e2500; color: #fbbf24; }
     [data-theme="dark"] .d-g2  { background: #2a1040; color: #c084fc; }
-    .d-id   { margin-left: auto; font-size: 0.7rem; opacity: 0.45; white-space: nowrap; }
+
+    .check-name {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .check-id {
+      margin-left: auto; font-size: 0.72rem; opacity: 0.45; font-variant-numeric: tabular-nums;
+    }
 
     /* ── Chips ── */
     .chip-area {
-      display: flex; flex-wrap: wrap; gap: 6px; min-height: 34px; align-items: center;
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+      border-top: 1px dashed var(--border); padding-top: 14px;
     }
     .chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 8px; border-radius: 12px; font-size: 0.78rem; font-weight: 500;
       border: 1px solid transparent;
     }
     .chip-een { background: #dcf0dc; color: #1e5a29; border-color: #b3d9b3; }
     .chip-cs  { background: #dde3ff; color: #3730a3; border-color: #c5cef7; }
     [data-theme="dark"] .chip-een { background: #1a2e1a; color: #5ec471; border-color: #2a3d2a; }
     [data-theme="dark"] .chip-cs  { background: #1e1e3a; color: #818cf8; border-color: #2d2d5a; }
-    .chip-sub { font-size: 0.67rem; opacity: 0.65; }
     
-    /* Interactive group badge inside chip */
-    .chip-group-badge {
+    .chip-toggle {
       font-size: 0.65rem; font-weight: 700;
-      padding: 1px 5px; border-radius: 3px;
+      padding: 1px 4px; border-radius: 3px;
       cursor: pointer; user-select: none;
-      transition: filter 0.1s;
     }
-    .chip-group-badge:hover { filter: brightness(0.9); }
-    .chip-group-badge.g1 { background: #fff3cd; color: #856404; }
-    .chip-group-badge.g2 { background: #f3e8ff; color: #6b21a8; }
-    [data-theme="dark"] .chip-group-badge.g1 { background: #2e2500; color: #fbbf24; }
-    [data-theme="dark"] .chip-group-badge.g2 { background: #2a1040; color: #c084fc; }
-
-    .chip-x   { cursor: pointer; font-size: 1rem; opacity: 0.5; line-height: 1; transition: opacity 0.1s; }
-    .chip-x:hover { opacity: 1; }
-    .chip-hint { font-size: 0.78rem; color: var(--text-2); }
+    .chip-toggle.g1 { background: #fff3cd; color: #856404; }
+    .chip-toggle.g2 { background: #f3e8ff; color: #6b21a8; }
+    [data-theme="dark"] .chip-toggle.g1 { background: #2e2500; color: #fbbf24; }
+    [data-theme="dark"] .chip-toggle.g2 { background: #2a1040; color: #c084fc; }
 
     /* ── Day tabs ── */
     .day-tabs {
@@ -257,10 +265,6 @@
       text-align: center; color: var(--text-2);
       font-size: 0.88rem; padding: 28px 0;
     }
-
-    @media (max-width: 480px) {
-      .tl-time { width: 60px; font-size: 0.66rem; }
-    }
   </style>
 </head>
 <body>
@@ -278,32 +282,55 @@
   <!-- Hero -->
   <section class="hero">
     <h1>Find Common Free Time</h1>
-    <p>Compare any combination of students or entire tutorial batches side-by-side</p>
+    <p>Check any combination/permutation of students or entire groups to find common open slots</p>
   </section>
 
-  <!-- Picker -->
+  <!-- Selection Card -->
   <div class="card">
-    <div class="card-title">Who's hanging out?</div>
+    <div class="card-title">Select Students to Compare</div>
     
-    <!-- Quick Add Groups -->
-    <div class="quick-groups">
-      <button type="button" class="group-btn" data-preset="een-1">+ EEN Group 1</button>
-      <button type="button" class="group-btn" data-preset="een-2">+ EEN Group 2</button>
-      <button type="button" class="group-btn" data-preset="cs-1">+ CS Group 1</button>
-      <button type="button" class="group-btn" data-preset="cs-2">+ CS Group 2</button>
+    <div class="filter-wrap">
+      <input class="filter-input" id="search-filter" type="text" placeholder="Type to filter list by name, ID, group…">
+      <button type="button" class="add-custom-btn" id="add-custom-btn">✨ Add Custom</button>
     </div>
 
-    <div class="search-wrap">
-      <input class="search-input" id="student-search" type="text"
-             placeholder="Search name, ID, or last 2 digits…" autocomplete="off" spellcheck="false">
-      <div class="dropdown" id="dropdown"></div>
+    <div class="selection-grid" id="selection-grid">
+      <!-- EEN Column -->
+      <div class="branch-col" id="een-col">
+        <div class="branch-header">
+          <span>ENERGY (EEN)</span>
+          <div class="branch-actions">
+            <button class="action-link" data-action="een-all">All</button>
+            <button class="action-link" data-action="een-g1">G1</button>
+            <button class="action-link" data-action="een-g2">G2</button>
+            <button class="action-link" data-action="een-none">Clear</button>
+          </div>
+        </div>
+        <div class="branch-items" id="een-items"></div>
+      </div>
+
+      <!-- CS Column -->
+      <div class="branch-col" id="cs-col">
+        <div class="branch-header">
+          <span>COMPUTER (CS)</span>
+          <div class="branch-actions">
+            <button class="action-link" data-action="cs-all">All</button>
+            <button class="action-link" data-action="cs-g1">G1</button>
+            <button class="action-link" data-action="cs-g2">G2</button>
+            <button class="action-link" data-action="cs-none">Clear</button>
+          </div>
+        </div>
+        <div class="branch-items" id="cs-items"></div>
+      </div>
     </div>
+
+    <!-- Active List Area -->
     <div class="chip-area" id="chip-area">
-      <span class="chip-hint" id="chip-hint">Add at least 2 people to compare</span>
+      <span class="chip-hint" id="chip-hint">Select at least 1 student to calculate timeline</span>
     </div>
   </div>
 
-  <!-- Results -->
+  <!-- Results Card -->
   <div class="card" id="result-card" style="display:none">
     <div class="card-title">Weekly schedule overlap</div>
 
@@ -388,8 +415,8 @@ const STUDENT_NAMES = {
   "24A1EENB0082": "Mahra Abdulaziz Aldhaheri"
 };
 
-// Auto-derive list of STUDENTS with branches and groups (1 = odd, 2 = even last digit)
-const STUDENTS = Object.entries(STUDENT_NAMES).map(([id, name]) => {
+// Compile student database. Odd entry number = Group 1, Even = Group 2.
+let STUDENTS = Object.entries(STUDENT_NAMES).map(([id, name]) => {
   const branch = id.startsWith("24A1CSEB") ? "cs" : "een";
   const lastDigit = parseInt(id.slice(-1), 10);
   const group = lastDigit % 2 === 1 ? 1 : 2;
@@ -397,7 +424,7 @@ const STUDENTS = Object.entries(STUDENT_NAMES).map(([id, name]) => {
 });
 
 // ================================================================
-// TIMETABLES (derived from scripts.js & timetable.js)
+// TIMETABLES (from scripts.js & timetable.js)
 // ================================================================
 const EEN_WEEK = {
   1: [
@@ -517,12 +544,12 @@ function buildTimeline(students, day) {
 }
 
 // ================================================================
-// UI STATE & ROUTINES
+// UI OPERATIONS & EVENT HANDLERS
 // ================================================================
-let selected = [];
 let activeDay = 1;
+let selectedIds = new Set(); // holds currently checked IDs
 
-// Theme
+// Theme Toggle
 const themeBtn = document.getElementById("theme-toggle");
 (function() { const s = localStorage.getItem("theme"); if (s) document.documentElement.setAttribute("data-theme",s); })();
 themeBtn.addEventListener("click", () => {
@@ -531,161 +558,156 @@ themeBtn.addEventListener("click", () => {
   localStorage.setItem("theme", n);
 });
 
-// Search input
-const searchEl  = document.getElementById("student-search");
-const dropEl    = document.getElementById("dropdown");
-const chipArea  = document.getElementById("chip-area");
+// Render Checklist
+function renderChecklist() {
+  const filterVal = document.getElementById("search-filter").value.toLowerCase().trim();
+  const eenContainer = document.getElementById("een-items");
+  const csContainer = document.getElementById("cs-items");
 
-function matchStudent(s, q) {
-  if (!q) return true;
-  const ql = q.toLowerCase();
-  const last2Digits = s.id.slice(-2);
-  const last4Digits = s.id.slice(-4);
-  return s.name.toLowerCase().includes(ql) || s.id.toLowerCase().includes(ql) || last4Digits === ql || last2Digits === ql;
-}
-
-function renderDropdown(q) {
-  const hits = STUDENTS.filter(s => !selected.some(x => x.id === s.id) && matchStudent(s, q.trim())).slice(0, 12);
-  let html = "";
-  
-  if (hits.length > 0) {
-    html += hits.map((s, i) => `
-      <div class="dropdown-item" data-id="${s.id}">
+  const buildItemHtml = (s) => {
+    const isChecked = selectedIds.has(s.id) ? "checked" : "";
+    return `
+      <label class="check-item" data-id="${s.id}">
+        <input type="checkbox" ${isChecked} onchange="toggleSelect('${s.id}')">
         <span class="d-badge d-${s.branch}">${s.branch.toUpperCase()}</span>
         <span class="d-badge d-g${s.group}">G${s.group}</span>
-        <span>${s.name}</span>
-        <span class="d-id">…${s.id.slice(-2)}</span>
-      </div>`).join("");
-  }
+        <span class="check-name">${s.name}</span>
+        <span class="check-id">…${s.id.slice(-2)}</span>
+      </label>
+    `;
+  };
 
-  // Option to add as a custom name if typed
-  const trimmed = q.trim();
-  if (trimmed.length > 0) {
-    html += `
-      <div class="dropdown-item custom-add-option" style="border-top: 1px solid var(--border); font-weight:600; color:var(--accent);">
-        ✨ Add "${trimmed}" as custom student
-      </div>`;
-  }
+  const matchesFilter = (s) => {
+    if (!filterVal) return true;
+    return s.name.toLowerCase().includes(filterVal) ||
+           s.id.toLowerCase().includes(filterVal) ||
+           s.id.slice(-2) === filterVal ||
+           ("g" + s.group).includes(filterVal);
+  };
 
-  if (!html) {
-    dropEl.innerHTML = `<div class="dropdown-item" style="opacity:.5; padding: 12px 14px;">No match</div>`;
-  } else {
-    dropEl.innerHTML = html;
-
-    dropEl.querySelectorAll(".dropdown-item").forEach((el) => {
-      el.addEventListener("mousedown", e => {
-        e.preventDefault();
-        if (el.classList.contains("custom-add-option")) {
-          // Add custom student
-          const customStudent = {
-            id: "CUSTOM_" + Date.now(),
-            name: trimmed,
-            branch: "een", // default
-            group: 1       // default
-          };
-          addStudent(customStudent);
-        } else {
-          const found = STUDENTS.find(s => s.id === el.dataset.id);
-          if (found) addStudent(JSON.parse(JSON.stringify(found))); // copy to allow local group mutations
-        }
-      });
-    });
-  }
-  dropEl.classList.add("open");
+  eenContainer.innerHTML = STUDENTS.filter(s => s.branch === "een" && matchesFilter(s)).map(buildItemHtml).join("");
+  csContainer.innerHTML = STUDENTS.filter(s => s.branch === "cs" && matchesFilter(s)).map(buildItemHtml).join("");
 }
 
-function addStudent(s) {
-  if (selected.some(x => x.id === s.id)) return;
-  selected.push(s);
-  searchEl.value = "";
-  dropEl.classList.remove("open");
+// Handle checkbox toggle
+window.toggleSelect = function(id) {
+  if (selectedIds.has(id)) {
+    selectedIds.delete(id);
+  } else {
+    selectedIds.add(id);
+  }
   renderChips();
   renderResult();
-}
+};
 
-function removeStudent(id) {
-  selected = selected.filter(x => x.id !== id);
-  renderChips();
-  if (selected.length >= 1) renderResult();
-  else document.getElementById("result-card").style.display = "none";
-}
-
-function toggleChipGroup(id) {
-  const s = selected.find(x => x.id === id);
-  if (s) {
-    s.group = s.group === 1 ? 2 : 1;
+// Toggle Group property dynamically on the selected chip
+window.toggleChipGroup = function(id) {
+  const idx = STUDENTS.findIndex(s => s.id === id);
+  if (idx !== -1) {
+    STUDENTS[idx].group = STUDENTS[idx].group === 1 ? 2 : 1;
+    renderChecklist();
     renderChips();
     renderResult();
   }
-}
+};
 
-function toggleChipBranch(id) {
-  const s = selected.find(x => x.id === id);
-  if (s) {
-    s.branch = s.branch === "een" ? "cs" : "een";
+// Toggle Branch property dynamically on the selected chip
+window.toggleChipBranch = function(id) {
+  const idx = STUDENTS.findIndex(s => s.id === id);
+  if (idx !== -1) {
+    STUDENTS[idx].branch = STUDENTS[idx].branch === "een" ? "cs" : "een";
+    renderChecklist();
     renderChips();
     renderResult();
   }
-}
+};
 
+// Render selected list at bottom
 function renderChips() {
+  const chipArea = document.getElementById("chip-area");
   chipArea.innerHTML = "";
-  if (!selected.length) { chipArea.appendChild(document.getElementById("chip-hint")); return; }
-  selected.forEach(s => {
+
+  if (selectedIds.size === 0) {
+    chipArea.appendChild(document.getElementById("chip-hint"));
+    return;
+  }
+
+  selectedIds.forEach(id => {
+    const s = STUDENTS.find(x => x.id === id);
+    if (!s) return;
+
     const chip = document.createElement("span");
     chip.className = `chip chip-${s.branch}`;
-    
-    // Interactive branch badge that can be clicked to toggle branch
-    const branchBadge = `<span class="d-badge d-${s.branch}" style="cursor:pointer" title="Click to toggle EEN/CS">${s.branch.toUpperCase()}</span>`;
-    
-    // Interactive group badge that can be clicked to toggle G1/G2
-    const groupBadge = `<span class="chip-group-badge g${s.group}" title="Click to toggle Group">${s.group === 1 ? "G1" : "G2"}</span>`;
-    
     chip.innerHTML = `
       <span>${s.name.split(" ")[0]}</span>
-      ${branchBadge}
-      ${groupBadge}
-      <span class="chip-x">×</span>`;
-      
-    chip.querySelector(`.d-${s.branch}`).onclick = (e) => { e.stopPropagation(); toggleChipBranch(s.id); };
-    chip.querySelector(".chip-group-badge").onclick = (e) => { e.stopPropagation(); toggleChipGroup(s.id); };
-    chip.querySelector(".chip-x").onclick = () => removeStudent(s.id);
+      <span class="d-badge d-${s.branch}" style="cursor:pointer" title="Click to toggle EEN/CS">${s.branch.toUpperCase()}</span>
+      <span class="chip-toggle g${s.group}" onclick="toggleChipGroup('${s.id}')" title="Click to toggle Group">${s.group === 1 ? "G1" : "G2"}</span>
+      <span class="chip-x" onclick="toggleSelect('${s.id}')">×</span>
+    `;
     
+    // Wire up branch toggle
+    chip.querySelector(`.d-${s.branch}`).onclick = (e) => {
+      e.stopPropagation();
+      toggleChipBranch(s.id);
+    };
+
     chipArea.appendChild(chip);
   });
-  if (selected.length < 2) {
-    const h = document.createElement("span");
-    h.className = "chip-hint"; h.textContent = "add at least 2 to compare";
-    chipArea.appendChild(h);
-  }
 }
 
-// Preset group buttons
-document.querySelectorAll(".group-btn").forEach(btn => {
+// Quick Branch/Group Selector Operations
+document.querySelectorAll(".action-link").forEach(btn => {
   btn.onclick = () => {
-    const preset = btn.dataset.preset;
-    let newPreset;
-    if (preset === "een-1") {
-      newPreset = { id: "PRESET_EEN1", name: "EEN Group 1", branch: "een", group: 1 };
-    } else if (preset === "een-2") {
-      newPreset = { id: "PRESET_EEN2", name: "EEN Group 2", branch: "een", group: 2 };
-    } else if (preset === "cs-1") {
-      newPreset = { id: "PRESET_CS1", name: "CS Group 1", branch: "cs", group: 1 };
-    } else if (preset === "cs-2") {
-      newPreset = { id: "PRESET_CS2", name: "CS Group 2", branch: "cs", group: 2 };
-    }
+    const action = btn.dataset.action;
+    const filterVal = document.getElementById("search-filter").value.toLowerCase().trim();
     
-    // Remove duplicate presets if clicked again or just add it
-    selected = selected.filter(x => x.id !== newPreset.id);
-    addStudent(newPreset);
+    const applyToMatches = (branch, condition) => {
+      STUDENTS.forEach(s => {
+        if (s.branch === branch) {
+          const matchSearch = !filterVal || s.name.toLowerCase().includes(filterVal) || s.id.toLowerCase().includes(filterVal);
+          if (matchSearch && condition(s)) {
+            selectedIds.add(s.id);
+          }
+        }
+      });
+    };
+
+    if (action === "een-all")  applyToMatches("een", () => true);
+    if (action === "een-g1")   applyToMatches("een", s => s.group === 1);
+    if (action === "een-g2")   applyToMatches("een", s => s.group === 2);
+    if (action === "een-none") STUDENTS.forEach(s => { if (s.branch === "een") selectedIds.delete(s.id); });
+
+    if (action === "cs-all")   applyToMatches("cs", () => true);
+    if (action === "cs-g1")    applyToMatches("cs", s => s.group === 1);
+    if (action === "cs-g2")    applyToMatches("cs", s => s.group === 2);
+    if (action === "cs-none")  STUDENTS.forEach(s => { if (s.branch === "cs") selectedIds.delete(s.id); });
+
+    renderChecklist();
+    renderChips();
+    renderResult();
   };
 });
 
-searchEl.addEventListener("input", () => renderDropdown(searchEl.value));
-searchEl.addEventListener("focus", () => renderDropdown(searchEl.value));
-searchEl.addEventListener("blur",  () => setTimeout(() => dropEl.classList.remove("open"), 180));
+// Add Custom Student dialog
+document.getElementById("add-custom-btn").onclick = () => {
+  const name = prompt("Enter custom student name:");
+  if (!name) return;
+  const branch = confirm("Is this student in CS? (Click Cancel for Energy/EEN)") ? "cs" : "een";
+  const group = confirm("Is this student in Group 1? (Click Cancel for Group 2)") ? 1 : 2;
 
-// Day tabs
+  const customId = "CUSTOM_" + Date.now();
+  STUDENTS.push({ id: customId, name, branch, group });
+  selectedIds.add(customId);
+  
+  renderChecklist();
+  renderChips();
+  renderResult();
+};
+
+// Search filter binding
+document.getElementById("search-filter").addEventListener("input", renderChecklist);
+
+// Day tabs binding
 document.getElementById("day-tabs").addEventListener("click", e => {
   const btn = e.target.closest(".day-tab"); if (!btn) return;
   activeDay = Number(btn.dataset.day);
@@ -693,14 +715,22 @@ document.getElementById("day-tabs").addEventListener("click", e => {
   renderTimeline();
 });
 
+// Render results timeline
 function renderResult() {
-  document.getElementById("result-card").style.display = "block";
+  const resultCard = document.getElementById("result-card");
+  if (selectedIds.size === 0) {
+    resultCard.style.display = "none";
+    return;
+  }
+  resultCard.style.display = "block";
   renderTimeline();
 }
 
 function renderTimeline() {
-  if (selected.length === 0) return;
-  const segs  = buildTimeline(selected, activeDay);
+  const selectedStudents = STUDENTS.filter(s => selectedIds.has(s.id));
+  if (selectedStudents.length === 0) return;
+
+  const segs  = buildTimeline(selectedStudents, activeDay);
   const tlEl  = document.getElementById("timeline");
   const pillsEl = document.getElementById("free-pills");
   const sumWrap = document.getElementById("summary-wrap");
@@ -708,10 +738,6 @@ function renderTimeline() {
   tlEl.innerHTML = segs.map(seg => {
     let detail;
     if (seg.status === "free")  detail = "Everyone free";
-    else if (seg.status === "busy")  {
-      const simpleNames = seg.busyNames.map(name => name.split(" ")[0]);
-      detail = simpleNames.join(", ") + " busy";
-    }
     else {
       const simpleNames = seg.busyNames.map(name => name.split(" ")[0]);
       detail = simpleNames.join(", ") + " busy";
@@ -747,8 +773,8 @@ function renderTimeline() {
   }
 }
 
-// Init chips
-renderChips();
+// Initial paint
+renderChecklist();
 </script>
 </body>
 </html>
