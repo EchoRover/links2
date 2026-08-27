@@ -12,6 +12,7 @@ const linksData = {
     Blackboard: "https://iida.blackboard.com/ultra/course",
     TimeTable: "timetable.pdf",
     Bus: "bus",
+    "Free Time": "free",
     linkCS: {
       url: "https://linkcs.vercel.app",
       className: "cs-link",

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Free Time Finder · IITD-AD Y3</title>
+  <link rel="icon" type="image/png" href="sustainability.png">
+  <script>
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Theme tokens ── */
+    :root {
+      --bg:         #f5f3ee;
+      --bg-card:    #ffffff;
+      --bg-input:   #f0ede8;
+      --text:       #1a1a1a;
+      --text-2:     #5a5550;
+      --border:     #d8d2c8;
+      --accent:     #2d7a3a;
+      --free-bg:    #e8f5e9;
+      --free-col:   #1b5e20;
+      --busy-bg:    #fdecea;
+      --busy-col:   #b71c1c;
+      --mixed-bg:   #fff8e1;
+      --mixed-col:  #7a5c00;
+      --radius:     10px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+    }
+    [data-theme="dark"] {
+      --bg:         #141a14;
+      --bg-card:    #1c2a1e;
+      --bg-input:   #111811;
+      --text:       #e8f0e8;
+      --text-2:     #8aab8a;
+      --border:     #2a3d2a;
+      --accent:     #5ec471;
+      --free-bg:    #1a2e1a;
+      --free-col:   #5ec471;
+      --busy-bg:    #2e1a1a;
+      --busy-col:   #ef9a9a;
+      --mixed-bg:   #2e2500;
+      --mixed-col:  #fcd34d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .page { max-width: 760px; margin: 0 auto; padding: 0 16px 80px; }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0 14px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .brand-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.45rem; font-weight: 700;
+      color: var(--accent);
+    }
+    .brand-text small {
+      font-size: 0.75rem; font-weight: 500; color: var(--text-2);
+      font-family: 'Inter', sans-serif; margin-left: 6px;
+    }
+    .topbar-right { display: flex; gap: 8px; align-items: center; }
+    .back-btn, .theme-btn {
+      font-size: 0.82rem; color: var(--text-2);
+      text-decoration: none;
+      padding: 5px 10px; border-radius: 6px;
+      border: 1px solid var(--border);
+      background: none; cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+    .back-btn:hover, .theme-btn:hover { color: var(--text); border-color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero { margin-bottom: 24px; }
+    .hero h1 {
+      font-size: clamp(1.4rem, 4vw, 1.9rem);
+      font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px;
+    }
+    .hero p { font-size: 0.88rem; color: var(--text-2); }
+
+    /* ── Card ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--text-2); margin-bottom: 14px;
+    }
+
+    /* ── Search ── */
+    .search-wrap { position: relative; margin-bottom: 12px; }
+    .search-input {
+      width: 100%; padding: 10px 14px;
+      border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--bg-input); color: var(--text);
+      font-size: 0.95rem; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.15s;
+    }
+    .search-input::placeholder { color: var(--text-2); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .dropdown {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--bg-card); border: 1.5px solid var(--border);
+      border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+      max-height: 220px; overflow-y: auto; z-index: 100; display: none;
+    }
+    .dropdown.open { display: block; }
+    .dropdown-item {
+      padding: 9px 14px; cursor: pointer; font-size: 0.88rem;
+      display: flex; align-items: center; gap: 7px;
+      transition: background 0.1s;
+    }
+    .dropdown-item:hover { background: var(--bg-input); }
+    .d-badge {
+      font-size: 0.67rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+    }
+    .d-cs   { background: #dde3ff; color: #3730a3; }
+    .d-een  { background: #dcf0dc; color: #1e5a29; }
+    .d-g1   { background: #fff3cd; color: #856404; }
+    .d-g2   { background: #f3e8ff; color: #6b21a8; }
+    [data-theme="dark"] .d-cs  { background: #1e1e3a; color: #818cf8; }
+    [data-theme="dark"] .d-een { background: #1a2e1a; color: #5ec471; }
+    [data-theme="dark"] .d-g1  { background: #2e2500; color: #fbbf24; }
+    [data-theme="dark"] .d-g2  { background: #2a1040; color: #c084fc; }
+    .d-id   { margin-left: auto; font-size: 0.7rem; opacity: 0.45; white-space: nowrap; }
+
+    /* ── Chips ── */
+    .chip-area {
+      display: flex; flex-wrap: wrap; gap: 6px; min-height: 34px; align-items: center;
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+      border: 1px solid transparent;
+    }
+    .chip-een { background: #dcf0dc; color: #1e5a29; border-color: #b3d9b3; }
+    .chip-cs  { background: #dde3ff; color: #3730a3; border-color: #c5cef7; }
+    [data-theme="dark"] .chip-een { background: #1a2e1a; color: #5ec471; border-color: #2a3d2a; }
+    [data-theme="dark"] .chip-cs  { background: #1e1e3a; color: #818cf8; border-color: #2d2d5a; }
+    .chip-sub { font-size: 0.67rem; opacity: 0.65; }
+    .chip-x   { cursor: pointer; font-size: 1rem; opacity: 0.5; line-height: 1; transition: opacity 0.1s; }
+    .chip-x:hover { opacity: 1; }
+    .chip-hint { font-size: 0.78rem; color: var(--text-2); }
+
+    /* ── Day tabs ── */
+    .day-tabs {
+      display: flex; gap: 3px; margin-bottom: 18px;
+      background: var(--bg-input); border-radius: 8px; padding: 3px;
+    }
+    .day-tab {
+      flex: 1; padding: 7px 4px; text-align: center;
+      border-radius: 6px; border: none; background: none; cursor: pointer;
+      font-size: 0.82rem; font-weight: 500; color: var(--text-2);
+      font-family: 'Inter', sans-serif; transition: all 0.15s;
+    }
+    .day-tab.active {
+      background: var(--bg-card); color: var(--accent); font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    /* ── Timeline ── */
+    .timeline { display: flex; flex-direction: column; gap: 2px; }
+    .tl-row { display: flex; align-items: stretch; }
+    .tl-time {
+      width: 82px; flex-shrink: 0; font-size: 0.7rem; color: var(--text-2);
+      padding: 7px 10px 7px 0; text-align: right; align-self: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .tl-bar {
+      flex: 1; padding: 7px 12px; border-radius: 6px;
+      font-size: 0.82rem; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tl-bar.free   { background: var(--free-bg);  color: var(--free-col); }
+    .tl-bar.busy   { background: var(--busy-bg);  color: var(--busy-col); }
+    .tl-bar.mixed  { background: var(--mixed-bg); color: var(--mixed-col); }
+    .tl-dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+    .free  .tl-dot { background: var(--free-col); }
+    .busy  .tl-dot { background: var(--busy-col); }
+    .mixed .tl-dot { background: #d97706; }
+    .tl-dur { margin-left: auto; font-size: 0.7rem; opacity: 0.65; white-space: nowrap; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 0.75rem; color: var(--text-2); margin-bottom: 14px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .ld { width: 9px; height: 9px; border-radius: 2px; }
+    .ld-free  { background: var(--free-col); }
+    .ld-busy  { background: var(--busy-col); }
+    .ld-mixed { background: #d97706; }
+
+    /* ── Free summary ── */
+    .free-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .free-pill {
+      padding: 5px 12px; border-radius: 16px; font-size: 0.8rem; font-weight: 500;
+      background: var(--free-bg); color: var(--free-col);
+      border: 1px solid color-mix(in srgb, var(--free-col) 25%, transparent);
+    }
+
+    .empty {
+      text-align: center; color: var(--text-2);
+      font-size: 0.88rem; padding: 28px 0;
+    }
+
+    @media (max-width: 480px) {
+      .tl-time { width: 60px; font-size: 0.66rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand-text">linkeen <small>free time</small></div>
+    <div class="topbar-right">
+      <a class="back-btn" href="/">← home</a>
+      <button class="theme-btn" id="theme-toggle">◐</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Find Common Free Time</h1>
+    <p>Search by name · ID number · or last 2 digits &nbsp;·&nbsp; EEN &amp; CS Year 3 Sem 5</p>
+  </section>
+
+  <!-- Picker -->
+  <div class="card">
+    <div class="card-title">Who's hanging out?</div>
+    <div class="search-wrap">
+      <input class="search-input" id="student-search" type="text"
+             placeholder="Name, full ID, or last 2 digits…" autocomplete="off" spellcheck="false">
+      <div class="dropdown" id="dropdown"></div>
+    </div>
+    <div class="chip-area" id="chip-area">
+      <span class="chip-hint" id="chip-hint">Add at least 2 people to compare</span>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card" id="result-card" style="display:none">
+    <div class="card-title">Weekly schedule overlap</div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="ld ld-free"></span> Everyone free</span>
+      <span class="legend-item"><span class="ld ld-busy"></span> Someone busy</span>
+      <span class="legend-item"><span class="ld ld-mixed"></span> Some free (split groups)</span>
+    </div>
+
+    <div class="day-tabs" id="day-tabs">
+      <button class="day-tab active" data-day="1">Mon</button>
+      <button class="day-tab" data-day="2">Tue</button>
+      <button class="day-tab" data-day="3">Wed</button>
+      <button class="day-tab" data-day="4">Thu</button>
+      <button class="day-tab" data-day="5">Fri</button>
+    </div>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div id="summary-wrap" style="display:none; margin-top:18px">
+      <div class="card-title">✦ Common free windows today</div>
+      <div class="free-pills" id="free-pills"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ================================================================
+// STUDENT ROSTER — edit this list to add/remove classmates
+// Format: { name, id, branch: "een" | "cs", group: 1 | 2 }
+// group = tutorial/lab batch group
+// ================================================================
+const STUDENTS = [
+  // ── EEN Year 3 ─────────────────────────────────────────────
+  { name: "Sumedh Jamsandekar",    id: "2023MT20765", branch: "een", group: 1 },
+  { name: "James Joshua Koshy",    id: "2023MT20757", branch: "een", group: 1 },
+  { name: "Aaron Binoj Amacadu",   id: "2023MT20769", branch: "een", group: 2 },
+  { name: "Evan Johan Tobias",     id: "2023MT20770", branch: "een", group: 2 },
+  // Add more EEN students here ↓
+
+  // ── CS Year 3 ──────────────────────────────────────────────
+  // Add CS students here — set branch: "cs", group: 1 or 2
+  { name: "CS Student G1",         id: "2023CS10001", branch: "cs",  group: 1 },
+  { name: "CS Student G2",         id: "2023CS10002", branch: "cs",  group: 2 },
+  // Add more CS students here ↓
+];
+
+// ================================================================
+// TIMETABLES  (source: linkeen scripts.js & linkcs timetable.js, Sem 5 2026)
+// slot: { start, end, label, group }  — group 0 = everyone, 1/2 = that batch only
+// ================================================================
+const EEN_WEEK = {
+  1: [
+    { start:"10:00", end:"11:00", label:"AENL226 Help Session",  group:0 },
+    { start:"11:00", end:"12:30", label:"AENL228 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL256 Lecture",        group:0 },
+    { start:"16:00", end:"18:50", label:"AGRL130 Lecture",        group:0 },
+  ],
+  2: [
+    { start:"10:00", end:"11:00", label:"ASBL100 Lecture",        group:0 },
+    { start:"11:00", end:"12:20", label:"AENL226 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL261 Lecture",        group:0 },
+    { start:"15:30", end:"16:20", label:"AHUL256 Tutorial",       group:0 },
+    { start:"16:00", end:"18:50", label:"AENP225 Lab",            group:1 },
+  ],
+  3: [
+    { start:"08:00", end:"09:00", label:"AENL228 Lecture",        group:0 },
+    { start:"09:00", end:"11:50", label:"AENP200 Lab",            group:1 },
+    { start:"09:00", end:"11:00", label:"AENL228 Lab",            group:2 },
+    { start:"11:00", end:"11:50", label:"AHUL261 Tutorial",       group:2 },
+    { start:"14:00", end:"15:20", label:"AHUL256 Lecture",        group:0 },
+    { start:"15:30", end:"16:20", label:"AHUL261 Tutorial",       group:1 },
+    { start:"15:30", end:"18:20", label:"AENP200 Lab",            group:2 },
+    { start:"17:00", end:"17:50", label:"AHUL256 Tutorial",       group:1 },
+  ],
+  4: [
+    { start:"09:00", end:"10:00", label:"AENL226 Tutorial",       group:0 },
+    { start:"10:00", end:"11:00", label:"ASBL100 Lecture",        group:0 },
+    { start:"11:00", end:"12:20", label:"AENL226 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL261 Lecture",        group:0 },
+    { start:"15:30", end:"17:30", label:"AENL228 Lab",            group:1 },
+    { start:"16:00", end:"18:50", label:"AENP225 Lab",            group:2 },
+  ],
+  5: [
+    { start:"08:00", end:"09:00", label:"ASBL100 Lecture",        group:0 },
+    { start:"10:00", end:"11:50", label:"ASBL100 Lab",            group:0 },
+  ],
+};
+
+const CS_WEEK = {
+  1: [
+    { start:"10:00", end:"10:50", label:"ACOL331 Lecture",        group:0 },
+    { start:"11:00", end:"11:50", label:"ACOL333 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL256 Lecture",        group:0 },
+    { start:"16:00", end:"18:50", label:"AGRL130 Lecture",        group:0 },
+  ],
+  2: [
+    { start:"08:00", end:"08:50", label:"ACOL351 Lecture",        group:0 },
+    { start:"10:00", end:"10:50", label:"ACOL331 Lecture",        group:0 },
+    { start:"11:00", end:"11:50", label:"ACOL333 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL261 Lecture",        group:0 },
+    { start:"15:30", end:"16:20", label:"AHUL256 Tutorial",       group:2 },
+    { start:"16:30", end:"18:20", label:"ACOL333 Lab",            group:0 },
+  ],
+  3: [
+    { start:"08:00", end:"09:50", label:"ACOL331 Lab",            group:0 },
+    { start:"10:00", end:"10:50", label:"ACOL351 Tutorial",       group:0 },
+    { start:"11:00", end:"11:50", label:"AHUL261 Tutorial",       group:2 },
+    { start:"14:00", end:"15:20", label:"AHUL256 Lecture",        group:0 },
+    { start:"15:30", end:"16:20", label:"AHUL261 Tutorial",       group:1 },
+    { start:"17:00", end:"17:50", label:"AHUL256 Tutorial",       group:1 },
+  ],
+  4: [
+    { start:"08:00", end:"08:50", label:"ACOL351 Lecture",        group:0 },
+    { start:"09:00", end:"10:00", label:"ACOD310 Reserved",       group:0 },
+    { start:"10:00", end:"10:50", label:"ACOL331 Lecture",        group:0 },
+    { start:"11:00", end:"11:50", label:"ACOL333 Lecture",        group:0 },
+    { start:"14:00", end:"15:20", label:"AHUL261 Lecture",        group:0 },
+    { start:"15:30", end:"17:20", label:"ACOL331 Lab",            group:0 },
+  ],
+  5: [
+    { start:"09:00", end:"09:50", label:"ACOL351 Lecture",        group:0 },
+  ],
+};
+
+// ================================================================
+// SCHEDULE LOGIC
+// ================================================================
+const DAY_START = 8 * 60;    // 08:00
+const DAY_END   = 19 * 60;   // 19:00
+const SLOT      = 30;        // minutes per slot
+
+const tmin = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
+const tfmt = m => `${String(Math.floor(m/60)).padStart(2,"0")}:${String(m%60).padStart(2,"0")}`;
+const tdur = m => m < 60 ? `${m}m` : (m%60 ? `${Math.floor(m/60)}h ${m%60}m` : `${Math.floor(m/60)}h`);
+
+function getBusy(student, day) {
+  const week = student.branch === "cs" ? CS_WEEK : EEN_WEEK;
+  return (week[day] || [])
+    .filter(s => s.group === 0 || s.group === student.group)
+    .map(s => ({ start: tmin(s.start), end: tmin(s.end), label: s.label }));
+}
+
+function buildTimeline(students, day) {
+  const busyMaps = students.map(s => getBusy(s, day));
+  const segments = [];
+
+  for (let t = DAY_START; t < DAY_END; t += SLOT) {
+    const mid = t + SLOT / 2;
+    const busyIdx = students
+      .map((_, i) => busyMaps[i].some(b => mid >= b.start && mid < b.end))
+      .map((isBusy, i) => isBusy ? i : -1)
+      .filter(i => i >= 0);
+
+    const status = busyIdx.length === 0 ? "free"
+                 : busyIdx.length === students.length ? "busy"
+                 : "mixed";
+
+    const last = segments[segments.length - 1];
+    if (last && last.status === status) {
+      last.end = t + SLOT;
+    } else {
+      segments.push({ start: t, end: t + SLOT, status, busyNames: busyIdx.map(i => students[i].name.split(" ")[0]) });
+    }
+  }
+  return segments;
+}
+
+// ================================================================
+// UI STATE
+// ================================================================
+let selected = [];
+let activeDay = 1;
+
+// Theme
+const themeBtn = document.getElementById("theme-toggle");
+(function() { const s = localStorage.getItem("theme"); if (s) document.documentElement.setAttribute("data-theme",s); })();
+themeBtn.addEventListener("click", () => {
+  const n = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", n);
+  localStorage.setItem("theme", n);
+});
+
+// Search
+const searchEl  = document.getElementById("student-search");
+const dropEl    = document.getElementById("dropdown");
+const chipArea  = document.getElementById("chip-area");
+
+function matchStudent(s, q) {
+  if (!q) return true;
+  const ql = q.toLowerCase();
+  return s.name.toLowerCase().includes(ql) || s.id.includes(ql) || s.id.slice(-2) === ql;
+}
+
+function renderDropdown(q) {
+  const hits = STUDENTS.filter(s => !selected.includes(s) && matchStudent(s, q.trim())).slice(0,12);
+  if (!hits.length) {
+    dropEl.innerHTML = `<div class="dropdown-item" style="opacity:.5">No match — add the student to the STUDENTS list in free.html</div>`;
+  } else {
+    dropEl.innerHTML = hits.map((s,i) => `
+      <div class="dropdown-item" data-i="${i}">
+        <span class="d-badge d-${s.branch}">${s.branch.toUpperCase()}</span>
+        <span class="d-badge d-g${s.group}">G${s.group}</span>
+        <span>${s.name}</span>
+        <span class="d-id">…${s.id.slice(-2)}</span>
+      </div>`).join("");
+    dropEl.querySelectorAll(".dropdown-item").forEach((el,i) => {
+      el.addEventListener("mousedown", e => { e.preventDefault(); addStudent(hits[i]); });
+    });
+  }
+  dropEl.classList.add("open");
+}
+
+function addStudent(s) {
+  if (selected.includes(s)) return;
+  selected.push(s);
+  searchEl.value = "";
+  dropEl.classList.remove("open");
+  renderChips();
+  if (selected.length >= 2) renderResult();
+}
+
+function removeStudent(s) {
+  selected = selected.filter(x => x !== s);
+  renderChips();
+  if (selected.length >= 2) renderResult();
+  else document.getElementById("result-card").style.display = "none";
+}
+
+function renderChips() {
+  chipArea.innerHTML = "";
+  if (!selected.length) { chipArea.appendChild(document.getElementById("chip-hint")); return; }
+  selected.forEach(s => {
+    const chip = document.createElement("span");
+    chip.className = `chip chip-${s.branch}`;
+    chip.innerHTML = `<span>${s.name.split(" ")[0]}</span><span class="chip-sub">${s.branch.toUpperCase()} G${s.group}</span><span class="chip-x">×</span>`;
+    chip.querySelector(".chip-x").onclick = () => removeStudent(s);
+    chipArea.appendChild(chip);
+  });
+  if (selected.length < 2) {
+    const h = document.createElement("span");
+    h.className = "chip-hint"; h.textContent = "add one more to compare";
+    chipArea.appendChild(h);
+  }
+}
+
+searchEl.addEventListener("input", () => renderDropdown(searchEl.value));
+searchEl.addEventListener("focus", () => renderDropdown(searchEl.value));
+searchEl.addEventListener("blur",  () => setTimeout(() => dropEl.classList.remove("open"), 160));
+
+// Day tabs
+document.getElementById("day-tabs").addEventListener("click", e => {
+  const btn = e.target.closest(".day-tab"); if (!btn) return;
+  activeDay = Number(btn.dataset.day);
+  document.querySelectorAll(".day-tab").forEach(b => b.classList.toggle("active", b===btn));
+  renderTimeline();
+});
+
+function renderResult() {
+  document.getElementById("result-card").style.display = "block";
+  renderTimeline();
+}
+
+function renderTimeline() {
+  if (selected.length < 2) return;
+  const segs  = buildTimeline(selected, activeDay);
+  const tlEl  = document.getElementById("timeline");
+  const pillsEl = document.getElementById("free-pills");
+  const sumWrap = document.getElementById("summary-wrap");
+
+  tlEl.innerHTML = segs.map(seg => {
+    let detail;
+    if (seg.status === "free")  detail = "Everyone free";
+    else if (seg.status === "busy")  detail = seg.busyNames.join(", ") + " busy";
+    else detail = seg.busyNames.join(", ") + " busy";
+    return `<div class="tl-row">
+      <div class="tl-time">${tfmt(seg.start)}</div>
+      <div class="tl-bar ${seg.status}">
+        <span class="tl-dot"></span>
+        <span>${detail}</span>
+        <span class="tl-dur">${tdur(seg.end - seg.start)}</span>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Free windows ≥ 30 min
+  const windows = [];
+  for (let i = 0; i < segs.length; ) {
+    if (segs[i].status === "free") {
+      const ws = segs[i].start; let j = i;
+      while (j < segs.length && segs[j].status === "free") j++;
+      windows.push({ start: ws, end: segs[j-1].end });
+      i = j;
+    } else i++;
+  }
+
+  if (windows.length) {
+    sumWrap.style.display = "block";
+    pillsEl.innerHTML = windows.map(w =>
+      `<span class="free-pill">⚡ ${tfmt(w.start)} – ${tfmt(w.end)} &nbsp;·&nbsp; ${tdur(w.end-w.start)}</span>`
+    ).join("");
+  } else {
+    sumWrap.style.display = "none";
+  }
+}
+
+// Init
+renderChips();
+</script>
+</body>
+</html>
