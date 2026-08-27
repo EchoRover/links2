@@ -296,28 +296,71 @@
 
 <script>
 // ================================================================
-// STUDENT ROSTER — edit this list to add/remove classmates
-// Format: { name, id, branch: "een" | "cs", group: 1 | 2 }
-// group = tutorial/lab batch group
+// OFFICIAL STUDENT REGISTRY (from cgpa.js)
 // ================================================================
-const STUDENTS = [
-  // ── EEN Year 3 ─────────────────────────────────────────────
-  { name: "Sumedh Jamsandekar",    id: "2023MT20765", branch: "een", group: 1 },
-  { name: "James Joshua Koshy",    id: "2023MT20757", branch: "een", group: 1 },
-  { name: "Aaron Binoj Amacadu",   id: "2023MT20769", branch: "een", group: 2 },
-  { name: "Evan Johan Tobias",     id: "2023MT20770", branch: "een", group: 2 },
-  // Add more EEN students here ↓
+const STUDENT_NAMES = {
+  "24A1CSEB0001": "Abhiramachandra Vemparala",
+  "24A1CSEB0002": "Aditya Murugesh",
+  "24A1CSEB0003": "Aditya Mohan",
+  "24A1CSEB0004": "Ahad Abdullah Alghamri",
+  "24A1CSEB0005": "Ayachi Mishra",
+  "24A1CSEB0006": "Chaudhary Parva Tejas",
+  "24A1CSEB0007": "Ehsan Mohamed K",
+  "24A1CSEB0008": "Evan Johan Tobias",
+  "24A1CSEB0009": "Farhan Faizy",
+  "24A1CSEB0010": "Hamad Mohammed",
+  "24A1CSEB0011": "Himanshu Nayan Rathi",
+  "24A1CSEB0012": "James Joshua Koshy",
+  "24A1CSEB0013": "Joel Jobi",
+  "24A1CSEB0014": "Kannapu Sujeeth Kevin",
+  "24A1CSEB0015": "Karthik Nambiar Puthiyedathu Ve",
+  "24A1CSEB0016": "Latifa Almarzooqi",
+  "24A1CSEB0017": "Paul Tiju",
+  "24A1CSEB0018": "Rawaan Alhammadi",
+  "24A1CSEB0019": "Saket Sharma",
+  "24A1CSEB0021": "Syeda Eshal Ilhan Daimi",
+  "24A1CSEB0022": "Tanvi Parsam",
+  "24A1CSEB0023": "Varanasi Sumant",
+  "24A1CSEB0024": "Vipulav Batra",
+  "24A1EENB0052": "Aryan Kumar Jha",
+  "24A1EENB0053": "Divyesh Agarwal",
+  "24A1EENB0054": "Fatima Alraeesi",
+  "24A1EENB0055": "Gundala Shailendra Bhaskar Kira",
+  "24A1EENB0056": "Hoor Alhammadi",
+  "24A1EENB0058": "Kartik Swami",
+  "24A1EENB0059": "Keshvi Singh",
+  "24A1EENB0060": "Krishna Chandra Singh",
+  "24A1EENB0061": "Kushal Rajendra Borugadda",
+  "24A1EENB0062": "Lokesh Tiwari",
+  "24A1EENB0064": "Mohammad Taqi Ahsan",
+  "24A1EENB0065": "Mohsin Khan",
+  "24A1EENB0066": "Noora Hamad Alrashdi",
+  "24A1EENB0067": "R Lawmsanga",
+  "24A1EENB0069": "Rindani Naman Shreyas",
+  "24A1EENB0070": "Sarvesh Sarvanan",
+  "24A1EENB0071": "Shama Alshehhi",
+  "24A1EENB0072": "Sunaina Reji Baker",
+  "24A1EENB0073": "Swara Amar Kotnis",
+  "24A1EENB0074": "Tanisha Senthilraj",
+  "24A1EENB0075": "Tarunika Ravikumar",
+  "24A1EENB0077": "Sumedh Jamsandekar",
+  "24A1EENB0078": "Abhimanyu Prakash",
+  "24A1EENB0079": "Noura Mohsin",
+  "24A1EENB0080": "Aaron Amacadu",
+  "24A1EENB0081": "Sumayya Shakir Syed",
+  "24A1EENB0082": "Mahra Abdulaziz Aldhaheri"
+};
 
-  // ── CS Year 3 ──────────────────────────────────────────────
-  // Add CS students here — set branch: "cs", group: 1 or 2
-  { name: "CS Student G1",         id: "2023CS10001", branch: "cs",  group: 1 },
-  { name: "CS Student G2",         id: "2023CS10002", branch: "cs",  group: 2 },
-  // Add more CS students here ↓
-];
+// Auto-derive list of STUDENTS with branches and groups (1 = odd, 2 = even last digit)
+const STUDENTS = Object.entries(STUDENT_NAMES).map(([id, name]) => {
+  const branch = id.startsWith("24A1CSEB") ? "cs" : "een";
+  const lastDigit = parseInt(id.slice(-1), 10);
+  const group = lastDigit % 2 === 1 ? 1 : 2;
+  return { id, name, branch, group };
+});
 
 // ================================================================
-// TIMETABLES  (source: linkeen scripts.js & linkcs timetable.js, Sem 5 2026)
-// slot: { start, end, label, group }  — group 0 = everyone, 1/2 = that batch only
+// TIMETABLES (derived from scripts.js & timetable.js)
 // ================================================================
 const EEN_WEEK = {
   1: [
@@ -394,7 +437,7 @@ const CS_WEEK = {
 };
 
 // ================================================================
-// SCHEDULE LOGIC
+// TIMELINE LOGIC
 // ================================================================
 const DAY_START = 8 * 60;    // 08:00
 const DAY_END   = 19 * 60;   // 19:00
@@ -437,7 +480,7 @@ function buildTimeline(students, day) {
 }
 
 // ================================================================
-// UI STATE
+// UI STATE & ROUTINES
 // ================================================================
 let selected = [];
 let activeDay = 1;
@@ -451,7 +494,7 @@ themeBtn.addEventListener("click", () => {
   localStorage.setItem("theme", n);
 });
 
-// Search
+// Search input
 const searchEl  = document.getElementById("student-search");
 const dropEl    = document.getElementById("dropdown");
 const chipArea  = document.getElementById("chip-area");
@@ -459,23 +502,30 @@ const chipArea  = document.getElementById("chip-area");
 function matchStudent(s, q) {
   if (!q) return true;
   const ql = q.toLowerCase();
-  return s.name.toLowerCase().includes(ql) || s.id.includes(ql) || s.id.slice(-2) === ql;
+  const last2Digits = s.id.slice(-2);
+  const last4Digits = s.id.slice(-4);
+  return s.name.toLowerCase().includes(ql) || s.id.toLowerCase().includes(ql) || last4Digits === ql || last2Digits === ql;
 }
 
 function renderDropdown(q) {
-  const hits = STUDENTS.filter(s => !selected.includes(s) && matchStudent(s, q.trim())).slice(0,12);
+  const hits = STUDENTS.filter(s => !selected.includes(s) && matchStudent(s, q.trim())).slice(0, 12);
   if (!hits.length) {
-    dropEl.innerHTML = `<div class="dropdown-item" style="opacity:.5">No match — add the student to the STUDENTS list in free.html</div>`;
+    dropEl.innerHTML = `<div class="dropdown-item" style="opacity:.5; padding: 12px 14px;">No match</div>`;
   } else {
-    dropEl.innerHTML = hits.map((s,i) => `
-      <div class="dropdown-item" data-i="${i}">
+    dropEl.innerHTML = hits.map((s, i) => `
+      <div class="dropdown-item" data-id="${s.id}">
         <span class="d-badge d-${s.branch}">${s.branch.toUpperCase()}</span>
         <span class="d-badge d-g${s.group}">G${s.group}</span>
         <span>${s.name}</span>
         <span class="d-id">…${s.id.slice(-2)}</span>
       </div>`).join("");
-    dropEl.querySelectorAll(".dropdown-item").forEach((el,i) => {
-      el.addEventListener("mousedown", e => { e.preventDefault(); addStudent(hits[i]); });
+
+    dropEl.querySelectorAll(".dropdown-item").forEach((el) => {
+      el.addEventListener("mousedown", e => {
+        e.preventDefault();
+        const found = STUDENTS.find(s => s.id === el.dataset.id);
+        if (found) addStudent(found);
+      });
     });
   }
   dropEl.classList.add("open");
@@ -516,7 +566,7 @@ function renderChips() {
 
 searchEl.addEventListener("input", () => renderDropdown(searchEl.value));
 searchEl.addEventListener("focus", () => renderDropdown(searchEl.value));
-searchEl.addEventListener("blur",  () => setTimeout(() => dropEl.classList.remove("open"), 160));
+searchEl.addEventListener("blur",  () => setTimeout(() => dropEl.classList.remove("open"), 180));
 
 // Day tabs
 document.getElementById("day-tabs").addEventListener("click", e => {
@@ -574,7 +624,7 @@ function renderTimeline() {
   }
 }
 
-// Init
+// Init chips
 renderChips();
 </script>
 </body>
