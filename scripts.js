@@ -13,6 +13,10 @@ const linksData = {
     TimeTable: "timetable.pdf",
     Bus: "bus",
     "Free Time": "free",
+    Common: "common.html",
+    Rooms: "rooms.html",
+    "3D Map": "both.html",
+    Campus: "campus.html",
     linkCS: {
       url: "https://linkcs.vercel.app",
       className: "cs-link",
@@ -268,84 +272,6 @@ function timeToMinutes(timeStr) {
   return h * 60 + m;
 }
 
-function updateLiveClassStatus() {
-  const statusEl = document.getElementById("live-class-status");
-  const dotEl = document.getElementById("live-class-dot");
-  if (!statusEl) return;
-  
-  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
-  const now = new Date();
-  const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
-  const currentMins = now.getHours() * 60 + now.getMinutes();
-  
-  // Weekend check
-  if (day === 0 || day === 6) {
-    statusEl.innerHTML = `<p class="class-free">☀️ Weekend — No classes scheduled today</p>`;
-    if (dotEl) dotEl.className = "live-class-dot dot-free";
-    return;
-  }
-  
-  const dayClasses = WEEKLY_CLASSES[day] || [];
-  
-  // Find current class
-  let currentClass = null;
-  let nextClass = null;
-  
-  for (const c of dayClasses) {
-    // Filter by batch
-    if (c.batch !== undefined && c.batch !== currentBatch) {
-      continue;
-    }
-    
-    const [startStr, endStr] = c.time.split("-");
-    const startMins = timeToMinutes(startStr.trim());
-    const endMins = timeToMinutes(endStr.trim());
-    
-    if (currentMins >= startMins && currentMins < endMins) {
-      currentClass = c;
-    } else if (currentMins < startMins) {
-      if (!nextClass || startMins < timeToMinutes(nextClass.time.split("-")[0].trim())) {
-        nextClass = c;
-      }
-    }
-  }
-  
-  // Lunch break check: between 12:00 and 14:00 (720 and 840 mins)
-  if (!currentClass && currentMins >= 720 && currentMins < 840) {
-    statusEl.innerHTML = `
-      <p>
-        <span class="class-lunch">✿ Lunch Break · 12:00 - 14:00</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
-      </p>
-    `;
-    if (dotEl) dotEl.className = "live-class-dot dot-lunch";
-    return;
-  }
-  
-  if (currentClass) {
-    statusEl.innerHTML = `
-      <p>
-        <span class="class-active">🟢 Now: <strong>${currentClass.code} ${currentClass.type}</strong> (${roomShort(currentClass.room)}) · ${currentClass.time}</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
-      </p>
-    `;
-    if (dotEl) dotEl.className = "live-class-dot dot-active";
-  } else {
-    // Free time
-    if (nextClass) {
-      statusEl.innerHTML = `
-        <p>
-          <span class="class-free">🌴 Free Time / Study Slot</span>
-          <span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>
-        </p>
-      `;
-      if (dotEl) dotEl.className = "live-class-dot dot-free";
-    } else {
-      statusEl.innerHTML = `<p><span class="class-free">🌴 Done with classes for today!</span></p>`;
-      if (dotEl) dotEl.className = "live-class-dot dot-free";
-    }
-  }
-}
 
 let activeTimetableTab = null;
 
@@ -435,8 +361,6 @@ window.addEventListener("DOMContentLoaded", () => {
   renderUpdates();
   renderLocalClips();
   buildHeroSub();
-  updateLiveClassStatus();
-  setInterval(updateLiveClassStatus, 30000);
   if (typeof initMascot === "function") initMascot();
 
   // Batch toggle buttons
@@ -450,7 +374,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const b = btn.dataset.batch;
       localStorage.setItem("student-batch", b);
       batchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
-      updateLiveClassStatus();
       renderModalTimetable(activeTimetableTab);
     });
   });
@@ -465,7 +388,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // Timetable Modal logic
-  const openTimeBtn = document.getElementById("timetable-box");
+  const openTimeBtn = document.getElementById("tt-card");
   const timeModal = document.getElementById("timetable-modal");
   const closeTimeBtn = document.getElementById("close-timetable-modal");
   

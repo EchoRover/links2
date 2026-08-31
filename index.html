@@ -40,7 +40,13 @@
   <div id="timetable-modal" class="modal">
     <div class="modal-content timetable-modal-content">
       <span class="close-button" id="close-timetable-modal">&times;</span>
-      <h2>Semester 5 Timetable</h2>
+      <div class="modal-header-row" style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+        <h2 style="margin: 0;">Semester 5 Timetable</h2>
+        <div class="batch-toggle-container">
+          <button type="button" class="batch-btn on" data-batch="1">G1</button>
+          <button type="button" class="batch-btn" data-batch="2">G2</button>
+        </div>
+      </div>
       <!-- 
         FUTURE MODEL SKELETON:
         Update the weekly grid table below once the official schedule is released.
@@ -114,21 +120,16 @@
         <div class="body-grid">
 
           <div class="left-col">
-            <!-- Active Class Live Tracker Bar -->
-            <div class="live-tracker-bar" id="timetable-box">
-              <div class="tracker-main">
-                <span class="live-class-dot" id="live-class-dot"></span>
-                <span class="tracker-title">Live Status</span>
-                <div class="batch-toggle-container" onclick="event.stopPropagation();">
-                  <button type="button" class="batch-btn on" data-batch="1">G1</button>
-                  <button type="button" class="batch-btn" data-batch="2">G2</button>
+            <!-- CLASS NOW / NEXT — live off the Sem 5 timetable -->
+            <section class="tt-card" id="tt-card" style="cursor: pointer;">
+                <div class="tt-head">
+                    <span class="tt-title">Class</span>
+                    <div class="tt-tools">
+                        <a href="timetable.pdf" target="_blank" rel="noopener" class="tt-pdf" onclick="event.stopPropagation();">full timetable</a>
+                    </div>
                 </div>
-              </div>
-              <div class="live-class-status" id="live-class-status">
-                <!-- Dynamic active/next class status will be loaded here -->
-              </div>
-              <span class="tracker-calendar-icon">📅</span>
-            </div>
+                <div class="tt-body" id="tt-body"></div>
+            </section>
 
             <div class="links"></div>
 
@@ -169,6 +170,7 @@
 
   <script src="shared.js?v=15"></script>
   <script src="scripts.js?v=15"></script>
+  <script src="timetable.js" defer></script>
   <script src="mascot.js?v=15"></script>
   <script src="gamesscript.js"></script>
 

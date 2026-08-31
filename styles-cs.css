@@ -1,0 +1,1413 @@
+﻿/* ============================================================
+   Cream + ink + coral Â· poles trio Â· 2-col compact courses
+   ============================================================ */
+
+:root {
+    --font-sans: 'Familjen Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Fraunces', 'Source Serif Pro', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+}
+
+:root[data-theme="light"] {
+    /* Editorial light mode â€” warm cream background, deep ink text,
+       rich saturated accents that pop. Distinct from dark in tone, not just luminance. */
+    --bg: #F2EBDB;              /* warm cream paper */
+    --bg-card: #FFFEFB;          /* off-white card */
+    --bg-elevated: #EAE0C8;
+    --fg: #0E1726;              /* deep ink */
+    --fg-soft: #3B4659;
+    --fg-faint: #6B7689;
+    --rule: rgba(14, 23, 38, 0.20);
+    --rule-faint: rgba(14, 23, 38, 0.09);
+
+    /* main accent â€” rich royal blue, vivid on cream */
+    --coral: #1E40AF;
+    --coral-bright: #2563EB;
+    --coral-glow: rgba(30, 64, 175, 0.28);
+    --coral-soft: #E2E8FB;
+
+    /* secondary â€” deep teal */
+    --cyan: #0F766E;
+    --cyan-bright: #14B8A6;
+    --cyan-glow: rgba(15, 118, 110, 0.26);
+    --cyan-soft: #D6F0EC;
+
+    /* indigo â€” vivid violet */
+    --indigo: #6D28D9;
+    --indigo-bright: #8B5CF6;
+    --indigo-glow: rgba(109, 40, 217, 0.28);
+    --indigo-soft: #E9DEFB;
+
+    /* deep navy */
+    --deep: #0E1726;
+    --deep-bright: #3B4659;
+    --deep-glow: rgba(14, 23, 38, 0.32);
+
+    /* violet accent */
+    --sky: #7C3AED;
+    --sky-glow: rgba(124, 58, 237, 0.32);
+
+    /* red â€” used for live indicator, AGRL category, LINKEEN border */
+    --red: #B91C1C;
+    --red-bright: #DC2626;
+    --red-glow: rgba(185, 28, 28, 0.32);
+    --red-soft: #FAD8D8;
+
+    --shadow-sm: 0 1px 2px rgba(14, 23, 38, 0.08);
+    --shadow-md: 0 6px 18px rgba(14, 23, 38, 0.12);
+    --shadow-lg: 0 24px 60px rgba(14, 23, 38, 0.18);
+}
+
+:root[data-theme="dark"] {
+    --bg: #060814;              /* near-black with subtle navy */
+    --bg-card: #0F1729;
+    --bg-elevated: #1E293B;
+    --fg: #E2E8F5;
+    --fg-soft: #94A3B8;
+    --fg-faint: #475569;
+    --rule: rgba(226, 232, 245, 0.13);
+    --rule-faint: rgba(226, 232, 245, 0.06);
+
+    --coral: #60A5FA;
+    --coral-bright: #93C5FD;
+    --coral-glow: rgba(96, 165, 250, 0.45);
+    --coral-soft: rgba(96, 165, 250, 0.12);
+
+    --cyan: #22D3EE;
+    --cyan-bright: #67E8F9;
+    --cyan-glow: rgba(34, 211, 238, 0.42);
+    --cyan-soft: rgba(34, 211, 238, 0.12);
+
+    --indigo: #818CF8;
+    --indigo-bright: #A5B4FC;
+    --indigo-glow: rgba(129, 140, 248, 0.38);
+    --indigo-soft: rgba(129, 140, 248, 0.12);
+
+    --deep: #CBD5E1;
+    --deep-bright: #E2E8F5;
+    --deep-glow: rgba(203, 213, 225, 0.32);
+
+    --sky: #A78BFA;
+    --sky-glow: rgba(167, 139, 250, 0.38);
+
+    --red: #F87171;
+    --red-bright: #FCA5A5;
+    --red-glow: rgba(248, 113, 113, 0.42);
+    --red-soft: rgba(248, 113, 113, 0.14);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+::selection { background: var(--coral); color: var(--bg); }
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Body bg is driven by --bg variable; no hardcoded overrides needed. */
+
+/* Circuit board layers â€” top-down PCB illusion via blur + depth */
+.circuit {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+/* Depth-illusion done via opacity + stroke-width per layer (NO filter:blur,
+   which forces full-viewport rasterization every animation frame). */
+.circuit-deep,
+.circuit-mid,
+.circuit-top {
+    z-index: 0;
+}
+
+/* Layer colors â€” each PCB layer has its own hue identity */
+.circuit-deep .circuit-traces use { stroke: var(--indigo); opacity: 0.22; stroke-width: 3; fill: none; stroke-linecap: square; stroke-linejoin: miter; }
+.circuit-mid  .circuit-traces use { stroke: var(--cyan);   opacity: 0.26; stroke-width: 2.4; fill: none; stroke-linecap: square; stroke-linejoin: miter; }
+.circuit-top  .circuit-traces use,
+.circuit-traces use {
+    fill: none;
+    stroke: var(--coral);
+    stroke-width: 2;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    opacity: 0.38;
+}
+
+.circuit-mid .circuit-vias circle { fill: var(--cyan); opacity: 0.6; r: 4; }
+.circuit-top .circuit-vias circle,
+.circuit-vias circle {
+    fill: var(--coral);
+    opacity: 0.75;
+}
+
+/* Pulses â€” NO drop-shadow filters (they re-rasterize every frame on
+   animated strokes). Brightness comes from bright stroke colors + opacity. */
+.circuit-deep .circuit-pulses use { stroke: var(--indigo-bright); opacity: 0.55; stroke-width: 2.6; }
+.circuit-mid  .circuit-pulses use { stroke: var(--cyan-bright);   opacity: 0.7;  stroke-width: 2.6; }
+.circuit-top  .circuit-pulses use { stroke-width: 2.6; }
+.circuit-pulses use {
+    fill: none;
+    stroke: var(--coral-bright);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 22 9999;
+    stroke-dashoffset: 0;
+    opacity: 0.85;
+    animation-name: zip;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes zip {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -9999; }
+}
+
+/* Interactive dots canvas â€” sits above the circuit, below the content */
+.dots {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Translucent cover â€” dims the circuit/dots so they sit behind the content */
+.cover {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: var(--bg);
+    opacity: 0.55;
+    transition: opacity 0.5s ease, background 0.4s ease;
+}
+[data-theme="dark"] .cover {
+    opacity: 0.5;
+}
+body.play-mode .cover {
+    opacity: 0;
+}
+
+/* HIDE toggle â€” small fixed pill at bottom; only visible at bottom of page */
+.play-toggle {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--coral);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.35s ease,
+                background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.3s;
+}
+.play-toggle.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+.play-toggle svg {
+    width: 14px; height: 14px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.play-toggle.visible:hover {
+    transform: translateX(-50%) translateY(-3px) scale(1.04);
+    box-shadow: 0 0 0 1px var(--coral), 0 16px 36px var(--coral-glow);
+}
+.play-toggle[aria-pressed="true"] {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: var(--bg);
+}
+.play-toggle[aria-pressed="true"] svg { transform: rotate(45deg); }
+
+/* When play mode is on: hide content, fade circuit slightly,
+   let canvas receive pointer events. */
+body.play-mode .page { opacity: 0; pointer-events: none; visibility: hidden; }
+body.play-mode .topbar,
+body.play-mode .quick-secondary { opacity: 0; pointer-events: none; visibility: hidden; }
+body.play-mode .circuit-traces use { opacity: 0.32; }
+body.play-mode .circuit-pulses use { stroke-width: 2.5; }
+body.play-mode { cursor: crosshair; }
+
+/* Page-load stagger reveal */
+.topbar { animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.herobar { animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.course-list { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
+.updates-grid { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Smooth theme transition on color properties */
+* {
+    transition-property: background-color, border-color, color, box-shadow, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+
+/* Focus ring â€” accessibility */
+:focus-visible {
+    outline: 2px solid var(--coral);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+a:focus-visible, button:focus-visible {
+    outline-offset: 3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--rule);
+    border-radius: 5px;
+    border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--coral); }
+* { scrollbar-color: var(--rule) transparent; scrollbar-width: thin; }
+
+.ambient {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle 600px at var(--mx,50%) var(--my,30%),
+        var(--coral-soft), transparent 70%);
+}
+
+/* ============================================================
+   TOP BAR â€” logo left Â· utilities right
+   ============================================================ */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+    padding: 0.75rem 0 1.25rem;
+    border-bottom: 1px solid var(--rule);
+}
+.brand {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    min-width: 0;
+}
+.brand-logo {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    flex-shrink: 0;
+    height: 56px;
+}
+.brand-logo .text-img { height: 56px; width: auto; display: block; }
+.brand-logo .circle-img { height: 56px; width: auto; display: block; }
+[data-theme="dark"] .brand-logo .text-img { filter: invert(1); }
+
+.brand-name {
+    display: inline-flex;
+    align-items: baseline;
+    line-height: 1;
+    flex-shrink: 0;
+    overflow: visible;
+}
+.brand-part-link {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 2.4rem;
+    color: var(--fg-soft);
+    letter-spacing: -0.045em;
+    line-height: 1;
+}
+.brand-part-cs,
+.brand-part-een {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: var(--coral);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin-left: 0.05em;
+    position: relative;
+}
+.brand-part-cs::after,
+.brand-part-een::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.18em;
+    height: 3px;
+    background: linear-gradient(90deg,
+        var(--coral) 0%,
+        var(--cyan) 25%,
+        var(--indigo) 50%,
+        var(--red) 75%,
+        var(--coral) 100%);
+    background-size: 300% 100%;
+    border-radius: 2px;
+    opacity: 0.85;
+    animation: brand-underline-slide 6s linear infinite;
+}
+@keyframes brand-underline-slide {
+    from { background-position: 0% 0; }
+    to   { background-position: 300% 0; }
+}
+
+.brand-meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+}
+.topbar-utils {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+}
+
+.button, .archive-link {
+    position: static;
+    width: 2.4rem; height: 2.4rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    color: var(--fg);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; border-radius: 10px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.25s, color 0.25s, box-shadow 0.3s, background 0.25s;
+}
+.button { font-size: 0.95rem; font-family: inherit; }
+.archive-link img { width: 1.2rem; height: 1.2rem; display: block; transition: filter 0.3s; }
+[data-theme="dark"] .archive-link img { filter: invert(1); }
+.button:hover, .archive-link:hover {
+    border-color: var(--coral);
+    color: var(--coral-bright);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 0 0 1px var(--coral), 0 12px 28px var(--coral-glow);
+}
+
+/* + more pill â€” chevron button (visible, clearly clickable) */
+.pill-more {
+    background: var(--bg-card);
+    border: 1.5px dashed var(--coral);
+    color: var(--coral);
+    cursor: pointer;
+    padding: 0;
+    width: 2.4rem;
+    min-width: 2.4rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    flex-shrink: 0;
+}
+/* CSS-drawn right-pointing triangle â€” perfectly centered, no font needed */
+.pill-more-icon {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 0 5px 8px;
+    border-color: transparent transparent transparent currentColor;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pill-more[aria-expanded="true"] .pill-more-icon {
+    transform: rotate(90deg);
+}
+.pill-more:hover {
+    background: var(--coral-soft);
+    border-color: var(--coral);
+    color: var(--coral);
+    transform: translateY(-2px) scale(1.04);
+}
+.pill-more[aria-expanded="true"] {
+    background: var(--coral);
+    border-color: var(--coral);
+    border-style: solid;
+    color: var(--bg);
+}
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+.page {
+    position: relative; z-index: 5;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.1rem, 4vw, 2.5rem) 5rem;
+}
+
+/* ============================================================
+   HEROBAR â€” logo + title block LEFT Â· pills RIGHT (linkeen-style)
+   ============================================================ */
+.herobar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    padding-bottom: clamp(0.85rem, 2vw, 1.25rem);
+    border-bottom: 1px solid var(--rule);
+}
+.hero-block {
+    display: inline-flex; align-items: center; gap: 0.85rem;
+    min-width: 0;
+}
+.hero-btech {
+    font-family: var(--font-serif);
+    font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    color: var(--coral);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    flex-shrink: 0;
+}
+
+.hero-text {
+    display: flex; flex-direction: column; gap: 0.15rem;
+    min-width: 0;
+}
+.hero-title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-family: var(--font-sans);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+}
+.hero-title-main {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+}
+.hero-title-yr {
+    font-size: clamp(0.95rem, 1.7vw, 1.2rem);
+    font-weight: 500;
+    color: var(--fg-soft);
+    font-family: var(--font-serif);
+    font-style: italic;
+}
+.hero-title-yr em {
+    font-style: italic;
+    font-weight: 800;
+    color: var(--coral);
+}
+
+.hero-quick {
+    display: flex; flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.hero-title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    font-family: var(--font-sans);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    min-width: 0;
+}
+.hero-title-prefix {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-weight: 400;
+    color: var(--fg-soft);
+    font-style: italic;
+    font-family: var(--font-serif);
+}
+.hero-title-main {
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+.hero-title-sep {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    color: var(--rule);
+    font-weight: 300;
+}
+.hero-title-yr {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-weight: 500;
+    color: var(--fg-soft);
+}
+.hero-title-yr em {
+    font-style: italic;
+    font-weight: 800;
+    color: var(--coral);
+    font-family: var(--font-serif);
+}
+
+.hero-side {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+.hero-logo {
+    display: flex; align-items: center; gap: 0.35rem;
+    opacity: 0.85;
+}
+.text-img { height: 24px; width: auto; display: block; }
+.circle-img { height: 24px; width: auto; display: block; }
+[data-theme="dark"] .text-img { filter: invert(1); }
+
+.hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--coral);
+    line-height: 1;
+}
+.live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: livePulse 1.8s ease-out infinite;
+    flex-shrink: 0;
+}
+@keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 var(--red-glow); }
+    70%  { box-shadow: 0 0 0 10px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* ============================================================
+   POLES â€” quote / link / quote (matches linkeen's treatment)
+   ============================================================ */
+.poles {
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto clamp(1.75rem, 4vw, 2.5rem);
+    padding-bottom: clamp(1.25rem, 3vw, 2rem);
+    border-bottom: 1px solid var(--rule);
+    width: fit-content;
+    max-width: 100%;
+}
+.poles-quote {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.15rem;
+    font-family: var(--font-serif);
+    font-variation-settings: "opsz" 36, "SOFT" 50, "WONK" 1;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--coral);
+    border: 1.5px solid var(--coral);
+    border-radius: 999px;
+    line-height: 1.1;
+    background: transparent;
+    transition: background 0.25s, color 0.25s, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: center;
+}
+.poles-quote:hover {
+    background: var(--coral-soft);
+    transform: scale(1.03);
+}
+.poles-quote-top { transform: rotate(-1deg); }
+.poles-quote-bot { transform: rotate(1deg); }
+.poles-quote-top:hover { transform: rotate(-1deg) scale(1.03); }
+.poles-quote-bot:hover { transform: rotate(1deg) scale(1.03); }
+
+.poles-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.65rem 1.3rem;
+    background: var(--coral);
+    color: var(--bg);
+    border: 1.5px solid var(--coral);
+    border-radius: 999px;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 14px var(--coral-glow);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+}
+.poles-link-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.poles-link:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 28px var(--coral-glow);
+}
+.poles-link:hover .poles-link-arrow { transform: translate(3px, -3px); }
+
+/* SECONDARY quick links â€” expandable below the herobar */
+.quick-secondary {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease, padding 0.4s ease, visibility 0s linear 0.4s;
+}
+.quick-secondary.open {
+    max-height: 16rem;
+    opacity: 1;
+    visibility: visible;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    padding-bottom: clamp(0.85rem, 2vw, 1.25rem);
+    border-bottom: 1px solid var(--rule);
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease, padding 0.4s ease, visibility 0s linear 0s;
+}
+.pill {
+    display: inline-flex; align-items: center;
+    padding: 0.78rem 1.2rem;
+    min-height: 44px;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    color: var(--fg);
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.25s, box-shadow 0.3s, background 0.25s, color 0.25s;
+}
+.pill-name {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+}
+.pill:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 14px 32px var(--coral-glow), 0 0 0 1px var(--fg);
+}
+.pill:active {
+    transform: translateY(-1px) scale(1.02);
+    transition-duration: 0.08s;
+}
+
+/* LINKEEN pill â€” red-accent + hover popup with two quotes */
+.pill-linkeen {
+    position: relative;
+    border-color: var(--red);
+    color: var(--red);
+    gap: 0.4rem;
+}
+.pill-linkeen .pill-name { color: var(--red); font-weight: 700; letter-spacing: 0.02em; }
+.pill-out {
+    width: 14px;
+    height: 14px;
+    color: var(--red);
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
+}
+.pill-linkeen:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--bg);
+    box-shadow: 0 0 0 1px var(--red), 0 14px 32px var(--red-glow);
+}
+.pill-linkeen:hover .pill-name,
+.pill-linkeen:hover .pill-out { color: var(--bg); }
+.pill-linkeen:hover .pill-out { transform: translate(3px, -3px); }
+
+/* Two separate quote pills â€” one above, one below the linkeen pill */
+.pill-quote {
+    position: absolute;
+    left: 50%;
+    padding: 0.45rem 1rem;
+    background: var(--bg);
+    border: 1.5px solid var(--coral);
+    border-radius: 999px;
+    color: var(--coral);
+    font-family: var(--font-serif);
+    font-variation-settings: "opsz" 24, "SOFT" 70, "WONK" 1;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.15;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px var(--coral-glow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 50;
+}
+.pill-quote-top {
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(10px) rotate(-2deg);
+}
+.pill-quote-bot {
+    top: calc(100% + 10px);
+    transform: translateX(-50%) translateY(-10px) rotate(2deg);
+}
+.pill-linkeen:hover .pill-quote-top,
+.pill-linkeen.show-popup .pill-quote-top {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(-2deg);
+}
+.pill-linkeen:hover .pill-quote-bot,
+.pill-linkeen.show-popup .pill-quote-bot {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) rotate(2deg);
+}
+
+/* ============================================================
+   COURSES â€” editorial header per course (drop-cap + chip + dept)
+   Single column Â· resource list 2-col with clickable rows
+   ============================================================ */
+.course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: stretch;
+    gap: 0.85rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+    padding-bottom: clamp(1.25rem, 3vw, 2rem);
+    border-bottom: 1px solid var(--rule);
+}
+.course-list .box {
+    display: flex; flex-direction: column;
+    align-self: stretch;
+    min-width: 0;
+    padding: 1.1rem 1.15rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-color 0.25s, box-shadow 0.3s;
+    position: relative;
+}
+.course-list .box:hover {
+    transform: translateY(-2px);
+    border-color: var(--coral);
+    box-shadow: 0 12px 28px var(--coral-glow);
+}
+
+.course-h1-sr {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+/* COURSE HEADER â€” clean stack: meta row on top, title below */
+.course-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+    border-bottom: 1px dotted var(--rule);
+}
+
+.course-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    min-width: 0;
+}
+.course-chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--coral);
+    padding: 0.28rem 0.55rem;
+    border: 1.5px solid var(--coral);
+    border-radius: 6px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.course-meta-inline {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    flex-shrink: 0;
+}
+
+.course-name {
+    font-family: var(--font-sans);
+    font-size: clamp(1.15rem, 1.9vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.course-firstletter {
+    color: var(--coral);
+    font-size: 1.25em;
+    font-weight: 800;
+    line-height: 1;
+}
+/* Letter gets color only (no background â€” it's inline on the title) */
+.course-list .box[data-prefix="ACOL"] .course-firstletter { color: var(--coral); }
+.course-list .box[data-prefix="AGRL"] .course-firstletter { color: var(--red); }
+.course-list .box[data-prefix="AHUL"] .course-firstletter { color: var(--indigo); }
+
+/* Chip + credits circle get the soft-tinted background pill */
+.course-list .box[data-prefix="ACOL"] .course-chip,
+.course-list .box[data-prefix="ACOL"] .course-credits { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
+.course-list .box[data-prefix="AGRL"] .course-chip,
+.course-list .box[data-prefix="AGRL"] .course-credits { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+.course-list .box[data-prefix="AHUL"] .course-chip,
+.course-list .box[data-prefix="AHUL"] .course-credits { color: var(--indigo); border-color: var(--indigo); background: var(--indigo-soft); }
+
+.course-list .box[data-prefix="ACOL"] a:hover { background: var(--coral-soft); color: var(--coral); }
+.course-list .box[data-prefix="AGRL"] a:hover { background: var(--red-soft); color: var(--red); }
+.course-list .box[data-prefix="AHUL"] a:hover { background: var(--indigo-soft); color: var(--indigo); }
+
+.course-list .box[data-prefix="ACOL"] .link-bullet { background: var(--coral); }
+.course-list .box[data-prefix="AGRL"] .link-bullet { background: var(--red); }
+.course-list .box[data-prefix="AHUL"] .link-bullet { background: var(--indigo); }
+
+.course-ltp {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+}
+.course-credits {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: var(--coral-soft);
+    color: var(--coral);
+    border-radius: 50%;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* RESOURCE LIST â€” 2-column rows, clear cell boundaries */
+.course-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0;
+    row-gap: 0;
+    min-width: 0;
+    border-top: 1px solid var(--rule);
+}
+.course-list .box a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    text-decoration: none;
+    padding: 0.55rem 0.7rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+/* Remove right border on right-column cells (every 2nd item) */
+.course-list .box a:nth-child(2n) {
+    border-right: none;
+}
+.link-bullet {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--coral);
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+.link-label {
+    min-width: 0;
+    /* multi-word labels wrap on spaces; single words stay intact */
+}
+.link-arrow {
+    width: 14px;
+    height: 14px;
+    color: var(--fg-faint);
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
+}
+.course-list .box a:hover {
+    color: var(--coral);
+    background: var(--coral-soft);
+}
+.course-list .box a:hover .link-bullet {
+    transform: scale(1.7);
+    box-shadow: 0 0 8px var(--coral-glow);
+}
+.course-list .box a:hover .link-arrow {
+    color: var(--coral);
+    transform: translateX(4px);
+}
+
+/* ============================================================
+   UPDATES â€” just the two columns, no big heading
+   ============================================================ */
+.updates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.updates-col {
+    padding: 0;
+}
+.updates-col-title {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--rule-faint);
+}
+.updates-col:nth-child(1) .updates-col-title { color: var(--coral); }
+.updates-col:nth-child(2) .updates-col-title { color: var(--cyan); }
+.updates-col:nth-child(1) .upd-dow,
+.updates-col:nth-child(1) .upd-code { color: var(--coral); }
+.updates-col:nth-child(2) .upd-dow,
+.updates-col:nth-child(2) .upd-code { color: var(--cyan); }
+
+.updates-list { display: flex; flex-direction: column; gap: 0.3rem; }
+.updates-list:empty::after {
+    content: 'â€” none â€”';
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--fg-faint);
+    font-size: 0.9rem;
+    padding: 0.35rem 0;
+}
+.upd-row {
+    display: flex; align-items: stretch; gap: 0.6rem;
+    padding: 0.3rem 0.35rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    color: var(--fg);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+/* Row highlight only â€” no slide. These rows are not clickable, and a
+   transform on hover promises a tap target that isn't there. */
+.upd-row:hover {
+    background: var(--bg-elevated);
+}
+.upd-date {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+    width: 64px;
+    padding: 0.5rem 0.3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 9px;
+    line-height: 1;
+    text-align: center;
+    gap: 0.15rem;
+}
+.upd-dow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--coral);
+}
+.upd-day {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: 0;
+    line-height: 1;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    width: 100%;
+}
+.upd-mon {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-soft);
+}
+.upd-body {
+    display: flex; flex-direction: column;
+    justify-content: center; gap: 0.15rem;
+    min-width: 0;
+}
+.upd-code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--coral);
+}
+.upd-event {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.3;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 960px) {
+    .course-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+    .hero-foot { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
+    .course-list { grid-template-columns: 1fr; }
+    .updates-grid { grid-template-columns: 1fr; }
+}
+
+/* TOPBAR on phones. The brand lockup runs ~500px wide â€” a 145px
+   institute wordmark, the linkCS name, and the meta line â€” against a
+   ~355px content box, and every child is flex-shrink:0 in a row that
+   never wraps. So the utils (theme toggle, archive, Home) ended up
+   painted on top of the wordmark. Drop the institute logo on mobile;
+   the linkCS name carries the identity on its own, and losing it buys
+   back ~190px. flex-wrap is the backstop: on a very narrow phone the
+   buttons take their own line instead of overlapping anything. */
+@media (max-width: 720px) {
+    .topbar {
+        flex-wrap: wrap;
+        row-gap: 0.55rem;
+        padding-bottom: 0.9rem;
+    }
+    .brand { gap: 0.45rem; min-width: 0; }
+    .brand-logo { display: none; }
+    .brand-part-link { font-size: 1.9rem; }
+    .brand-part-cs { font-size: 2rem; }
+    .topbar-utils { margin-left: auto; flex-shrink: 0; }
+    .topbar-utils .pill { padding: 0.5rem 0.8rem; min-height: 38px; }
+    .topbar-utils .pill-name { font-size: 0.85rem; }
+}
+
+/* below this the meta line is what tips the row into wrapping */
+@media (max-width: 540px) {
+    .brand-meta { display: none; }
+}
+
+@media (max-width: 480px) {
+    body { font-size: 15px; }
+    .button, .archive-link { top: 0.75rem; height: 2.4rem; width: 2.4rem; }
+    .button { right: 0.75rem; }
+    .archive-link { right: 3.4rem; }
+    .page { padding-top: 3.5rem; }
+    .poles-quote { font-size: 0.95rem; padding: 0.45rem 0.95rem; }
+    .poles-link { font-size: 0.95rem; padding: 0.6rem 1.15rem; }
+    .pill { padding: 0.7rem 1rem; }
+    .pill-name { font-size: 0.95rem; }
+    .course-name { font-size: 1rem; }
+}
+
+/* ============================================================
+   CLASS NOW / NEXT â€” live card driven by timetable.js.
+   Additive: all new class names, nothing above is touched.
+   ============================================================ */
+.tt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 0.85rem 1rem 0.9rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.tt-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.tt-title {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--fg-soft);
+}
+
+.tt-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tt-pdf {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--fg-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+}
+
+.tt-pdf:hover {
+    color: var(--coral);
+    border-color: var(--coral);
+}
+
+.tt-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.5rem;
+}
+
+/* A slot is two matching plates bracketing the course: how long you
+   have, and which room. Both are one big number because both get read
+   at a glance, mid-walk. */
+.tt-slot {
+    display: grid;
+    /* Course first, then the room and countdown plates on the right.
+       The plate columns are max-content, NOT auto: an auto track with
+       leftover space in the row stretches to absorb it, which blew the
+       room plate out to 3x its contents once it stopped being the last
+       column. max-content makes each plate hug its own text and hands
+       the slack to the course, which is the part that can use it. */
+    grid-template-columns: 1fr max-content max-content;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.6rem 0.65rem;
+    background: var(--bg-elevated);
+    border-radius: 11px;
+    border: 1px solid transparent;
+}
+
+.tt-main {
+    display: grid;
+    align-content: center;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.tt-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--fg-soft);
+    font-weight: 600;
+}
+
+.tt-on .tt-tag {
+    color: var(--coral);
+}
+
+.tt-kind {
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    padding: 0.08rem 0.32rem;
+    border-radius: 4px;
+    font-weight: 700;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    color: var(--fg-soft);
+}
+
+.tt-k-lab {
+    background: var(--cyan-soft);
+    border-color: transparent;
+    color: var(--cyan);
+}
+
+.tt-k-tut {
+    background: var(--indigo-soft);
+    border-color: transparent;
+    color: var(--indigo);
+}
+
+.tt-g {
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    padding: 0.08rem 0.32rem;
+    border-radius: 4px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-weight: 700;
+}
+
+.tt-code {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    line-height: 1.2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.tt-code em {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: var(--fg-soft);
+}
+
+.tt-clock {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--fg-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- the plate: one shape, used twice ---- */
+.tt-plate {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.03rem;
+    min-width: 4.5rem;
+    padding: 0.42rem 0.45rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 9px;
+}
+
+.tt-p-lab,
+.tt-p-sub {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-soft);
+    white-space: nowrap;
+}
+
+.tt-p-no {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+}
+
+/* A room we have not confirmed shows its raw code, not an invented
+   classroom number â€” smaller, because the code is longer and because
+   it should not read as authoritative. */
+.tt-p-raw .tt-p-no {
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    color: var(--fg-soft);
+}
+
+/* the class you are in gets both plates lit */
+.tt-on .tt-plate {
+    border-color: var(--coral);
+}
+
+.tt-on .tt-p-no {
+    color: var(--coral);
+}
+
+.tt-quiet {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--fg-soft);
+}
+
+@media (max-width: 480px) {
+    .tt-slot {
+        gap: 0.45rem;
+        padding: 0.55rem;
+        /* narrow phones: the plates may shrink toward their min-width
+           rather than starving the course column into clipping */
+        grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    .tt-code {
+        font-size: 0.95rem;
+        /* long codes wrap here instead of spilling out of the track */
+        overflow-wrap: anywhere;
+    }
+
+    .tt-p-no {
+        font-size: 1.75rem;
+    }
+
+    .tt-plate {
+        min-width: 3.9rem;
+        padding: 0.38rem 0.3rem;
+    }
+
+    .tt-p-lab,
+    .tt-p-sub {
+        font-size: 0.52rem;
+        letter-spacing: 0.06em;
+    }
+}

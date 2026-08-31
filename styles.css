@@ -2123,3 +2123,250 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   background: transparent;
   cursor: default;
 }
+
+
+/* Timetable Card Styles ported from linkcs */
+.tt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 0.85rem 1rem 0.9rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.tt-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.tt-title {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--fg-soft);
+}
+
+.tt-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tt-pdf {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--fg-soft);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+}
+
+.tt-pdf:hover {
+    color: var(--coral);
+    border-color: var(--coral);
+}
+
+.tt-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.5rem;
+}
+
+/* A slot is two matching plates bracketing the course: how long you
+   have, and which room. Both are one big number because both get read
+   at a glance, mid-walk. */
+.tt-slot {
+    display: grid;
+    /* Course first, then the room and countdown plates on the right.
+       The plate columns are max-content, NOT auto: an auto track with
+       leftover space in the row stretches to absorb it, which blew the
+       room plate out to 3x its contents once it stopped being the last
+       column. max-content makes each plate hug its own text and hands
+       the slack to the course, which is the part that can use it. */
+    grid-template-columns: 1fr max-content max-content;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.6rem 0.65rem;
+    background: var(--bg-elevated);
+    border-radius: 11px;
+    border: 1px solid transparent;
+}
+
+.tt-main {
+    display: grid;
+    align-content: center;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.tt-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--fg-soft);
+    font-weight: 600;
+}
+
+.tt-on .tt-tag {
+    color: var(--coral);
+}
+
+.tt-kind {
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    padding: 0.08rem 0.32rem;
+    border-radius: 4px;
+    font-weight: 700;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    color: var(--fg-soft);
+}
+
+.tt-k-lab {
+    background: var(--cyan-soft);
+    border-color: transparent;
+    color: var(--cyan);
+}
+
+.tt-k-tut {
+    background: var(--indigo-soft);
+    border-color: transparent;
+    color: var(--indigo);
+}
+
+.tt-g {
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    padding: 0.08rem 0.32rem;
+    border-radius: 4px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-weight: 700;
+}
+
+.tt-code {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.02rem;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    line-height: 1.2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.tt-code em {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.8rem;
+    color: var(--fg-soft);
+}
+
+.tt-clock {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--fg-soft);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- the plate: one shape, used twice ---- */
+.tt-plate {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.03rem;
+    min-width: 4.5rem;
+    padding: 0.42rem 0.45rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 9px;
+}
+
+.tt-p-lab,
+.tt-p-sub {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-soft);
+    white-space: nowrap;
+}
+
+.tt-p-no {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+}
+
+/* A room we have not confirmed shows its raw code, not an invented
+   classroom number — smaller, because the code is longer and because
+   it should not read as authoritative. */
+.tt-p-raw .tt-p-no {
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    color: var(--fg-soft);
+}
+
+/* the class you are in gets both plates lit */
+.tt-on .tt-plate {
+    border-color: var(--coral);
+}
+
+.tt-on .tt-p-no {
+    color: var(--coral);
+}
+
+.tt-quiet {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--fg-soft);
+}
+
+@media (max-width: 480px) {
+    .tt-slot {
+        gap: 0.45rem;
+        padding: 0.55rem;
+        /* narrow phones: the plates may shrink toward their min-width
+           rather than starving the course column into clipping */
+        grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    .tt-code {
+        font-size: 0.95rem;
+        /* long codes wrap here instead of spilling out of the track */
+        overflow-wrap: anywhere;
+    }
+
+    .tt-p-no {
+        font-size: 1.75rem;
+    }
+
+    .tt-plate {
+        min-width: 3.9rem;
+        padding: 0.38rem 0.3rem;
+    }
+
+    .tt-p-lab,
+    .tt-p-sub {
+        font-size: 0.52rem;
+        letter-spacing: 0.06em;
+    }
+}
+
