@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>M3 in 3D Â· linkeen</title>
+    <title>M2 in 3D · linkeen</title>
     <link rel="icon" type="image/png" href="sustainability.png">
     <script src="theme-init.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,67 +30,26 @@
         .b-seg button.on { background: var(--coral); color: var(--bg-card); }
         input[type=range] { width: 150px; accent-color: var(--coral); }
 
-        /* One column: the model gets the full width, and what you clicked reads
-           as a strip underneath it rather than a column stealing 300px from the
-           thing you are actually looking at. */
         .b-stage { display: flex; flex-direction: column; gap: 12px; }
         .b-canvas { position: relative; background: var(--bg-card); border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
         #scene { display: block; width: 100%; height: min(82vh, 900px); touch-action: none; cursor: grab; }
         #scene.dragging { cursor: grabbing; }
         #tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-        .tag { position: absolute; transform: translate(-50%, -50%); font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg);
-               background: color-mix(in srgb, var(--bg-card) 88%, transparent); border: 1px solid var(--rule-faint); border-radius: 6px;
-               padding: 2px 7px; white-space: nowrap; pointer-events: auto; cursor: pointer; box-shadow: var(--shadow-sm); }
-        .tag.sel { border-color: var(--coral); color: var(--coral); font-weight: 600; }
-        .tag.busy { border-color: var(--red); background: var(--red-soft); color: var(--red); }
-        .tag.free { border-color: var(--cyan); background: var(--cyan-soft); color: var(--cyan); font-weight: 600; }
-        .tag.anon { color: var(--fg-faint); border-style: dashed; }
-        .b-help { position: absolute; left: 10px; bottom: 10px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--fg-faint);
-                  background: color-mix(in srgb, var(--bg-card) 90%, transparent); border: 1px solid var(--rule-faint); border-radius: 8px; padding: 6px 10px; }
-        .b-legend { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 3px;
-                    background: color-mix(in srgb, var(--bg-card) 90%, transparent); border: 1px solid var(--rule-faint); border-radius: 8px; padding: 7px 10px;
-                    font-family: var(--font-mono); font-size: 0.64rem; color: var(--fg-faint); }
-        .b-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; margin-right: 5px; }
+        .b-help { position: absolute; bottom: 12px; left: 16px; font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-faint); pointer-events: none; }
+        .b-legend { position: absolute; bottom: 12px; right: 16px; font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fg-faint); display: flex; gap: 16px; pointer-events: none; }
+        .b-legend span { display: flex; align-items: center; gap: 6px; }
+        .b-legend .sq { width: 9px; height: 9px; border-radius: 3px; border: 1px solid var(--rule); }
 
-        /* The detail strip. Everything here was sized and coloured for a narrow
-           side column; laid out along the bottom it needs to carry at a glance,
-           so: larger type, and the text that matters uses --fg rather than the
-           faint tokens meant for secondary labels. */
-        .b-side { background: var(--bg-card); border: 1px solid var(--rule); border-radius: 12px;
-                  padding: 12px 18px; min-height: 0; box-shadow: var(--shadow-sm);
-                  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; }
-        .side-empty { font-size: 0.95rem; color: var(--fg-soft); margin: 0; }
-
-        .b-side .side-head { display: flex; flex-direction: column; gap: 2px; }
-        .side-name { font-family: var(--font-serif); font-style: italic; font-size: 1.5rem;
-                     color: var(--fg); margin: 0; line-height: 1.1; }
-        .side-code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-soft); }
-
-        .b-side .side-status { display: flex; flex-direction: column; gap: 3px; }
-        .st-busy-course { font-weight: 700; color: var(--fg); font-size: 1.05rem; }
-        .st-when { font-family: var(--font-mono); font-size: 0.85rem; color: var(--fg-soft); }
-        .st-when b { color: var(--coral); font-weight: 700; }
-
-        .b-side .slots { display: flex; flex-wrap: wrap; gap: 6px 18px; }
-        .b-side .slot-row { border-bottom: none; padding: 0; gap: 8px; font-size: 0.9rem;
-                            color: var(--fg); align-items: baseline; }
-        .b-side .slot-row.past { opacity: 0.55; }
-        .slot-time { font-family: var(--font-mono); font-size: 0.82rem; color: var(--fg-soft); white-space: nowrap; }
-        .slot-course { font-family: var(--font-mono); font-weight: 700; color: var(--fg); }
-
-        .side-meta { font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-faint);
-                     border-top: none; margin: 0 0 0 auto; padding: 0; text-align: right; line-height: 1.5;
-                     align-self: center; }
-        .side-empty { font-size: 0.83rem; color: var(--fg-faint); line-height: 1.5; }
-        .side-name { font-family: var(--font-serif); font-style: italic; font-size: 1.25rem; color: var(--fg); margin: 0 0 2px; }
-        .side-code { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-faint); }
-        .side-meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-faint); margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--rule-faint); line-height: 1.7; }
-        .st-free { color: var(--cyan); font-family: var(--font-mono); font-size: 1rem; font-weight: 700; }
-        .st-busy-course { font-weight: 700; color: var(--fg); }
+        .b-side { border: 1px solid var(--rule); border-radius: 12px; background: var(--bg-card); padding: 16px 20px; box-shadow: var(--shadow-sm); display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: start; }
+        .side-empty { margin: 0; font-family: var(--font-serif); font-style: italic; color: var(--fg-faint); grid-column: 1 / -1; text-align: center; padding: 12px 0; }
+        .st-name { font-family: var(--font-serif); font-style: italic; font-weight: 500; font-size: 1.45rem; color: var(--fg); margin: 0 0 1px; }
+        .st-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .st-area { display: inline-block; font-size: 0.72rem; padding: 2px 7px; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg-elevated); color: var(--fg-soft); margin-left: 6px; vertical-align: middle; }
+        .st-now { font-size: 0.84rem; line-height: 1.5; color: var(--fg-soft); margin: 0; }
+        .st-now b { color: var(--fg); }
         .st-when { font-family: var(--font-mono); font-size: 0.73rem; color: var(--fg-faint); display: block; margin-top: 3px; }
         .st-when b { color: var(--coral); }
         .slot-row { display: flex; gap: 9px; padding: 5px 0; border-bottom: 1px solid var(--rule-faint); font-size: 0.77rem; align-items: baseline; }
-        .slot-row:last-child { border-bottom: none; }
         .slot-row.past { opacity: 0.42; }
         .slot-time { font-family: var(--font-mono); font-size: 0.68rem; color: var(--fg-faint); white-space: nowrap; }
         .slot-course { font-family: var(--font-mono); font-weight: 600; }
@@ -114,7 +73,7 @@
                     <img src="assets/circle.webp" class="circle-img" alt="">
                 </div>
                 <span class="brand-name"><span class="brand-part-link">link</span><span class="brand-part-een">een</span></span>
-                <span class="brand-meta">M3 · 3d</span>
+                <span class="brand-meta">M2 · 3d</span>
             </div>
             <div class="topbar-utils">
                 <a href="m2.html" class="pill"><span class="pill-name">M2</span></a>
@@ -131,12 +90,11 @@
         <div class="b-wrap">
             <section class="b-hero">
                 <div>
-                    <h1 class="b-title">M4, <em>both floors</em></h1>
-                    <p class="b-sub">Rooms and names from the fire-evacuation boards, envelope and doors
-                        from the university's CAD. Drag to orbit, scroll to zoom, right-drag to pan.
-                        Click a room for what is happening in it.</p>
+                    <h1 class="b-title">M2, <em>all floors</em></h1>
+                    <p class="b-sub">Footprint extruded from the university's campus CAD, detailing EEN classrooms and labs.
+                        Drag to orbit, scroll to zoom, right-drag to pan. Click a room for live occupancy tracking.</p>
                 </div>
-                <div class="b-now"><span class="live-dot2"></span><span>now</span><span id="b-clock">â€¦</span></div>
+                <div class="b-now"><span class="live-dot2"></span><span>now</span><span id="b-clock">…</span></div>
             </section>
 
             <div class="b-bar">
@@ -160,7 +118,7 @@
                 <div class="b-canvas">
                     <canvas id="scene"></canvas>
                     <div id="tags"></div>
-                    <div class="b-help">drag orbit Â· scroll zoom Â· right-drag pan</div>
+                    <div class="b-help">drag orbit · scroll zoom · right-drag pan</div>
                     <div class="b-legend" id="b-legend"></div>
                 </div>
                 <aside class="b-side" id="b-side"><p class="side-empty">Click a room.</p></aside>
@@ -168,15 +126,8 @@
             </div>
 
             <p class="b-foot">
-                <b>Where the rooms come from.</b> The two fire-evacuation boards inside M4, segmented by
-                colour. The boards are the source of truth for layout because the CAD has stray linework
-                inside the big rooms that keeps splitting them.
-                <b>What is still rough.</b> Scale is a bounding-box fit onto M4's CAD footprint, not yet a
-                proper four-corner registration, so every dimension carries a few percent of the
-                photograph's perspective. Sanity check: the Lectures Hall comes out 131 mÂ².
-                <b>Not in here yet.</b> Doors, stairs, the corridor and the top-centre service rooms on the
-                ground floor, and the Library and conference rooms on the first floor â€” the detector
-                missed those and they get added by hand in the plan editor.
+                <b>Where the rooms come from.</b> Classroom M2-2-007 and Measurement Lab M2-2-031 are configured inside the M2 footprint, showing class schedules and active occupancy bounds.
+                <b>Availability Tracker.</b> Rooms will color green if they are currently free, and red if a class is currently in progress according to the EEN Year 3 Semester 5 schedule.
             </p>
         </div>
     </main>
@@ -184,7 +135,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="timetable.js"></script>
     <script src="rooms-data.js"></script>
-    <script src="m3-data.js"></script>
+    <script src="m2-data.js"></script>
     <script src="building.js"></script>
 </body>
 
