@@ -39,6 +39,29 @@
   --accent-50:#e6f5d9;--accent-100:#cdeab2;--accent-200:#a5d572;--accent-300:#84c244;
   --accent-400:#69a830;--accent-500:#528823;--accent-600:#406b1c;--accent-700:#314f16;
   --accent-800:#1f320d;--accent-900:#101906;--accent-950:#070d03;
+
+  /* Mappings for ported CS components */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --bg-card: var(--surface-elevated);
+  --bg-elevated: var(--surface-sunken);
+  --rule: var(--border-soft);
+  --rule-faint: var(--border-soft);
+  --fg: var(--text);
+  --fg-soft: var(--text-muted);
+  --fg-faint: var(--text-subtle);
+  --coral: var(--accent);
+  --coral-bright: var(--accent-strong);
+  --coral-glow: rgba(74, 156, 63, 0.25);
+  --coral-soft: var(--accent-soft);
+  --indigo: var(--accent-warm);
+  --indigo-soft: var(--accent-warm-soft);
+  --cyan: var(--accent);
+  --cyan-soft: var(--accent-soft);
+  --red: #B91C1C;
+  --red-soft: #FAD8D8;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 :root[data-theme="dark"] {
@@ -77,6 +100,29 @@
   --accent-50:#070d03;--accent-100:#101906;--accent-200:#1f320d;--accent-300:#314f16;
   --accent-400:#406b1c;--accent-500:#528823;--accent-600:#69a830;--accent-700:#84c244;
   --accent-800:#a5d572;--accent-900:#cdeab2;--accent-950:#e6f5d9;
+
+  /* Mappings for ported CS components */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --bg-card: var(--surface-elevated);
+  --bg-elevated: var(--surface-sunken);
+  --rule: var(--border-soft);
+  --rule-faint: var(--border-soft);
+  --fg: var(--text);
+  --fg-soft: var(--text-muted);
+  --fg-faint: var(--text-subtle);
+  --coral: var(--accent);
+  --coral-bright: var(--accent-strong);
+  --coral-glow: rgba(131, 224, 125, 0.25);
+  --coral-soft: var(--accent-soft);
+  --indigo: var(--accent-warm);
+  --indigo-soft: var(--accent-warm-soft);
+  --cyan: var(--accent);
+  --cyan-soft: var(--accent-soft);
+  --red: #FF6B6B;
+  --red-soft: rgba(255, 107, 107, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
 }
 
 /* ---------- Base ---------- */

@@ -1,99 +1,97 @@
-﻿/* ============================================================
+/* ============================================================
    Cream + ink + coral Â· poles trio Â· 2-col compact courses
    ============================================================ */
 
 :root {
-    --font-sans: 'Familjen Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Fraunces', 'Source Serif Pro', Georgia, serif;
-    --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root[data-theme="light"] {
-    /* Editorial light mode â€” warm cream background, deep ink text,
-       rich saturated accents that pop. Distinct from dark in tone, not just luminance. */
-    --bg: #F2EBDB;              /* warm cream paper */
-    --bg-card: #FFFEFB;          /* off-white card */
-    --bg-elevated: #EAE0C8;
-    --fg: #0E1726;              /* deep ink */
-    --fg-soft: #3B4659;
-    --fg-faint: #6B7689;
-    --rule: rgba(14, 23, 38, 0.20);
-    --rule-faint: rgba(14, 23, 38, 0.09);
+    --bg: #F5F7EC;              /* soft match cream background */
+    --bg-card: #FFFFFF;          /* off-white card */
+    --bg-elevated: #E6ECDC;
+    --fg: #132515;              /* deep forest green text */
+    --fg-soft: #354D38;
+    --fg-faint: #5D7560;
+    --rule: rgba(19, 37, 21, 0.16);
+    --rule-faint: rgba(19, 37, 21, 0.08);
 
-    /* main accent â€” rich royal blue, vivid on cream */
-    --coral: #1E40AF;
-    --coral-bright: #2563EB;
-    --coral-glow: rgba(30, 64, 175, 0.28);
-    --coral-soft: #E2E8FB;
+    /* main accent — green */
+    --coral: #2C6A26;
+    --coral-bright: #4A9C3F;
+    --coral-glow: rgba(44, 106, 38, 0.24);
+    --coral-soft: #E6F2E5;
 
-    /* secondary â€” deep teal */
-    --cyan: #0F766E;
-    --cyan-bright: #14B8A6;
-    --cyan-glow: rgba(15, 118, 110, 0.26);
-    --cyan-soft: #D6F0EC;
+    /* secondary — teal */
+    --cyan: #1E6B65;
+    --cyan-bright: #298E87;
+    --cyan-glow: rgba(30, 107, 101, 0.24);
+    --cyan-soft: #E5F2F1;
 
-    /* indigo â€” vivid violet */
-    --indigo: #6D28D9;
-    --indigo-bright: #8B5CF6;
-    --indigo-glow: rgba(109, 40, 217, 0.28);
-    --indigo-soft: #E9DEFB;
+    /* indigo — warm amber accent (secondary whimsy) */
+    --indigo: #B47C1C;
+    --indigo-bright: #D49B3C;
+    --indigo-glow: rgba(180, 124, 28, 0.24);
+    --indigo-soft: #FBF4E6;
 
-    /* deep navy */
-    --deep: #0E1726;
-    --deep-bright: #3B4659;
-    --deep-glow: rgba(14, 23, 38, 0.32);
+    /* deep forest */
+    --deep: #132515;
+    --deep-bright: #354D38;
+    --deep-glow: rgba(19, 37, 21, 0.28);
 
-    /* violet accent */
-    --sky: #7C3AED;
-    --sky-glow: rgba(124, 58, 237, 0.32);
+    /* violet/purple accent -> soft sage */
+    --sky: #3A7E30;
+    --sky-glow: rgba(58, 126, 48, 0.24);
 
-    /* red â€” used for live indicator, AGRL category, LINKEEN border */
+    /* red — used for warning or badge */
     --red: #B91C1C;
     --red-bright: #DC2626;
     --red-glow: rgba(185, 28, 28, 0.32);
     --red-soft: #FAD8D8;
 
-    --shadow-sm: 0 1px 2px rgba(14, 23, 38, 0.08);
-    --shadow-md: 0 6px 18px rgba(14, 23, 38, 0.12);
-    --shadow-lg: 0 24px 60px rgba(14, 23, 38, 0.18);
+    --shadow-sm: 0 1px 2px rgba(19, 37, 21, 0.08);
+    --shadow-md: 0 6px 18px rgba(19, 37, 21, 0.12);
+    --shadow-lg: 0 24px 60px rgba(19, 37, 21, 0.18);
 }
 
 :root[data-theme="dark"] {
-    --bg: #060814;              /* near-black with subtle navy */
-    --bg-card: #0F1729;
-    --bg-elevated: #1E293B;
-    --fg: #E2E8F5;
-    --fg-soft: #94A3B8;
-    --fg-faint: #475569;
-    --rule: rgba(226, 232, 245, 0.13);
-    --rule-faint: rgba(226, 232, 245, 0.06);
+    --bg: #0A0F0D;              /* deep forest black */
+    --bg-card: #131F19;
+    --bg-elevated: #1E2F26;
+    --fg: #E1ECD9;
+    --fg-soft: #91A58D;
+    --fg-faint: #4E5E4C;
+    --rule: rgba(225, 236, 217, 0.15);
+    --rule-faint: rgba(225, 236, 217, 0.07);
 
-    --coral: #60A5FA;
-    --coral-bright: #93C5FD;
-    --coral-glow: rgba(96, 165, 250, 0.45);
-    --coral-soft: rgba(96, 165, 250, 0.12);
+    --coral: #83E07D;
+    --coral-bright: #A8E895;
+    --coral-glow: rgba(131, 224, 125, 0.4);
+    --coral-soft: #182F1C;
 
-    --cyan: #22D3EE;
-    --cyan-bright: #67E8F9;
-    --cyan-glow: rgba(34, 211, 238, 0.42);
-    --cyan-soft: rgba(34, 211, 238, 0.12);
+    --cyan: #76CFCE;
+    --cyan-bright: #9EECEB;
+    --cyan-glow: rgba(118, 207, 206, 0.38);
+    --cyan-soft: rgba(118, 207, 206, 0.12);
 
-    --indigo: #818CF8;
-    --indigo-bright: #A5B4FC;
-    --indigo-glow: rgba(129, 140, 248, 0.38);
-    --indigo-soft: rgba(129, 140, 248, 0.12);
+    --indigo: #F0C061;
+    --indigo-bright: #F7D48E;
+    --indigo-glow: rgba(240, 192, 97, 0.38);
+    --indigo-soft: rgba(240, 192, 97, 0.12);
 
     --deep: #CBD5E1;
-    --deep-bright: #E2E8F5;
+    --deep-bright: #E1ECD9;
     --deep-glow: rgba(203, 213, 225, 0.32);
 
-    --sky: #A78BFA;
-    --sky-glow: rgba(167, 139, 250, 0.38);
+    --sky: #A8E895;
+    --sky-glow: rgba(168, 232, 149, 0.38);
 
-    --red: #F87171;
+    --red: #FF6B6B;
     --red-bright: #FCA5A5;
-    --red-glow: rgba(248, 113, 113, 0.42);
-    --red-soft: rgba(248, 113, 113, 0.14);
+    --red-glow: rgba(255, 107, 107, 0.42);
+    --red-soft: rgba(255, 107, 107, 0.14);
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.55);
