@@ -458,12 +458,12 @@ body #open-games-modal:hover {
 /* quick-link pills in hero */
 .general {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 6px;
   margin: 0; padding: 0; background: transparent; border-radius: 0;
   width: auto;
   justify-content: flex-end;
-  max-width: none;
+  max-width: 580px;
   transition: none;
 }
 .general a {
