@@ -39,14 +39,14 @@ const linksData = {
   courses: {
     "AENL226 (Power Electronics and Power Systems)": { 
       credits: 4, ltp: "3-1-0", 
-      prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2.2.007 / M4-0-011", 
+      prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2-2-007 / M4-0-011", 
       links: {
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_162_1/outline"
       } 
     },
     "AENL228 (Measurement & Instrumentation for Energy Systems)": { 
       credits: 3, ltp: "2-0-2", 
-      prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2.2.007 / M2.2.031", 
+      prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2-2-007 / M2-2-031", 
       links: {
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_163_1/outline"
       } 
@@ -81,7 +81,7 @@ const linksData = {
     },
     "ASBL100 (Introductory Biology for Engineers)": { 
       credits: 4, ltp: "3-0-2", 
-      prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2.2.007 / M3-1-031", 
+      prof: "Prof. Saurabh Raj", cabin: "Faculty Cabin", room: "M2-2-007 / M3-1-031", 
       links: {
         "Blackboard": "https://iida.blackboard.com/ultra/courses/_190_1/outline"
       } 
@@ -310,19 +310,24 @@ function buildHeroSub() {
 }
 
 // Room codes -> what people actually call the room.
+// NOTE: Classroom 7 is strictly M4-1-017 in Building M4. M2-2-007 is a distinct room in Building M2.
 const ROOM_NAMES = {
   "M4-0-011": "Classroom 3",
   "M4-1-017": "Classroom 7",
   "M3-1-009": "Energy Lab",
   "M3-1-031": "Biology Lab",
-  "M2-2-007": "Classroom 7 (M2)",
-  "M2-2-031": "Measurement Lab"
+  "M2-2-007": "M2-2-007",
+  "M2.2.007": "M2-2-007",
+  "M2-2-031": "Measurement Lab",
+  "M2.2.031": "Measurement Lab"
 };
 
 function roomShort(code) {
   if (!code) return "";
   return String(code).split("/").map(part => {
     const raw = part.trim();
+    if (raw === "M2-2-007" || raw === "M2.2.007") return "M2-2-007";
+    if (raw === "M4-1-017") return "Classroom 7";
     return ROOM_NAMES[raw] || raw;
   }).join(" / ");
 }
@@ -331,8 +336,10 @@ function roomLabel(code) {
   if (!code) return "";
   return String(code).split("/").map(part => {
     const raw = part.trim();
+    if (raw === "M2-2-007" || raw === "M2.2.007") return "M2-2-007 (Bldg M2)";
+    if (raw === "M4-1-017") return "Classroom 7 (M4-1-017)";
     const name = ROOM_NAMES[raw];
-    return name ? `${name} (${raw})` : raw;
+    return name && name !== raw ? `${name} (${raw})` : raw;
   }).join(" / ");
 }
 
