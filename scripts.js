@@ -1,3 +1,14 @@
+const COURSE_TITLES = {
+  AENL226: "Power Electronics and Power Systems",
+  AENL228: "Measurement & Instrumentation for Energy Systems",
+  AENP200: "Energy Technology Lab",
+  AENP225: "Electrical Energy Laboratory",
+  AHUL256: "Critical Thinking",
+  AHUL261: "Introduction to Psychology",
+  ASBL100: "Introductory Biology for Engineers",
+  AGRL130: "Innovation, Entrepreneurship, and Sustainability"
+};
+
 // ============================================================
 // scripts.js — INDEX page only.
 // Shared helpers live in shared.js
@@ -293,68 +304,36 @@ function updateLiveClassStatus() {
   const dotEl = document.getElementById("live-class-dot");
   if (!statusEl) return;
   
-  const currentBatch = Number(localStorage.getItem("student-batch") || "1");
+  const savedBatch = localStorage.getItem("student-batch") || "1";
   const now = new Date();
-  
-  // Format current date as YYYY-MM-DD
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  
-  // 1. Term Bounds check
-  const termStart = "2026-08-20";
-  const termEnd = "2026-12-16";
-  if (todayStr < termStart) {
-    statusEl.innerHTML = `<p class="class-free">☀️ Term starts on 20/08/2026</p>`;
-    if (dotEl) dotEl.className = "live-class-dot dot-free";
-    return;
-  }
-  if (todayStr > termEnd) {
-    statusEl.innerHTML = `<p class="class-free">☀️ Semester's over. Have a good break!</p>`;
-    if (dotEl) dotEl.className = "live-class-dot dot-free";
-    return;
-  }
-  
-  // 2. Holiday check
-  const HOLIDAYS = {
-    "2026-08-28": "Prophet's Birthday",
-    "2026-09-04": "Preparation Day (No Classes)",
-    "2026-10-12": "Preparation Day (No Classes)",
-    "2026-10-13": "Preparation Day (No Classes)",
-    "2026-10-14": "Preparation Day (No Classes)",
-    "2026-10-15": "Preparation Day (No Classes)",
-    "2026-10-16": "Preparation Day (No Classes)",
-    "2026-12-01": "Commemoration Day",
-    "2026-12-02": "National Day",
-    "2026-12-03": "National Day Holiday"
-  };
-  
-  const holiday = HOLIDAYS[todayStr];
-  if (holiday) {
-    statusEl.innerHTML = `<p class="class-free">☀️ Holiday — ${holiday}</p>`;
+  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const currentDay = days[now.getDay()];
+  const currentMins = now.getHours() * 60 + now.getMinutes();
+
+  if (currentDay === "saturday" || currentDay === "sunday") {
+    statusEl.innerHTML = `
+      <div class="tracker-hero-body">
+        <div class="tracker-main-info">
+          <div class="tracker-class-name">
+            <span class="live-tag live-tag-free">WEEKEND</span>
+            <strong>Campus Quiet · Rest Period</strong>
+          </div>
+          <div class="tracker-prof-line">No lectures scheduled today · Enjoy your weekend ✿</div>
+        </div>
+      </div>
+    `;
     if (dotEl) dotEl.className = "live-class-dot dot-free";
     return;
   }
 
-  const day = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
-  const currentMins = now.getHours() * 60 + now.getMinutes();
-  
-  // 3. Weekend check
-  if (day === 0 || day === 6) {
-    statusEl.innerHTML = `<p class="class-free">☀️ Weekend — No classes scheduled today</p>`;
-    if (dotEl) dotEl.className = "live-class-dot dot-free";
-    return;
-  }
-  
-  const dayClasses = WEEKLY_CLASSES[day] || [];
-  
-  // Find current class
+  const todayClasses = (timetableData[currentDay] || []).filter(c => {
+    return !c.batch || c.batch === savedBatch;
+  });
+
   let currentClass = null;
   let nextClass = null;
-  
-  for (const c of dayClasses) {
-    if (c.batch !== undefined && c.batch !== currentBatch) {
-      continue;
-    }
-    
+
+  for (const c of todayClasses) {
     const [startStr, endStr] = c.time.split("-");
     const startMins = timeToMinutes(startStr.trim());
     const endMins = timeToMinutes(endStr.trim());
@@ -367,15 +346,26 @@ function updateLiveClassStatus() {
       }
     }
   }
-  
+
   // Lunch break check: between 12:00 and 14:00 (720 and 840 mins)
   if (!currentClass && currentMins >= 720 && currentMins < 840) {
     statusEl.innerHTML = `
-      <div class="live-status-row">
-        <span class="live-tag live-tag-lunch">LUNCH BREAK</span>
-        <span class="live-free-text">12:00 – 14:00</span>
-        ${nextClass ? `<span class="live-next-chip">Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+      <div class="tracker-hero-body">
+        <div class="tracker-main-info">
+          <div class="tracker-class-name">
+            <span class="live-tag live-tag-lunch">LUNCH BREAK</span>
+            <strong>Campus Dining & Recess</strong>
+          </div>
+          <div class="tracker-prof-line">Midday break · 12:00 – 14:00</div>
+        </div>
       </div>
+      ${nextClass ? `
+        <div class="tracker-next-banner">
+          <span class="next-label">⏱ AFTERNOON SESSION AT ${nextClass.time.split("-")[0].trim()}:</span>
+          <strong>${nextClass.code} ${nextClass.type}</strong>
+          <span class="next-room">in ${roomShort(nextClass.room)}</span>
+        </div>
+      ` : ""}
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-lunch";
     return;
@@ -385,16 +375,37 @@ function updateLiveClassStatus() {
     const [, endStr] = currentClass.time.split("-");
     const endMins = timeToMinutes(endStr.trim());
     const minsLeft = endMins - currentMins;
-    const timeLeftStr = minsLeft < 60 ? `${minsLeft}m` : `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
+    const timeLeftStr = minsLeft < 60 ? `${minsLeft} min` : `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
+    const fullTitle = (COURSE_TITLES && COURSE_TITLES[currentClass.code]) || currentClass.code;
 
     statusEl.innerHTML = `
-      <div class="live-status-row">
-        <span class="live-tag live-tag-now">IN SESSION</span>
-        <span class="live-course"><strong>${currentClass.code}</strong> ${currentClass.type}</span>
-        <span class="live-room">${roomShort(currentClass.room)}</span>
-        <span class="live-countdown">ends in ${timeLeftStr}</span>
-        ${nextClass ? `<span class="live-next-chip">Next: <strong>${nextClass.code}</strong> at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+      <div class="tracker-hero-body">
+        <div class="tracker-main-info">
+          <div class="tracker-class-name">
+            <span class="live-tag live-tag-now">IN SESSION</span>
+            <strong>${currentClass.code}</strong>
+            <span class="tracker-type-badge">${currentClass.type}</span>
+          </div>
+          <div class="tracker-prof-line">${fullTitle}</div>
+        </div>
+        <div class="tracker-plates">
+          <div class="tracker-plate tracker-plate-room">
+            <span class="plate-label">ROOM</span>
+            <span class="plate-val">${roomShort(currentClass.room)}</span>
+          </div>
+          <div class="tracker-plate tracker-plate-time">
+            <span class="plate-label">ENDS IN</span>
+            <span class="plate-val time-val">${timeLeftStr}</span>
+          </div>
+        </div>
       </div>
+      ${nextClass ? `
+        <div class="tracker-next-banner">
+          <span class="next-label">⏱ UP NEXT AT ${nextClass.time.split("-")[0].trim()}:</span>
+          <strong>${nextClass.code} ${nextClass.type}</strong>
+          <span class="next-room">in ${roomShort(nextClass.room)}</span>
+        </div>
+      ` : ""}
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-active";
   } else {
@@ -403,21 +414,42 @@ function updateLiveClassStatus() {
       const [startStr] = nextClass.time.split("-");
       const startMins = timeToMinutes(startStr.trim());
       const minsToStart = startMins - currentMins;
-      const timeToStartStr = minsToStart < 60 ? `${minsToStart}m` : `${Math.floor(minsToStart / 60)}h ${minsToStart % 60}m`;
+      const timeToStartStr = minsToStart < 60 ? `${minsToStart} min` : `${Math.floor(minsToStart / 60)}h ${minsToStart % 60}m`;
+      const nextTitle = (COURSE_TITLES && COURSE_TITLES[nextClass.code]) || nextClass.code;
 
       statusEl.innerHTML = `
-        <div class="live-status-row">
-          <span class="live-tag live-tag-free">FREE PERIOD</span>
-          <span class="live-free-text">Study Slot</span>
-          <span class="live-next-chip">Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) in ${timeToStartStr}</span>
+        <div class="tracker-hero-body">
+          <div class="tracker-main-info">
+            <div class="tracker-class-name">
+              <span class="live-tag live-tag-free">FREE PERIOD</span>
+              <strong>Open Study & Break Slot</strong>
+            </div>
+            <div class="tracker-prof-line">No lectures currently in progress</div>
+          </div>
+          <div class="tracker-plates">
+            <div class="tracker-plate tracker-plate-next">
+              <span class="plate-label">STARTS IN</span>
+              <span class="plate-val time-val">${timeToStartStr}</span>
+            </div>
+          </div>
+        </div>
+        <div class="tracker-next-banner">
+          <span class="next-label">⏱ UP NEXT AT ${nextClass.time.split("-")[0].trim()}:</span>
+          <strong>${nextClass.code} ${nextClass.type}</strong> (${nextTitle})
+          <span class="next-room">in ${roomShort(nextClass.room)}</span>
         </div>
       `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";
     } else {
       statusEl.innerHTML = `
-        <div class="live-status-row">
-          <span class="live-tag live-tag-done">DONE FOR TODAY</span>
-          <span class="live-free-text">All scheduled lectures complete ✿</span>
+        <div class="tracker-hero-body">
+          <div class="tracker-main-info">
+            <div class="tracker-class-name">
+              <span class="live-tag live-tag-done">DONE FOR TODAY</span>
+              <strong>Classes Complete ✿</strong>
+            </div>
+            <div class="tracker-prof-line">All scheduled academic lectures for today are finished</div>
+          </div>
         </div>
       `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";

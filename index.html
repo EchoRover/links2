@@ -110,25 +110,41 @@
 
           <div class="left-col">
             <!-- Active Class Live Tracker Bar -->
-            <div class="live-tracker-bar" id="timetable-box" style="cursor: pointer;">
-              <div class="tracker-main">
-                <span class="live-class-dot" id="live-class-dot"></span>
-                <span class="tracker-title">Live Status</span>
-                <div class="batch-toggle-container" onclick="event.stopPropagation();">
-                  <button type="button" class="batch-btn on" data-batch="1">G1</button>
-                  <button type="button" class="batch-btn" data-batch="2">G2</button>
+            <div class="live-tracker-bar" id="timetable-box" style="cursor: pointer;" title="Click to view full schedule">
+              <div class="tracker-top-row">
+                <div class="tracker-badge-group">
+                  <span class="live-class-dot" id="live-class-dot"></span>
+                  <span class="tracker-title" id="tracker-title">Live Class Status</span>
+                </div>
+                <div class="tracker-actions">
+                  <div class="batch-toggle-container" onclick="event.stopPropagation();">
+                    <button type="button" class="batch-btn on" data-batch="1">G1</button>
+                    <button type="button" class="batch-btn" data-batch="2">G2</button>
+                  </div>
+                  <span class="tracker-calendar-btn">📅 Full Timetable</span>
                 </div>
               </div>
               <div class="live-class-status" id="live-class-status">
                 <!-- Dynamic active/next class status will be loaded here -->
               </div>
-              <span class="tracker-calendar-icon" title="View Full Timetable">📅</span>
             </div>
 
             <div class="links"></div>
           </div>
 
           <aside class="side-col">
+            <!-- Urgent Academic Updates placed prominently -->
+            <div class="updates-layout">
+              <div class="updates-header">
+                <span class="updates-title">Academic Agenda & Quizzes</span>
+              </div>
+              <div class="updates">
+                <div class="box" id="assignments-box"><h2>Assignments</h2></div>
+                <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
+              </div>
+            </div>
+
+            <!-- Daily Reels companion widget below -->
             <div class="reels-card">
               <div class="reels-card-header">
                 <span>Daily Reels ✿</span>
@@ -146,13 +162,6 @@
                     <div class="reel-overlay"></div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div class="updates-layout">
-              <div class="updates">
-                <div class="box" id="assignments-box"><h2>Assignments</h2></div>
-                <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
               </div>
             </div>
           </aside>
