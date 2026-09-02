@@ -2098,13 +2098,7 @@ body #open-games-modal:hover {
   width: 100%;
   background: #000;
   box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.reel-panel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  border: 1px solid var(--border-soft);
 }
 
 .reel-frame {
@@ -2112,6 +2106,7 @@ body #open-games-modal:hover {
   height: 100%;
   position: relative;
   aspect-ratio: 9 / 16;
+  overflow: hidden;
 }
 
 .reel-frame video {
@@ -2120,6 +2115,7 @@ body #open-games-modal:hover {
   aspect-ratio: 9 / 16;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
 /* Site Footer */
@@ -2933,26 +2929,6 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
-}
-.reel-sound-badge {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  font-size: 0.85rem;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(4px);
-  padding: 3px 7px;
-  border-radius: 6px;
-  pointer-events: none;
-  opacity: 0.85;
-  transition: all 0.2s ease;
-}
-.reel-panel:hover .reel-sound-badge {
-  opacity: 1;
-  transform: scale(1.1);
-}
-.reel-panel {
-  cursor: pointer;
 }
 .modal-tab-bar {
   display: flex;

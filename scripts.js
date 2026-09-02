@@ -125,6 +125,7 @@ function renderLocalClips() {
   if (leftVid) {
     leftVid.src = vid1;
     leftVid.muted = true;
+    leftVid.volume = 0;
     leftVid.playsInline = true;
     leftVid.loop = true;
     leftVid.autoplay = true;
@@ -134,6 +135,7 @@ function renderLocalClips() {
   if (rightVid) {
     rightVid.src = vid2;
     rightVid.muted = true;
+    rightVid.volume = 0;
     rightVid.playsInline = true;
     rightVid.loop = true;
     rightVid.autoplay = true;
@@ -142,15 +144,11 @@ function renderLocalClips() {
   }
 }
 
-// ================= INTERACTIVE REELS HELPER =================
+// ================= SHUFFLE REELS HELPER (NO AUDIO) =================
 function wireInteractiveReels() {
   const shuffleBtn = document.getElementById("shuffle-reels-btn");
-  const leftPanel = document.getElementById("reel-panel-left");
-  const rightPanel = document.getElementById("reel-panel-right");
   const leftVid = document.getElementById("local-clip-left");
   const rightVid = document.getElementById("local-clip-right");
-  const leftBadge = document.getElementById("sound-badge-left");
-  const rightBadge = document.getElementById("sound-badge-right");
 
   if (shuffleBtn) {
     shuffleBtn.addEventListener("click", (e) => {
@@ -158,26 +156,21 @@ function wireInteractiveReels() {
       let i1 = Math.floor(Math.random() * localClips.length);
       let i2 = Math.floor(Math.random() * localClips.length);
       if (i1 === i2) i2 = (i1 + 1) % localClips.length;
-      if (leftVid) { leftVid.src = localClips[i1]; leftVid.load(); leftVid.play().catch(() => {}); }
-      if (rightVid) { rightVid.src = localClips[i2]; rightVid.load(); rightVid.play().catch(() => {}); }
+      if (leftVid) {
+        leftVid.src = localClips[i1];
+        leftVid.muted = true;
+        leftVid.volume = 0;
+        leftVid.load();
+        leftVid.play().catch(() => {});
+      }
+      if (rightVid) {
+        rightVid.src = localClips[i2];
+        rightVid.muted = true;
+        rightVid.volume = 0;
+        rightVid.load();
+        rightVid.play().catch(() => {});
+      }
     });
-  }
-
-  function toggleSound(vid, badge) {
-    if (!vid) return;
-    vid.muted = !vid.muted;
-    if (badge) {
-      badge.textContent = vid.muted ? "🔇" : "🔊";
-      badge.classList.toggle("unmuted", !vid.muted);
-    }
-    if (vid.paused) vid.play().catch(() => {});
-  }
-
-  if (leftPanel && leftVid) {
-    leftPanel.addEventListener("click", () => toggleSound(leftVid, leftBadge));
-  }
-  if (rightPanel && rightVid) {
-    rightPanel.addEventListener("click", () => toggleSound(rightVid, rightBadge));
   }
 }
 
