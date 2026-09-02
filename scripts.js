@@ -158,18 +158,38 @@ function renderUpdates() {
       const [y, m, d] = parts;
       const expiryExclusive = new Date(y, m - 1, d + 1);
       if (now < expiryExclusive) {
-        const p = document.createElement("p");
-        p.className = "update-item";
-        p.textContent = text;
-        container.appendChild(p);
+        const dateObj = new Date(y, m - 1, d);
+        const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dateObj.getDay()];
+        const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dateObj.getMonth()];
+
+        const colon = text.indexOf(":");
+        const code = colon >= 0 ? text.slice(0, colon).trim() : "";
+        let event = colon >= 0 ? text.slice(colon + 1).trim() : text;
+        const comma = event.lastIndexOf(",");
+        if (comma >= 0) event = event.slice(0, comma).trim();
+
+        const row = document.createElement("div");
+        row.className = "update-row";
+        row.innerHTML = `
+          <div class="update-date-badge">
+            <span class="upd-dow">${DOW}</span>
+            <span class="upd-day">${String(d).padStart(2, "0")}</span>
+            <span class="upd-mon">${MON}</span>
+          </div>
+          <div class="update-info">
+            ${code ? `<span class="upd-code" style="color: ${COURSE_COLORS[code] || 'var(--accent)'}">${code}</span>` : ""}
+            <span class="upd-text">${event}</span>
+          </div>
+        `;
+        container.appendChild(row);
         activeCount++;
       }
     });
-    
+
     if (activeCount === 0) {
-      const p = document.createElement("p");
+      const p = document.createElement("div");
       p.className = "update-empty";
-      p.innerHTML = "✨ All caught up! No tasks.";
+      p.innerHTML = "✨ All caught up! No active tasks.";
       container.appendChild(p);
     }
   });
@@ -487,7 +507,6 @@ window.addEventListener("DOMContentLoaded", () => {
   updateLiveClassStatus();
   setInterval(updateLiveClassStatus, 15000);
   if (typeof initMascot === "function") initMascot();
-  if (typeof initEnergySprite === "function") initEnergySprite();
 
   // Batch toggle buttons
   const batchBtns = document.querySelectorAll(".batch-btn");

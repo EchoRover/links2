@@ -80,25 +80,27 @@
 
         <!-- Hero strip -->
         <section class="hero">
-          <img src="image.png" alt="Avatar" class="avatar">
-          <div class="hero-text">
-            <p class="hero-eyebrow">Year 3 · Semester 5 · Aug-Dec 2026</p>
-            <div class="title-with-mascot">
-              <h1>B.Tech Energy Engineering</h1>
-              <div id="mascot-container">
-                <div id="mascot">
-                  <div class="mascot-face">
-                    <div class="mascot-eye left"></div>
-                    <div class="mascot-eye right"></div>
-                    <div class="mascot-mouth"></div>
-                    <div class="mascot-blush"></div>
+          <div class="hero-main">
+            <img src="image.png" alt="Avatar" class="avatar">
+            <div class="hero-text">
+              <p class="hero-eyebrow">Year 3 · Semester 5 · Aug-Dec 2026</p>
+              <div class="title-with-mascot">
+                <h1>B.Tech Energy Engineering</h1>
+                <div id="mascot-container">
+                  <div id="mascot">
+                    <div class="mascot-face">
+                      <div class="mascot-eye left"></div>
+                      <div class="mascot-eye right"></div>
+                      <div class="mascot-mouth"></div>
+                      <div class="mascot-blush"></div>
+                    </div>
+                    <div class="mascot-aura"></div>
                   </div>
-                  <div class="mascot-aura"></div>
+                  <div id="mascot-speech">hi! i'm sparky.</div>
                 </div>
-                <div id="mascot-speech">hi! i'm sparky.</div>
               </div>
+              <p class="hero-sub" id="hero-sub">y3 · running studies, links, updates &amp; the off-clock</p>
             </div>
-            <p class="hero-sub" id="hero-sub">y3 · running studies, links, updates &amp; the off-clock</p>
           </div>
           <div class="general"></div>
         </section>
@@ -120,31 +122,37 @@
               <div class="live-class-status" id="live-class-status">
                 <!-- Dynamic active/next class status will be loaded here -->
               </div>
-              <span class="tracker-calendar-icon">📅</span>
+              <span class="tracker-calendar-icon" title="View Full Timetable">📅</span>
             </div>
 
             <div class="links"></div>
-
-            <div class="updates-layout">
-              <div class="updates">
-                <h1>updates</h1>
-                <div class="box" id="assignments-box"><h2>Assignments</h2></div>
-                <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
-              </div>
-            </div>
           </div>
 
           <aside class="side-col">
-            <div class="reel-panel left-reel">
-              <div class="reel-frame">
-                <video id="local-clip-left" playsinline autoplay muted loop></video>
-                <div class="reel-overlay"></div>
+            <div class="reels-card">
+              <div class="reels-card-header">
+                <span>Daily Reels ✿</span>
+              </div>
+              <div class="reels-row">
+                <div class="reel-panel left-reel">
+                  <div class="reel-frame">
+                    <video id="local-clip-left" playsinline autoplay muted loop></video>
+                    <div class="reel-overlay"></div>
+                  </div>
+                </div>
+                <div class="reel-panel right-reel">
+                  <div class="reel-frame">
+                    <video id="local-clip-right" playsinline autoplay muted loop></video>
+                    <div class="reel-overlay"></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="reel-panel right-reel">
-              <div class="reel-frame">
-                <video id="local-clip-right" playsinline autoplay muted loop></video>
-                <div class="reel-overlay"></div>
+
+            <div class="updates-layout">
+              <div class="updates">
+                <div class="box" id="assignments-box"><h2>Assignments</h2></div>
+                <div class="box" id="quizzes-box"><h2>Quizzes</h2></div>
               </div>
             </div>
           </aside>
