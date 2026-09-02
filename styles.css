@@ -1202,15 +1202,16 @@ body #open-games-modal:hover {
 /* ---------- Responsive ---------- */
 
 /* ============================================================
-   GLOBAL & DESKTOP STYLES
-   Generous, airy spacing with high-contrast hierarchy
+   GLOBAL & DESKTOP / LAPTOP STYLES
+   Takes up the entire screen to display rich, detailed academic info
    ============================================================ */
 
-/* Layout Container: Spacious, breathable, relaxed vertical scroll */
+/* Full-Screen Layout for Laptops & Desktops */
 .layout {
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: clamp(1.25rem, 2.5vw, 2.25rem);
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 1.25rem clamp(1.5rem, 3.2vw, 3.5rem);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -1224,6 +1225,7 @@ body #open-games-modal:hover {
   gap: 1.5rem;
   flex: 1 1 auto;
   min-height: 0;
+  width: 100%;
 }
 
 /* Topbar */
@@ -1231,13 +1233,14 @@ body #open-games-modal:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--border-soft);
+  width: 100%;
 }
 
 .brand-text {
   font-family: var(--font-serif);
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.02em;
@@ -1245,7 +1248,7 @@ body #open-games-modal:hover {
 
 .brand-text small {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--text-subtle);
   margin-left: 10px;
   font-weight: 500;
@@ -1258,8 +1261,9 @@ body #open-games-modal:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.75rem;
-  padding: 0.5rem 0;
+  gap: 2rem;
+  padding: 0.25rem 0;
+  width: 100%;
 }
 
 .hero-main {
@@ -1305,7 +1309,7 @@ body #open-games-modal:hover {
 
 .hero h1 {
   font-family: var(--font-serif);
-  font-size: 1.55rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--text);
   margin: 0;
@@ -1320,18 +1324,18 @@ body #open-games-modal:hover {
 }
 
 .hero-sub {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-subtle);
   margin: 0;
 }
 
-/* General Quick Pills: Organized, Tactile, Easy to Scan */
+/* General Quick Pills */
 .general {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
-  max-width: 620px;
+  max-width: 680px;
   margin: 0;
   padding: 0;
 }
@@ -1374,26 +1378,28 @@ body #open-games-modal:hover {
 }
 
 /* ============================================================
-   MAIN BODY GRID: Balanced 2 Columns
-   Left (Academic Hub: Live Status + 8 Courses)
-   Right (Agenda: Quizzes & Assignments + Daily Reels)
+   MAIN BODY GRID: Laptop Full-Screen Information Hub
+   Left (Command Center + Full Breadth Courses)
+   Right (High-Density Academic Agenda + Interactive Reels)
    ============================================================ */
 .body-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(320px, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) clamp(350px, 25vw, 420px);
+  gap: 1.75rem;
   align-items: start;
+  width: 100%;
 }
 
 .left-col {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.4rem;
   min-width: 0;
+  width: 100%;
 }
 
 /* ============================================================
-   LIVE CLASS COMMAND CENTER (Unmissable Hero Element)
+   LIVE CLASS COMMAND CENTER (Hero Element)
    ============================================================ */
 .live-tracker-bar {
   display: flex;
@@ -1402,11 +1408,13 @@ body #open-games-modal:hover {
   background: var(--surface-elevated);
   border: 1.5px solid var(--border-soft);
   border-radius: 16px;
-  padding: 14px 18px;
+  padding: 16px 20px;
   box-shadow: 0 4px 16px -2px rgba(0,0,0,0.08);
   cursor: pointer;
   position: relative;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .live-tracker-bar:hover {
@@ -1421,6 +1429,7 @@ body #open-games-modal:hover {
   justify-content: space-between;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-soft);
+  width: 100%;
 }
 
 .tracker-badge-group {
@@ -1459,7 +1468,7 @@ body #open-games-modal:hover {
 
 .tracker-title {
   font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1484,9 +1493,9 @@ body #open-games-modal:hover {
 .batch-btn {
   background: transparent;
   border: none;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 6px;
   cursor: pointer;
   color: var(--text-subtle);
@@ -1502,7 +1511,7 @@ body #open-games-modal:hover {
 .tracker-calendar-btn {
   font-size: 0.74rem;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 6px;
   background: var(--surface-sunken);
   border: 1px solid var(--border-soft);
@@ -1525,6 +1534,7 @@ body #open-games-modal:hover {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: 100%;
 }
 
 .tracker-main-info {
@@ -1539,7 +1549,7 @@ body #open-games-modal:hover {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 1.18rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.015em;
@@ -1549,7 +1559,7 @@ body #open-games-modal:hover {
   font-size: 0.72rem;
   font-family: var(--font-mono);
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 6px;
   background: var(--surface-sunken);
   color: var(--text-muted);
@@ -1558,7 +1568,7 @@ body #open-games-modal:hover {
 }
 
 .tracker-prof-line {
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: var(--text-subtle);
   line-height: 1.3;
 }
@@ -1576,17 +1586,17 @@ body #open-games-modal:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 10px;
   background: var(--surface-sunken);
   border: 1.5px solid var(--border-soft);
-  min-width: 68px;
+  min-width: 76px;
   text-align: center;
 }
 
 .plate-label {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1596,7 +1606,7 @@ body #open-games-modal:hover {
 
 .plate-val {
   font-family: var(--font-mono);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
   color: var(--text);
 }
@@ -1617,13 +1627,13 @@ body #open-games-modal:hover {
   gap: 6px;
   padding-top: 8px;
   border-top: 1px dashed var(--border-soft);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
 }
 
 .next-label {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--text-subtle);
@@ -1635,10 +1645,10 @@ body #open-games-modal:hover {
 
 /* Live Tags */
 .live-tag {
-  font-size: 0.64rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.08em;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 6px;
   text-transform: uppercase;
   font-family: var(--font-mono);
@@ -1669,13 +1679,20 @@ body #open-games-modal:hover {
 }
 
 /* ============================================================
-   COURSE CARDS GRID (Spacious, 2 Columns, Full Titles)
+   COURSE CARDS GRID (Laptop: Takes up the Screen with 2-3 Columns)
    ============================================================ */
 .links {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 1.15rem;
   margin: 0;
+  width: 100%;
+}
+
+@media (min-width: 1550px) {
+  .links {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .course-card {
@@ -1684,11 +1701,11 @@ body #open-games-modal:hover {
   border: 1px solid var(--border-soft);
   border-left: 5px solid var(--course-color, var(--accent));
   border-radius: 14px;
-  padding: 1.15rem 1.25rem;
+  padding: 1.25rem 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
   box-shadow: 0 2px 8px -2px rgba(0,0,0,0.06);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1710,7 +1727,7 @@ body #open-games-modal:hover {
 
 .course-code {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   padding: 3px 8px;
@@ -1726,7 +1743,7 @@ body #open-games-modal:hover {
 
 .course-spec .ltp {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-subtle);
 }
@@ -1742,14 +1759,14 @@ body #open-games-modal:hover {
   background: var(--surface-sunken);
   color: var(--text);
   border: 1px solid var(--border-soft);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
   font-family: var(--font-mono);
 }
 
 .course-title {
   font-family: var(--font-sans);
-  font-size: 1.08rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
   margin: 4px 0 2px;
@@ -1763,7 +1780,7 @@ body #open-games-modal:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   color: var(--text-subtle);
   margin: 2px 0 4px;
   white-space: nowrap;
@@ -1790,7 +1807,7 @@ body #open-games-modal:hover {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 8px;
@@ -1813,8 +1830,9 @@ body #open-games-modal:hover {
 .side-col {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.4rem;
   min-width: 0;
+  width: 100%;
 }
 
 /* Updates Layout: Prominent Agenda & Quiz Alert */
@@ -1827,6 +1845,8 @@ body #open-games-modal:hover {
   flex-direction: column;
   gap: 14px;
   box-shadow: 0 4px 16px -2px rgba(0,0,0,0.08);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .updates-header {
@@ -1861,6 +1881,7 @@ body #open-games-modal:hover {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 100%;
 }
 
 .updates .box {
@@ -1873,6 +1894,8 @@ body #open-games-modal:hover {
   gap: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.03);
   transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .updates .box:hover {
@@ -1936,6 +1959,8 @@ body #open-games-modal:hover {
   border: 1px solid var(--border-soft);
   border-radius: 10px;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .update-card-item:hover {
@@ -2041,6 +2066,8 @@ body #open-games-modal:hover {
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 2px 8px -2px rgba(0,0,0,0.06);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .reels-card-header {
@@ -2100,7 +2127,7 @@ body #open-games-modal:hover {
   font-size: 0.74rem;
   color: var(--text-subtle);
   text-align: center;
-  padding: 1rem 0;
+  padding: 1.25rem 0 0.5rem;
 }
 
 /* ============================================================
@@ -2115,50 +2142,84 @@ body #open-games-modal:hover {
 
 /* ============================================================
    RESPONSIVE: MOBILE (< 640px)
-   Zero clamping, spacious single-column touch experience
+   Ultra-Compact, Perfectly Aligned Touch Hierarchy
    ============================================================ */
 @media (max-width: 640px) {
   .layout {
-    padding: 12px 14px 28px;
-    gap: 14px;
+    padding: 10px 12px 28px;
+    gap: 10px;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
   }
 
-  /* Topbar */
-  .brand-text { font-size: 1.4rem; }
-  .brand-text small { display: none; }
-  body #open-games-modal { padding: 4px 10px; font-size: 0.74rem; }
-  body #theme-toggle { width: 30px; height: 30px; font-size: 0.9rem; }
+  /* Topbar: edge-aligned */
+  .topbar {
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .brand-text {
+    font-size: 1.35rem;
+  }
+  .brand-text small {
+    display: none;
+  }
+  body #open-games-modal {
+    padding: 3px 9px;
+    font-size: 0.72rem;
+    border-radius: 6px;
+  }
+  body #theme-toggle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
 
-  /* Hero: clean single tier */
+  /* Hero: clean single-tier alignment */
   .hero {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     padding: 0;
+    width: 100%;
   }
-  .avatar { display: none; }
+  .hero-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .avatar {
+    display: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
   .title-with-mascot {
     display: flex;
     align-items: center;
     gap: 8px;
   }
   #mascot-container {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
   .hero h1 {
-    font-size: 1.25rem;
-    line-height: 1.2;
-    margin: 2px 0;
+    font-size: 1.2rem;
+    line-height: 1.15;
   }
   .hero-sub {
-    font-size: 0.76rem;
-    margin-top: 3px;
-    margin-bottom: 6px;
+    font-size: 0.72rem;
+    margin: 1px 0 4px;
+    color: var(--text-subtle);
   }
 
   /* General Pills: Smooth Horizontal Swipe Strip */
@@ -2169,65 +2230,214 @@ body #open-games-modal:hover {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 6px;
-    padding: 6px 2px;
-    margin: 6px 0 0;
+    padding: 4px 0;
+    margin: 2px 0 0;
     width: 100%;
     justify-content: flex-start;
   }
   .general::-webkit-scrollbar { display: none; }
   .general a {
     flex-shrink: 0;
-    font-size: 0.76rem;
-    padding: 5px 12px;
+    font-size: 0.72rem;
+    padding: 4px 10px;
     border-radius: 999px;
   }
 
-  /* Body Grid */
+  /* Body Grid: single-column vertical stack */
   .body-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
   }
 
-  /* Live Tracker Bar */
+  .left-col, .side-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Live Tracker Bar: compact & aligned */
   .live-tracker-bar {
-    padding: 12px 14px;
-    gap: 10px;
-    border-radius: 14px;
+    padding: 10px 12px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+  .tracker-top-row {
+    padding-bottom: 6px;
+  }
+  .tracker-title {
+    font-size: 0.68rem;
+  }
+  .batch-btn {
+    padding: 2px 6px;
+    font-size: 0.66rem;
+  }
+  .tracker-calendar-btn {
+    font-size: 0.68rem;
+    padding: 2px 7px;
   }
   .tracker-hero-body {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
+  }
+  .tracker-class-name {
+    font-size: 1.05rem;
+    gap: 6px;
+  }
+  .tracker-type-badge {
+    font-size: 0.66rem;
+    padding: 1px 5px;
+  }
+  .tracker-prof-line {
+    font-size: 0.76rem;
   }
   .tracker-plates {
     width: 100%;
-    justify-content: flex-start;
+    display: flex;
+    gap: 8px;
   }
   .tracker-plate {
     flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
+    border-radius: 8px;
+  }
+  .plate-label {
+    font-size: 0.54rem;
+  }
+  .plate-val {
+    font-size: 0.88rem;
+  }
+  .tracker-next-banner {
+    font-size: 0.74rem;
+    padding-top: 6px;
+  }
+  .next-label {
+    font-size: 0.62rem;
   }
 
-  /* Courses: 1 Column Full Width */
+  /* Courses: 1 Column Full Width, Compact & Aligned */
   .links {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .course-card {
-    padding: 12px 14px;
-    border-radius: 14px;
-  }
-
-  /* Right column: updates first, reels hidden */
-  .updates-layout {
-    padding: 12px 14px;
-    border-radius: 14px;
-  }
-  .updates {
     grid-template-columns: 1fr;
     gap: 8px;
   }
+  .course-card {
+    padding: 10px 12px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+  .course-code {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+  }
+  .course-spec .ltp {
+    font-size: 0.64rem;
+  }
+  .cr-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.64rem;
+  }
+  .course-title {
+    font-size: 0.95rem;
+    margin: 2px 0 1px;
+    line-height: 1.2;
+  }
+  .course-meta-row {
+    font-size: 0.72rem;
+    gap: 8px;
+    margin: 1px 0 3px;
+  }
+  .course-links {
+    margin-top: 4px;
+    padding-top: 6px;
+  }
+  .course-links a {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  /* Academic Agenda: Compact & Aligned */
+  .updates-layout {
+    padding: 12px 14px;
+    border-radius: 12px;
+    gap: 10px;
+  }
+  .updates-header {
+    padding-bottom: 6px;
+  }
+  .updates-title {
+    font-size: 0.7rem;
+  }
+  .agenda-count-badge {
+    font-size: 0.64rem;
+    padding: 1px 6px;
+  }
+  .updates {
+    gap: 10px;
+  }
+  .updates .box {
+    padding: 10px 12px;
+    border-radius: 10px;
+    gap: 6px;
+  }
+  .box-title-wrap h2 {
+    font-size: 0.74rem;
+  }
+  .box-subtitle {
+    font-size: 0.64rem;
+  }
+  .box-count-badge {
+    font-size: 0.6rem;
+    padding: 1px 5px;
+  }
+  .update-card-item {
+    padding: 6px 8px;
+    gap: 8px;
+    border-radius: 8px;
+  }
+  .update-date-badge {
+    min-width: 38px;
+    padding: 4px 2px;
+    border-radius: 6px;
+  }
+  .upd-mon { font-size: 0.52rem; }
+  .upd-day { font-size: 0.86rem; margin: 2px 0 1px; }
+  .upd-dow { font-size: 0.52rem; }
+  .upd-code { font-size: 0.64rem; padding: 1px 4px; }
+  .upd-countdown { font-size: 0.64rem; }
+  .upd-text { font-size: 0.76rem; }
+
+  /* Daily Reels on Mobile: Compact Pair with 9:16 Aspect Ratio */
   .reels-card {
-    display: none; /* Hide videos on mobile to keep layout clean and save data */
+    padding: 10px 12px;
+    border-radius: 12px;
+    gap: 8px;
+  }
+  .reels-card-header {
+    font-size: 0.7rem;
+  }
+  .shuffle-reels-btn {
+    font-size: 0.64rem;
+    padding: 1px 6px;
+  }
+  .reels-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .reel-panel {
+    border-radius: 10px;
+    max-width: 145px;
+  }
+
+  .site-footer {
+    font-size: 0.7rem;
+    padding: 12px 0;
   }
 }
 
