@@ -964,12 +964,203 @@ body #open-games-modal:hover {
 }
 
 /* ---------- Responsive ---------- */
-/* Tablet / narrow desktop: collapse body grid, reels become aspect-driven */
-@media (max-width: 1024px) {
-  .layout { padding: 12px 16px; height: auto; min-height: 100vh; }
+
+/* ============================================================
+   LAPTOP / DESKTOP (Min-width: 1025px)
+   Engineered to fit comfortably within the viewport without scrolling!
+   ============================================================ */
+@media (min-width: 1025px) {
+  html, body {
+    height: 100%;
+    overflow-y: auto;
+  }
+  .layout {
+    height: 100vh;
+    max-height: 100vh;
+    padding: 12px clamp(1.25rem, 2.5vw, 2.75rem) 10px;
+    gap: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-height: 0;
+    justify-content: space-between;
+  }
+  .topbar {
+    padding: 0;
+  }
+  .brand-text {
+    font-size: 1.55rem;
+  }
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  #mascot-container {
+    width: 40px;
+    height: 40px;
+  }
+  .hero h1 {
+    font-size: 1.35rem;
+    line-height: 1.1;
+  }
+  .hero-sub {
+    font-size: 0.74rem;
+  }
+  .general {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    justify-content: flex-end;
+    max-width: 580px;
+  }
+  .general a {
+    padding: 3px 9px;
+    font-size: 0.74rem;
+  }
+  .body-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2.25fr) minmax(0, 0.95fr);
+    gap: 10px;
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+  }
+  .left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 0;
+    justify-content: space-between;
+  }
+  .live-tracker-bar {
+    padding: 6px 12px !important;
+    border-radius: 10px !important;
+    gap: 10px !important;
+    margin: 0 !important;
+  }
+  .tracker-title {
+    font-size: 0.82rem !important;
+  }
+  .live-tracker-bar .live-class-status {
+    font-size: 0.82rem !important;
+  }
+  .batch-btn {
+    font-size: 0.68rem !important;
+    padding: 2px 7px !important;
+  }
+  .links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 0;
+  }
+  .course-card {
+    padding: 6px 8px;
+    gap: 2px;
+    border-radius: 10px;
+  }
+  .course-code {
+    font-size: 0.58rem;
+    padding: 1px 5px;
+  }
+  .course-spec .ltp {
+    font-size: 0.58rem;
+  }
+  .cr-badge {
+    min-width: 15px;
+    height: 15px;
+    font-size: 0.6rem;
+  }
+  .course-title {
+    font-size: 0.8rem;
+    line-height: 1.15;
+    margin: 2px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .course-links {
+    margin-top: 3px;
+    padding-top: 3px;
+    gap: 1px;
+  }
+  .course-links a {
+    font-size: 0.65rem;
+    padding: 1px 3px;
+  }
+  .updates-layout {
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+  .updates-layout::before {
+    font-size: 0.85rem;
+    top: -8px;
+  }
+  .updates {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .updates .box {
+    padding: 5px 8px;
+    border-radius: 8px;
+  }
+  .updates .box h2 {
+    font-size: 0.74rem;
+    margin-bottom: 2px;
+  }
+  .update-item {
+    font-size: 0.72rem;
+  }
+  .side-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    height: 100%;
+    min-height: 0;
+    align-self: stretch;
+  }
+  .reel-panel {
+    height: 100%;
+    width: 100%;
+    padding: 4px;
+    aspect-ratio: auto;
+    min-height: 0;
+    border-radius: 10px;
+  }
+  .reel-frame {
+    height: 100%;
+    width: 100%;
+  }
+  .site-footer {
+    font-size: 0.68rem;
+    padding: 0;
+  }
+}
+
+/* ============================================================
+   TABLET / MID SCREENS (641px - 1024px)
+   ============================================================ */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .layout { padding: 14px 20px; height: auto; min-height: 100vh; }
   body { overflow: auto; }
   .general { flex-wrap: wrap; }
-  .body-grid { grid-template-columns: 1fr; }
+  .body-grid { grid-template-columns: 1fr; gap: 14px; }
+  .links { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .side-col {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
@@ -980,93 +1171,202 @@ body #open-games-modal:hover {
   }
 }
 
-/* Phone */
+/* ============================================================
+   PHONE (< 640px)
+   Clean, spacious, anti-clamping & effortless to scan
+   ============================================================ */
 @media (max-width: 640px) {
-  .layout { padding: 12px 12px 16px; gap: 6px; }
-  .container { gap: 8px; }
+  .layout {
+    padding: 12px 14px 28px;
+    gap: 12px;
+    height: auto;
+    min-height: 100vh;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-
-  /* Topbar — tighten chrome */
+  /* Topbar */
   .brand-text { font-size: 1.4rem; }
   .brand-text small { display: none; }
   body #open-games-modal { padding: 3px 9px; font-size: 0.72rem; }
   body #theme-toggle { width: 28px; height: 28px; font-size: 0.85rem; }
 
-  /* Hero — hide avatar, quick-links wrap below */
+  /* Hero: clean single tier */
   .hero {
     display: block;
     padding: 0;
   }
   .avatar { display: none; }
-  .hero h1 { font-size: 1.25rem; margin-bottom: 2px; }
-  .hero-sub { font-size: 0.74rem; margin-bottom: 8px; }
-  .general {
-    justify-content: flex-start;
-    max-width: none;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-top: 8px;
+  .title-with-mascot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-  .general a { font-size: 0.72rem; padding: 2px 7px; }
+  #mascot-container {
+    width: 36px;
+    height: 36px;
+  }
+  #mascot-speech {
+    font-size: 1rem;
+    padding: 6px 12px;
+    top: -45px;
+  }
+  .hero h1 {
+    font-size: 1.25rem;
+    margin-bottom: 2px;
+    line-height: 1.15;
+  }
+  .hero-sub {
+    font-size: 0.74rem;
+    margin-top: 2px;
+    margin-bottom: 4px;
+  }
 
-  /* Live Tracker Bar — keep compact and horizontal on mobile */
+  /* General Pills: Smooth Horizontal Swipe Strip (No more 5-line clumping) */
+  .general {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding: 4px 2px 8px;
+    margin: 4px 0 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .general::-webkit-scrollbar { display: none; }
+  .general a {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    padding: 5px 12px;
+    white-space: nowrap;
+    border-radius: 999px;
+  }
+
+  /* Live Tracker Bar: Clean structured card with ample breathing room */
   .live-tracker-bar {
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    padding: 0.5rem 0.8rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+    padding: 9px 12px !important;
     border-radius: 12px !important;
+    margin-bottom: 4px !important;
   }
-  .live-tracker-bar .live-class-status p {
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
+  .tracker-main {
+    display: flex !important;
     align-items: center !important;
-    gap: 0.2rem 0.5rem !important;
-  }
-  .live-tracker-bar .class-next {
-    border-left: 1px solid var(--border-soft) !important;
-    padding-left: 0.5rem !important;
-    margin-top: 0 !important;
-    font-size: 0.72rem !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    padding-bottom: 5px !important;
+    border-bottom: 1px solid var(--border-soft) !important;
   }
   .tracker-title {
-    font-size: 0.82rem !important;
-  }
-  .live-tracker-bar .live-class-status {
-    font-size: 0.8rem !important;
-  }
-  .batch-toggle-container {
-    gap: 2px !important;
+    font-size: 0.76rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
   }
   .batch-btn {
-    font-size: 0.65rem !important;
-    padding: 1px 4px !important;
-    min-height: auto !important;
+    font-size: 0.68rem !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+  }
+  .live-tracker-bar .live-class-status {
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+  }
+  .live-tracker-bar .live-class-status p {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 3px !important;
+  }
+  .live-tracker-bar .class-next {
+    display: block !important;
+    margin-top: 3px !important;
+    font-size: 0.74rem !important;
+    color: var(--text-subtle) !important;
+    border-left: none !important;
+    padding-left: 0 !important;
   }
 
-  /* Courses: 2-up */
-  .links { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .course-card { padding: 8px 9px; gap: 4px; }
-  .course-title { font-size: 0.82rem; }
-  .course-card a, .course-links a { font-size: 0.68rem; padding: 1px 5px; }
+  /* Courses: 1 Column Full Width (Readable, Spacious, Uncramped) */
+  .links {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .course-card {
+    padding: 10px 12px;
+    gap: 5px;
+    border-radius: 12px;
+  }
+  .course-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .course-code {
+    font-size: 0.66rem;
+    padding: 2px 7px;
+  }
+  .course-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 2px 0;
+    white-space: normal;
+  }
+  .course-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .course-links a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    background: color-mix(in srgb, var(--card-accent, var(--accent)) 8%, transparent);
+    border-radius: 6px;
+    color: var(--card-accent, var(--accent-strong));
+  }
 
-  /* Updates: stack, smaller */
-  .updates-layout { padding-top: 8px; margin-top: 2px; }
-  .updates { grid-template-columns: 1fr; gap: 4px; }
-  .updates .box { padding: 6px 8px; }
-  .updates h1 { font-size: 1.15rem; margin-bottom: 6px; }
-  .updates .box h2 { font-size: 0.8rem; margin-bottom: 4px; }
-  .update-item { font-size: 0.74rem; }
+  /* Updates */
+  .updates-layout {
+    padding-top: 12px;
+    margin-top: 6px;
+  }
+  .updates {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .updates .box {
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+  .updates .box h2 {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  .update-item {
+    font-size: 0.76rem;
+  }
 
-  /* Reels: hide on mobile to save space and clean up the UI */
+  /* Reels: hidden on mobile to eliminate clutter and save bandwidth */
   .side-col { display: none; }
 
-  .site-footer { font-size: 0.64rem; padding-top: 4px; }
-}
-
-/* Very narrow phone */
-@media (max-width: 380px) {
-  .links { grid-template-columns: 1fr; }
+  .site-footer {
+    font-size: 0.66rem;
+    padding-top: 6px;
+  }
 }
 
 /* ---------- Modal palette nudges (works in both themes) ---------- */
@@ -1441,8 +1741,6 @@ body #archive-btn:hover { color: var(--accent-strong); }
 }
 .sprite-orb.form-dna::before { transform: rotate(20deg); }
 .sprite-orb.form-dna::after { transform: rotate(-20deg); }
-  border-radius: 10px;
-}
 .sprite-orb.form-dna::before, .sprite-orb.form-dna::after {
   content: "—";
   font-weight: bold;
@@ -2136,26 +2434,6 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
 }
 .live-tracker-bar:hover .tracker-calendar-icon {
   opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .live-tracker-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1.1rem 1.35rem;
-    border-radius: 16px;
-  }
-  .live-tracker-bar .live-class-status p {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-  .live-tracker-bar .class-next {
-    border-left: none;
-    padding-left: 0;
-    margin-top: 0.25rem !important;
-  }
 }
 
 /* Click-shield overlay to make YouTube iframes un-interactive */
