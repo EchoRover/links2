@@ -727,29 +727,36 @@ a:focus-visible, button:focus-visible {
     transition-duration: 0.08s;
 }
 
-/* LINKEEN pill â€” red-accent + hover popup with two quotes */
+/* LINKCS & LINKEEN pills — accent + hover popup with two quotes */
+.pill-linkcs,
 .pill-linkeen {
     position: relative;
-    border-color: var(--red);
-    color: var(--red);
+    border-color: var(--indigo);
+    color: var(--indigo);
     gap: 0.4rem;
 }
-.pill-linkeen .pill-name { color: var(--red); font-weight: 700; letter-spacing: 0.02em; }
-.pill-out {
+.pill-linkcs .pill-name,
+.pill-linkeen .pill-name { color: var(--indigo); font-weight: 700; letter-spacing: 0.02em; }
+.pill-linkcs .pill-out,
+.pill-linkeen .pill-out {
     width: 14px;
     height: 14px;
-    color: var(--red);
+    color: var(--indigo);
     flex-shrink: 0;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s;
 }
+.pill-linkcs:hover,
 .pill-linkeen:hover {
-    background: var(--red);
-    border-color: var(--red);
+    background: var(--indigo);
+    border-color: var(--indigo);
     color: var(--bg);
-    box-shadow: 0 0 0 1px var(--red), 0 14px 32px var(--red-glow);
+    box-shadow: 0 0 0 1px var(--indigo), 0 14px 32px var(--indigo-glow);
 }
+.pill-linkcs:hover .pill-name,
+.pill-linkcs:hover .pill-out,
 .pill-linkeen:hover .pill-name,
 .pill-linkeen:hover .pill-out { color: var(--bg); }
+.pill-linkcs:hover .pill-out,
 .pill-linkeen:hover .pill-out { transform: translate(3px, -3px); }
 
 /* Two separate quote pills â€” one above, one below the linkeen pill */
@@ -782,11 +789,15 @@ a:focus-visible, button:focus-visible {
     top: calc(100% + 10px);
     transform: translateX(-50%) translateY(-10px) rotate(2deg);
 }
+.pill-linkcs:hover .pill-quote-top,
+.pill-linkcs.show-popup .pill-quote-top,
 .pill-linkeen:hover .pill-quote-top,
 .pill-linkeen.show-popup .pill-quote-top {
     opacity: 1;
     transform: translateX(-50%) translateY(0) rotate(-2deg);
 }
+.pill-linkcs:hover .pill-quote-bot,
+.pill-linkcs.show-popup .pill-quote-bot,
 .pill-linkeen:hover .pill-quote-bot,
 .pill-linkeen.show-popup .pill-quote-bot {
     opacity: 1;
@@ -889,23 +900,38 @@ a:focus-visible, button:focus-visible {
     line-height: 1;
 }
 /* Letter gets color only (no background â€” it's inline on the title) */
-.course-list .box[data-prefix="ACOL"] .course-firstletter { color: var(--coral); }
+.course-list .box[data-prefix="ACOL"] .course-firstletter,
+.course-list .box[data-prefix="AENL"] .course-firstletter { color: var(--coral); }
+.course-list .box[data-prefix="AENP"] .course-firstletter { color: var(--cyan); }
+.course-list .box[data-prefix="ASBL"] .course-firstletter { color: var(--sky); }
 .course-list .box[data-prefix="AGRL"] .course-firstletter { color: var(--red); }
 .course-list .box[data-prefix="AHUL"] .course-firstletter { color: var(--indigo); }
 
 /* Chip + credits circle get the soft-tinted background pill */
 .course-list .box[data-prefix="ACOL"] .course-chip,
-.course-list .box[data-prefix="ACOL"] .course-credits { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
+.course-list .box[data-prefix="ACOL"] .course-credits,
+.course-list .box[data-prefix="AENL"] .course-chip,
+.course-list .box[data-prefix="AENL"] .course-credits { color: var(--coral); border-color: var(--coral); background: var(--coral-soft); }
+.course-list .box[data-prefix="AENP"] .course-chip,
+.course-list .box[data-prefix="AENP"] .course-credits { color: var(--cyan); border-color: var(--cyan); background: var(--cyan-soft); }
+.course-list .box[data-prefix="ASBL"] .course-chip,
+.course-list .box[data-prefix="ASBL"] .course-credits { color: var(--sky); border-color: var(--sky); background: var(--coral-soft); }
 .course-list .box[data-prefix="AGRL"] .course-chip,
 .course-list .box[data-prefix="AGRL"] .course-credits { color: var(--red); border-color: var(--red); background: var(--red-soft); }
 .course-list .box[data-prefix="AHUL"] .course-chip,
 .course-list .box[data-prefix="AHUL"] .course-credits { color: var(--indigo); border-color: var(--indigo); background: var(--indigo-soft); }
 
-.course-list .box[data-prefix="ACOL"] a:hover { background: var(--coral-soft); color: var(--coral); }
+.course-list .box[data-prefix="ACOL"] a:hover,
+.course-list .box[data-prefix="AENL"] a:hover { background: var(--coral-soft); color: var(--coral); }
+.course-list .box[data-prefix="AENP"] a:hover { background: var(--cyan-soft); color: var(--cyan); }
+.course-list .box[data-prefix="ASBL"] a:hover { background: var(--coral-soft); color: var(--sky); }
 .course-list .box[data-prefix="AGRL"] a:hover { background: var(--red-soft); color: var(--red); }
 .course-list .box[data-prefix="AHUL"] a:hover { background: var(--indigo-soft); color: var(--indigo); }
 
-.course-list .box[data-prefix="ACOL"] .link-bullet { background: var(--coral); }
+.course-list .box[data-prefix="ACOL"] .link-bullet,
+.course-list .box[data-prefix="AENL"] .link-bullet { background: var(--coral); }
+.course-list .box[data-prefix="AENP"] .link-bullet { background: var(--cyan); }
+.course-list .box[data-prefix="ASBL"] .link-bullet { background: var(--sky); }
 .course-list .box[data-prefix="AGRL"] .link-bullet { background: var(--red); }
 .course-list .box[data-prefix="AHUL"] .link-bullet { background: var(--indigo); }
 

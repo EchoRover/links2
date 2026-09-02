@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // UI behaviors: hide-mode toggle, interactive dot canvas,
 // cursor ambient, more-toggle, linkeen tap, course-box equalize.
 // (Theme toggle lives in scripts.js â€” do not add a second one
@@ -148,9 +148,9 @@
     });
 })();
 
-// LINKEEN pill â€” tap-toggle the popup on touch devices
+// LINKCS / LINKEEN pill â€” tap-toggle the popup on touch devices
 (function () {
-    const el = document.getElementById('pill-linkeen');
+    const el = document.getElementById('pill-linkcs') || document.getElementById('pill-linkeen');
     if (!el) return;
     const isTouch = window.matchMedia('(hover: none)').matches;
     if (!isTouch) return;
