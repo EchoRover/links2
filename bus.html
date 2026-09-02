@@ -4,19 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Bus Schedule — linkEEN</title>
+    <title>linkeen · Bus Schedule</title>
     <meta name="description" content="Shuttle schedule between KCA 1&2, KCA 3 and Campus — IIT Delhi Abu Dhabi.">
-    <link rel="icon" type="image/webp" href="sustainability.png" type="image/png">
-    <script src="theme-init.js"></script>
+    <link rel="icon" type="image/png" href="sustainability.png">
+    <script>
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500;1,600&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles-cs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=12">
     <style>
         /* ============================================================
            BUS PAGE — scoped styles only. Nothing here leaks into
            index.html; it reuses the shared tokens from styles.css.
            ============================================================ */
+
+        :root {
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Caveat', 'Source Serif 4', Georgia, serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', 'Menlo', monospace;
+            
+            --bg: var(--surface);
+            --bg-card: var(--surface-elevated);
+            --fg: var(--text);
+            --fg-soft: var(--text-muted);
+            --rule: var(--border);
+            --rule-faint: var(--border-soft);
+            
+            --coral: var(--accent-strong);
+            --coral-bright: var(--accent);
+            --coral-glow: var(--accent-soft);
+            --coral-soft: var(--accent-soft);
+            
+            --indigo: var(--accent-warm);
+            --indigo-soft: var(--accent-warm-soft);
+            
+            --red: #B91C1C;
+            --red-bright: #DC2626;
+            --red-glow: rgba(185, 28, 28, 0.32);
+            --red-soft: #FAD8D8;
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .page {
+            position: relative;
+            z-index: 5;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: clamp(1.25rem, 4vw, 2.5rem) clamp(1.1rem, 4vw, 2.5rem) 4rem;
+        }
 
         .bus-hero {
             display: flex;
@@ -42,7 +81,7 @@
             font-family: var(--font-serif);
             font-variation-settings: "opsz" 144;
             font-style: italic;
-            font-weight: 400;
+            font-weight: 500;
             color: var(--coral);
         }
 
@@ -54,11 +93,12 @@
 
         .bus-now {
             display: inline-flex;
-            align-items: baseline;
+            align-items: center;
             gap: 0.5rem;
             font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--fg-soft);
+            flex-wrap: wrap;
         }
 
         .bus-now #clock {
@@ -67,220 +107,191 @@
             color: var(--fg);
         }
 
-        /* the dot pulses so it reads as live, not as a frozen snapshot */
-        .live-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--red-bright);
-            align-self: center;
-            animation: livePulse 2.4s ease-in-out infinite;
+        .status-chip {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.22rem 0.65rem;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-right: 0.4rem;
+            border: 1px solid transparent;
         }
 
-        @keyframes livePulse {
+        .status-chip.active-day {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .status-chip.active-night {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366F1;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
 
-            0%,
-            100% {
-                opacity: 1;
-                box-shadow: 0 0 0 0 var(--red-glow);
-            }
+        .status-chip.prayer-break {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+            border-color: rgba(245, 158, 11, 0.2);
+        }
 
-            50% {
-                opacity: 0.55;
-                box-shadow: 0 0 0 4px transparent;
-            }
+        .status-chip.off-duty {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.2);
         }
 
         /* ---------- route strip ---------- */
-        /* ---------- next-departure cards ---------- */
-        .next-wrap {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-            gap: clamp(0.75rem, 2vw, 1.1rem);
-            margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
-        }
-
-        .next-card {
-            background: var(--bg-card);
-            border: 1px solid var(--rule);
-            border-radius: 14px;
-            padding: clamp(1rem, 2.2vw, 1.35rem);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .next-head {
+        .route-strip {
             display: flex;
-            align-items: baseline;
-            justify-content: space-between;
+            align-items: center;
             gap: 0.6rem;
             flex-wrap: wrap;
-            margin-bottom: 0.85rem;
-        }
-
-        .next-dir {
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .next-from {
+            margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
             font-family: var(--font-mono);
-            font-size: 0.72rem;
+            font-size: 0.8rem;
             color: var(--fg-soft);
         }
 
-        .next-lead {
-            display: flex;
-            align-items: baseline;
-            gap: 0.7rem;
-            flex-wrap: wrap;
-        }
-
-        .next-eta {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            line-height: 1;
-            letter-spacing: -0.03em;
-            color: var(--coral);
-        }
-
-        .next-time {
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            color: var(--fg-soft);
-        }
-
-        .next-meta {
-            display: flex;
+        .stop {
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.7rem;
-            flex-wrap: wrap;
+            gap: 0.45rem;
+            padding: 0.4rem 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--rule);
+            border-radius: 999px;
         }
 
-        .tag {
-            font-family: var(--font-mono);
-            font-size: 0.66rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 0.22rem 0.5rem;
-            border-radius: 6px;
+        .stop::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--coral);
         }
 
-        .tag-day {
-            background: var(--coral-soft);
-            color: var(--coral);
-        }
-
-        .tag-night {
-            background: var(--indigo-soft);
-            color: var(--indigo);
-        }
-
-        /* Neutral tone for a time that is NOT confirmed. It must not
-           borrow the confidence of the coral/indigo tags. */
-        .tag-soft {
-            background: transparent;
-            border: 1px dashed var(--rule);
+        .route-arrow {
             color: var(--fg-soft);
         }
 
-        .next-veh {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
+        .route-loop {
             color: var(--fg-soft);
+            font-style: italic;
         }
 
-        .next-then {
-            list-style: none;
-            margin: 0.9rem 0 0;
-            padding: 0.75rem 0 0;
-            border-top: 1px solid var(--rule-faint);
-            display: grid;
-            gap: 0.35rem;
+        /* ---------- premium search card ---------- */
+        .search-card {
+            background: var(--bg-card);
+            border: 1px solid var(--rule);
+            border-radius: 20px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
-        .next-then li {
-            display: grid;
-            grid-template-columns: 5.5rem 1fr auto;
-            align-items: baseline;
-            gap: 0.5rem;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--fg-soft);
-        }
-
-        .then-eta {
-            color: var(--fg-soft);
-        }
-
-        .then-veh {
-            color: var(--fg-soft);
-            font-size: 0.7rem;
-        }
-
-        /* ---------- controls ----------
-           On a phone this bar is the context: which direction you are
-           reading and the road it takes. It sticks to the top so that
-           scrolling 58 rows of times can never leave you wondering which
-           way round you are looking at. On desktop both directions are
-           on screen with their own headings, so it stays put. */
-        .bus-controls {
-            margin-bottom: 1rem;
-        }
-
-        .ctl-row {
+        .search-row {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
+            gap: 1rem;
+            width: 100%;
         }
 
-        .road {
-            display: none;
-            align-items: center;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            margin-top: 0.5rem;
+        @media (max-width: 768px) {
+            .search-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .swap-btn {
+                transform: rotate(90deg);
+                align-self: center;
+                margin: -0.25rem 0;
+            }
+        }
+
+        .search-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            flex: 1;
+        }
+
+        .search-label {
             font-family: var(--font-mono);
             font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             color: var(--fg-soft);
-        }
-
-        .road .from {
-            background: var(--coral);
-            color: var(--bg-card);
-            font-weight: 700;
-            padding: 0.15rem 0.4rem;
-            border-radius: 5px;
-        }
-
-        .road .via {
-            color: var(--fg);
             font-weight: 600;
+            padding-left: 0.25rem;
         }
 
-        .road .arw {
-            opacity: 0.55;
+        .swap-btn {
+            background: var(--surface);
+            border: 1px solid var(--rule);
+            color: var(--fg);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.15rem;
+            transition: all 0.2s ease;
+            margin-top: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .swap-btn {
+                margin-top: 0;
+            }
+        }
+
+        .swap-btn:hover {
+            border-color: var(--coral);
+            color: var(--coral);
+            transform: scale(1.08) rotate(180deg);
+        }
+
+        .search-row-meta {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1rem;
+            border-top: 1px solid var(--rule-faint);
+            padding-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .seg {
-            display: none;
-            /* only used on narrow screens */
+            display: inline-flex;
             gap: 0.4rem;
+            flex-wrap: wrap;
         }
 
         .seg button {
             font-family: var(--font-sans);
             font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.5rem 0.9rem;
-            min-height: 40px;
-            background: var(--bg-card);
+            font-size: 0.82rem;
+            padding: 0.42rem 0.85rem;
+            min-height: 38px;
+            background: var(--surface);
             border: 1px solid var(--rule);
-            border-radius: 9px;
+            border-radius: 999px;
             color: var(--fg-soft);
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .seg button.on {
@@ -289,29 +300,273 @@
             color: var(--bg);
         }
 
-        .link-btn {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.5rem 0.85rem;
-            min-height: 40px;
-            background: transparent;
-            border: 1px dashed var(--rule);
-            border-radius: 9px;
-            color: var(--fg-soft);
+        .jump-action-btn {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.1rem;
+            min-height: 38px;
+            background: var(--coral-soft);
+            border: 1px solid var(--coral);
+            border-radius: 999px;
+            color: var(--coral);
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .link-btn:hover {
-            border-style: solid;
-            border-color: var(--coral);
+        .jump-action-btn:hover {
+            background: var(--coral);
+            color: var(--bg);
+            box-shadow: 0 0 10px var(--coral-glow);
+        }
+
+        /* ---------- active shuttle tracker ---------- */
+        .tracker-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--surface-sunken));
+            border: 1px solid var(--rule);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .tracker-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             color: var(--coral);
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--coral);
+            box-shadow: 0 0 0 0 var(--coral-glow);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 var(--coral-glow);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 6px rgba(44, 106, 38, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(44, 106, 38, 0);
+            }
+        }
+
+        .tracker-map {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 0.5rem 0.75rem 0;
+        }
+
+        .map-line {
+            position: relative;
+            height: 6px;
+            background: var(--rule-faint);
+            border-radius: 999px;
+            margin: 0 0.5rem;
+        }
+
+        .map-progress {
+            position: absolute;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 999px;
+            top: 0;
+            left: 0;
+        }
+
+        .map-bus {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.25rem;
+            transition: left 0.5s linear;
+        }
+
+        .map-stops {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .map-stop {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 5.5rem;
+            text-align: center;
+        }
+
+        .stop-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--rule);
+            margin-top: -24px;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .map-stop.passed .stop-dot {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .map-stop.active .stop-dot {
+            background: var(--coral);
+            border-color: var(--coral);
+            transform: scale(1.25);
+            box-shadow: 0 0 8px var(--coral-glow);
+        }
+
+        .stop-name {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: var(--fg-soft);
+            margin-top: 0.5rem;
+        }
+
+        .map-stop.active .stop-name,
+        .map-stop.passed .stop-name {
+            color: var(--fg);
+        }
+
+        .stop-time {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--fg-soft);
+            margin-top: 0.15rem;
+        }
+
+        /* ---------- live departures board ---------- */
+        .board-card {
+            background: var(--bg-card);
+            border: 1px solid var(--rule);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            padding: 0.25rem 0;
+            margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+        }
+
+        .board-title-row {
+            padding: 1rem 1.25rem 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--fg-soft);
+            font-weight: 600;
+        }
+
+        .board-item {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--rule-faint);
+            gap: 1.25rem;
+        }
+
+        .board-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-time-eta {
+            display: flex;
+            flex-direction: column;
+            width: 6.5rem;
+            flex-shrink: 0;
+        }
+
+        .item-eta {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 1.35rem;
+            line-height: 1.1;
+            color: var(--coral);
+        }
+
+        .item-time {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--fg-soft);
+            margin-top: 0.15rem;
+        }
+
+        .item-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-route-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .item-dest {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--fg);
+        }
+
+        .board-veh-tag {
+            font-size: 0.68rem;
+            padding: 0.22rem 0.6rem;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .item-timeline {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--fg-soft);
+            margin-top: 0.35rem;
+            line-height: 1.4;
+            white-space: normal;
+            letter-spacing: -0.01em;
+        }
+        
+        .board-empty {
+            padding: 1.75rem;
+            text-align: center;
+            color: var(--fg-soft);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
         }
 
         /* ---------- schedule tables ---------- */
         .sched-wrap {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-            gap: clamp(1rem, 2.5vw, 1.75rem);
+            margin-top: 1rem;
+        }
+
+        .sched-col {
+            width: 100%;
         }
 
         .sched-head {
@@ -319,7 +574,7 @@
         }
 
         .sched-h2 {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
             margin: 0;
         }
@@ -406,13 +661,8 @@
             color: var(--fg-soft);
             font-family: var(--font-mono);
             font-size: 0.72rem;
-            text-align: right;
         }
 
-        /* Past trips step back by weight and colour, NOT by opacity.
-           The old opacity:.38 dropped this text to under 2:1 against the
-           card, which is what read as "contrast is too low". --fg-soft
-           is 9.4:1 on light and 7.0:1 on dark. */
         tr.past .c-time {
             color: var(--fg-soft);
             font-weight: 400;
@@ -440,49 +690,11 @@
             color: var(--coral);
         }
 
-        /* A cancelled run stays in the table, keeping its poster trip number,
-           struck through. Deleting the row would leave a silent hole that
-           looks identical to a bug; striking it answers "why is there no
-           12:30?" without anyone having to ask. */
-        tr.cancelled .c-time {
-            text-decoration: line-through;
-            text-decoration-thickness: 1px;
-            color: var(--fg-soft);
-            font-weight: 400;
-        }
-
-        tr.cancelled .c-no,
-        tr.cancelled .c-route {
-            color: var(--fg-soft);
-        }
-
-        tr.cancelled .c-veh {
-            color: var(--fg-soft);
-            font-style: italic;
-            text-transform: uppercase;
-            font-size: 0.64rem;
-            letter-spacing: 0.06em;
-        }
-
-        /* Why the countdown is pointing so far ahead. Without this a 45-minute
-           wait mid-afternoon just looks like the page is wrong. */
-        .next-gap {
-            margin: 0.7rem 0 0;
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            line-height: 1.5;
-            color: var(--fg-soft);
-            border-left: 2px solid var(--rule);
-            padding-left: 0.6rem;
-        }
-
-        /* tap-confirmation for "jump to next departure" */
         .flash {
             animation: flashRow 1.1s ease-out 1;
         }
 
         @keyframes flashRow {
-
             0%,
             100% {
                 background: transparent;
@@ -493,103 +705,9 @@
             }
         }
 
-        /* A dashed edge means "different footing from the block above" —
-           the night van shift on weekdays, the assumed late runs on
-           weekends. */
         .sched-dashed .sched-scroll {
             border-style: dashed;
         }
-
-        /* ---------- weekday / weekend switch ----------
-           This governs the TABLES only. The countdown cards above always
-           speak for today, so switching here can never make the live
-           numbers lie about which day they belong to. */
-        .day-switch {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.85rem;
-        }
-
-        .day-switch-label {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--fg-soft);
-        }
-
-        /* .seg is mobile-only; this one is always on, at both widths,
-           so it beats the media query on specificity rather than order. */
-        .seg.seg-day {
-            display: inline-flex;
-            flex: 0 0 auto;
-        }
-
-        .seg.seg-day button {
-            flex: 0 0 auto;
-            font-size: 0.8rem;
-            padding: 0.42rem 0.8rem;
-            min-height: 36px;
-        }
-
-        .day-today {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--fg-soft);
-        }
-
-        .sched-caveat {
-            margin: 0 0 1.1rem;
-            padding-left: 0.8rem;
-            border-left: 2px solid var(--rule);
-            max-width: 46rem;
-            font-size: 0.78rem;
-            line-height: 1.6;
-            color: var(--fg-soft);
-        }
-
-        .sched-caveat[hidden] {
-            display: none;
-        }
-
-        /* KCA 3 pass-through estimate. Deliberately NOT styled like a
-           departure time -- lighter, smaller, dashed, and labelled -- so it
-           can never be mistaken for something off the poster. */
-        .next-kca3 {
-            display: flex;
-            align-items: baseline;
-            gap: 0.5rem;
-            margin: 0.6rem 0 0;
-            padding-top: 0.55rem;
-            border-top: 1px dashed var(--rule);
-            font-size: 0.8rem;
-            color: var(--fg-soft);
-        }
-
-        .kca3-stop {
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-        }
-
-        .kca3-win {
-            font-family: var(--font-mono);
-            font-weight: 600;
-            color: var(--fg);
-        }
-
-        .kca3-est {
-            margin-left: auto;
-            font-size: 0.68rem;
-            color: var(--coral);
-            text-decoration: none;
-            border-bottom: 1px dashed currentColor;
-        }
-
-        .kca3-est:hover { opacity: 0.75; }
 
         /* ---------- footnote ---------- */
         .bus-note {
@@ -602,54 +720,12 @@
             line-height: 1.6;
         }
 
-        .bus-note p {
-            margin: 0 0 0.5rem;
-        }
-
-        .bus-note p:last-child {
-            margin-bottom: 0;
-        }
-
         .bus-note strong {
-            color: var(--fg);
-            font-weight: 600;
+            color: var(--fg-soft);
         }
 
-        .note-star {
-            color: var(--coral);
-            font-weight: 700;
-        }
-
-        /* The * on a day's caveat jumps to the footnote that explains it. */
-        .note-ref {
-            color: var(--coral);
-            font-weight: 700;
-            text-decoration: none;
-            padding: 0 0.15em;
-        }
-
-        .note-ref:hover {
-            text-decoration: underline;
-        }
-
-        #notes:target {
-            animation: note-flash 1.4s ease;
-        }
-
-        @keyframes note-flash {
-            from { background: var(--coral-soft); }
-            to   { background: transparent; }
-        }
-
-        /* ---------- narrow screens: the table ----------
-           The four columns need ~376px; a 390px phone gives the table
-           ~355px, so it scrolled sideways and the vehicle fell off the
-           edge. The Route cell is 166px of that and is byte-identical on
-           every one of the 144 rows — and it is already printed once,
-           in full, under the direction heading. Dropping the repeat gets
-           the table to ~210px and everything fits from 320px up. */
+        /* ---------- narrow screens ---------- */
         @media (max-width: 560px) {
-
             table.sched th.c-route,
             table.sched td.c-route {
                 display: none;
@@ -666,48 +742,11 @@
             }
 
             .sched-route {
-                font-size: 0.72rem;
-            }
-        }
-
-        /* ---------- narrow screens: one direction at a time ---------- */
-        @media (max-width: 720px) {
-            .seg {
-                display: inline-flex;
-            }
-
-            body[data-dir="toCampus"] [data-dir="toDorms"],
-            body[data-dir="toDorms"] [data-dir="toCampus"] {
                 display: none;
             }
-
-            /* full-bleed so nothing scrolls through the side padding */
-            .bus-controls {
-                position: sticky;
-                top: 0;
-                z-index: 30;
-                margin-left: calc(-1 * clamp(1.1rem, 4vw, 2.5rem));
-                margin-right: calc(-1 * clamp(1.1rem, 4vw, 2.5rem));
-                padding: 0.55rem clamp(1.1rem, 4vw, 2.5rem) 0.5rem;
-                background: var(--bg);
-                border-bottom: 1px solid var(--rule);
-            }
-
-            .road {
-                display: flex;
-            }
-
-            .seg {
-                flex: 1;
-            }
-
-            .seg button {
-                flex: 1;
-            }
-
-            /* the sticky bar already shows the road — don't print it twice */
-            .sched-route {
-                display: none;
+            
+            .map-stop {
+                width: 4.8rem;
             }
         }
 
@@ -724,87 +763,113 @@
     </style>
 </head>
 
-<body data-dir="toCampus">
+<body class="archive-page">
+    <!-- animated background layer -->
+    <div id="bg" aria-hidden="true"></div>
+
     <main class="page">
+        <!-- Top bar -->
         <header class="topbar">
             <div class="brand">
-                <div class="brand-logo">
-                    <img src="assets/text.webp" class="text-img" alt="IIT Delhi Abu Dhabi">
-                    <img src="assets/circle.webp" class="circle-img" alt="">
-                </div>
-                <span class="brand-name">
-                    <span class="brand-part-link">link</span><span class="brand-part-cs">EEN</span>
-                </span>
-                <span class="brand-meta">bus · shuttle</span>
+                <a class="brand-text" href="/">← linkeen<small>bus shuttle</small></a>
             </div>
-            <div class="topbar-utils">
-                <a href="./" class="pill">
-                    <span class="pill-name">← Home</span>
-                </a>
-                <button class="button" id="theme-toggle" aria-label="Toggle theme">◐</button>
+            <div class="topbar-actions">
+                <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
             </div>
         </header>
 
         <section class="bus-hero">
             <div>
                 <h1 class="bus-title">Shuttle <em>Schedule</em></h1>
-                <p class="bus-sub">One clockwise loop, both directions.</p>
+                <p class="bus-sub">KCA 1&amp;2 · KCA 3 · Campus — one clockwise loop, both directions.<br>
+                    Mon&ndash;Fri runs the poster timetable; Sat &amp; Sun runs every 30 minutes from 7:30 AM.</p>
             </div>
             <div class="bus-now">
-                <span class="live-dot" aria-hidden="true"></span>
+                <span class="status-chip" id="status-chip">...</span>
                 <span>now</span><span id="clock">—</span>
             </div>
         </section>
 
-        <!-- LIVE — next departures per direction -->
-        <div class="next-wrap" id="next-wrap"></div>
+        <div class="route-strip">
+            <span class="stop">KCA 1&amp;2</span>
+            <span class="route-arrow">→</span>
+            <span class="stop">KCA 3</span>
+            <span class="route-arrow">→</span>
+            <span class="stop">Campus</span>
+            <span class="route-arrow">→</span>
+            <span class="route-loop">back to KCA 1&amp;2</span>
+        </div>
 
-        <div class="bus-controls" id="bus-controls">
-            <div class="ctl-row">
-                <div class="seg">
-                    <button type="button" data-show="toCampus" class="on">To Campus</button>
-                    <button type="button" data-show="toDorms">To Dorms</button>
+        <!-- SEARCH CARD CONTROLS -->
+        <section class="search-card">
+            <div class="search-row">
+                <div class="search-field">
+                    <span class="search-label">From</span>
+                    <div class="seg seg-location" id="location-seg">
+                        <button type="button" data-loc="kca1">KCA 1&amp;2</button>
+                        <button type="button" data-loc="kca3">KCA 3</button>
+                        <button type="button" data-loc="campus">Campus</button>
+                    </div>
                 </div>
-                <button type="button" class="link-btn" id="jump-next">jump to next</button>
+                
+                <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap locations">⇄</button>
+                
+                <div class="search-field">
+                    <span class="search-label">To</span>
+                    <div class="seg seg-dest" id="dest-seg">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
             </div>
-            <div class="road" id="road" aria-live="polite"></div>
-        </div>
 
-        <!-- WHICH TIMETABLE — defaults to today's -->
-        <div class="day-switch">
-            <span class="day-switch-label">Timetable</span>
-            <div class="seg seg-day">
-                <button type="button" data-day="weekday">Mon &ndash; Thu</button>
-                <button type="button" data-day="friday">Fri</button>
-                <button type="button" data-day="weekend">Sat &amp; Sun</button>
+            <div class="search-row-meta">
+                <div class="search-field">
+                    <span class="search-label">Timetable</span>
+                    <div class="seg seg-day">
+                        <button type="button" data-day="weekday">Mon &ndash; Fri</button>
+                        <button type="button" data-day="weekend">Sat &amp; Sun</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="jump-action-btn" id="jump-next">
+                    <span>⚡ Jump to next departure</span>
+                </button>
             </div>
-            <span class="day-today" id="day-today"></span>
-        </div>
+        </section>
 
+        <!-- ACTIVE TRANSIT SHUTTLE TRACKER -->
+        <div id="active-tracker-wrap" style="display: none;"></div>
+
+        <!-- LIVE BOARD — next departures -->
+        <section class="board-card">
+            <div class="board-title-row">Live Departures</div>
+            <div class="board-list" id="next-wrap"></div>
+        </section>
+
+        <div class="day-today" id="day-today" style="margin-bottom: 0.5rem; display: block; font-weight: 500;"></div>
         <p class="sched-caveat" id="sched-caveat" hidden></p>
 
         <!-- FULL TABLES -->
         <div class="sched-wrap" id="sched-wrap"></div>
 
-        <div class="bus-note" id="notes">
-            <p><span class="note-star">*</span> <strong>Sources.</strong>
-                Mon&ndash;Thu: printed shift poster, transcribed 19 Aug 2026.
-                Fri: same poster, minus the 22 Aug notice &mdash; no Campus&ndash;Dorms trips 12:30&ndash;1:15 PM.
-                Sat &amp; Sun: 22 Aug notice &mdash; every 30 min from 7:30 AM, both directions.</p>
-            <p><strong>KCA 3.</strong> Not on the poster, which only prints departures from KCA 1&amp;2.
-                The KCA 1&amp;2 &rarr; KCA 3 leg is about 5 minutes, usually 3&ndash;7 &mdash; timed by hand,
-                and it varies with traffic and how long the driver holds. Shown for the outbound leg only:
-                the Campus &rarr; KCA 1&amp;2 run does not reliably carry on to KCA 3.</p>
-            <p><strong>Assumed, not stated.</strong> That the 1:15 PM run departs &mdash; treat it as the
-                earliest, not a promise. Weekend runs after 6:30 PM.</p>
-            <p><strong>Not covered.</strong> Public holidays. Which vehicle runs which weekend trip.</p>
-            <p><strong>As printed.</strong> Weekday trips 16 and 17 to Dorms are both 10:00 AM; reproduced,
-                not corrected. Cancelled runs are struck through rather than deleted, so trip numbers still
-                match the sheet. Countdowns use your device clock.</p>
-        </div>
+        <p class="bus-note">
+            <strong>Friday Prayer.</strong> No shuttle service operates between 12:30 PM and 1:15 PM on Fridays.
+            <br><br>
+            <strong>Sources.</strong> Mon&ndash;Fri comes from the printed shift poster, transcribed 19 Aug 2026.
+            Sat &amp; Sun comes from the campus notice of 22 Aug 2026: <em>&ldquo;Saturdays and Sundays, vehicles
+            will operate between the campus and KCA 1,2 &amp; 3 every 30 minutes in both directions, starting
+            from 7:30 AM.&rdquo;</em> Countdowns use your device clock, so they only line up if your phone is on
+            Gulf time.
+            <strong>Known gaps.</strong> The weekend notice gives no last departure and no vehicle rota, so the
+            weekend table has no Vehicle column and its post-7 PM runs sit in their own dashed block marked
+            <em>assumed</em> &mdash; they are this page&rsquo;s guess, not the notice. Neither source says anything
+            about public holidays. Trips 16 and 17 on the Campus &rarr; Dorms weekday leg are both printed as
+            10:00 AM; that is reproduced as printed, not corrected.
+        </p>
     </main>
 
-    <script src="bus.js" defer></script>
+    <script src="shared.js?v=12"></script>
+    <script src="bus.js?v=4" defer></script>
 </body>
 
 </html>
