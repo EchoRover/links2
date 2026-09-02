@@ -2085,20 +2085,48 @@ body #open-games-modal:hover {
 
 .reels-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 180px));
+  gap: 14px;
+  justify-content: center;
   align-items: start;
+  width: 100%;
 }
 
 .reel-panel {
   position: relative;
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 22px;
+  background: var(--surface-elevated);
+  border: 2px solid var(--border);
+  box-shadow: 0 8px 24px -4px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.06);
+  padding: 8px 6px;
   aspect-ratio: 9 / 16;
   width: 100%;
-  background: #000;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-  border: 1px solid var(--border-soft);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+.reel-panel:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 30px -4px rgba(0,0,0,0.22);
+}
+
+/* Smartphone dynamic island / top bezel pill */
+.reel-panel::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  border-radius: 999px;
+  z-index: 15;
+  pointer-events: none;
 }
 
 .reel-frame {
@@ -2106,7 +2134,10 @@ body #open-games-modal:hover {
   height: 100%;
   position: relative;
   aspect-ratio: 9 / 16;
+  border-radius: 16px;
   overflow: hidden;
+  background: #000;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
 }
 
 .reel-frame video {
@@ -2115,6 +2146,17 @@ body #open-games-modal:hover {
   aspect-ratio: 9 / 16;
   object-fit: cover;
   display: block;
+  pointer-events: none;
+}
+
+.reel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: transparent;
   pointer-events: none;
 }
 
@@ -2423,12 +2465,22 @@ body #open-games-modal:hover {
   }
   .reels-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 150px));
+    gap: 10px;
+    justify-content: center;
   }
   .reel-panel {
-    border-radius: 10px;
-    max-width: 145px;
+    border-radius: 18px;
+    padding: 6px 5px;
+    max-width: 155px;
+  }
+  .reel-panel::before {
+    top: 10px;
+    width: 20px;
+    height: 3px;
+  }
+  .reel-frame {
+    border-radius: 12px;
   }
 
   .site-footer {
