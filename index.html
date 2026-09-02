@@ -40,7 +40,15 @@
   <div id="timetable-modal" class="modal">
     <div class="modal-content timetable-modal-content">
       <span class="close-button" id="close-timetable-modal">&times;</span>
-      <h2>Semester 5 Timetable</h2>
+      <div class="modal-title-row">
+        <h2>Semester 5 Timetable</h2>
+        <a href="timetable.pdf" target="_blank" class="tt-pdf-btn" title="Download official timetable PDF">📄 Official PDF ↗</a>
+      </div>
+      <div class="modal-batch-bar" id="modal-batch-bar">
+        <span class="modal-batch-label">Viewing for:</span>
+        <button type="button" class="modal-batch-btn on" data-batch="1">Group 1 (G1)</button>
+        <button type="button" class="modal-batch-btn" data-batch="2">Group 2 (G2)</button>
+      </div>
       <div class="modal-tab-bar" id="modal-tab-bar">
         <button type="button" class="modal-tab-btn" data-day-tab="1">Mon</button>
         <button type="button" class="modal-tab-btn" data-day-tab="2">Tue</button>
@@ -148,18 +156,19 @@
             <div class="reels-card">
               <div class="reels-card-header">
                 <span>Daily Reels ✿</span>
+                <button type="button" id="shuffle-reels-btn" class="shuffle-reels-btn" title="Shuffle new random clips">🔀 Shuffle</button>
               </div>
               <div class="reels-row">
-                <div class="reel-panel left-reel">
+                <div class="reel-panel left-reel" id="reel-panel-left" title="Click to toggle sound">
                   <div class="reel-frame">
                     <video id="local-clip-left" playsinline autoplay muted loop></video>
-                    <div class="reel-overlay"></div>
+                    <span class="reel-sound-badge" id="sound-badge-left">🔇</span>
                   </div>
                 </div>
-                <div class="reel-panel right-reel">
+                <div class="reel-panel right-reel" id="reel-panel-right" title="Click to toggle sound">
                   <div class="reel-frame">
                     <video id="local-clip-right" playsinline autoplay muted loop></video>
-                    <div class="reel-overlay"></div>
+                    <span class="reel-sound-badge" id="sound-badge-right">🔇</span>
                   </div>
                 </div>
               </div>

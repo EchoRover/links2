@@ -535,34 +535,49 @@ function renderModalTimetable(dayKey) {
   container.innerHTML = rowsHtml.join("");
 }
 
-// Psychology Quiz for next Tuesday (Sep 8, 2026) during class
+// Academic Deadlines & Quizzes
+addUpdate("assignments", "AENP200: Complete Bomb Calorimeter Lab Report (Energy Transition Lab), 09/09/2026", "2026-09-09");
 addUpdate("quizzes", "AHUL261: Psychology Quiz (during class 14:00), 08/09/2026", "2026-09-08");
 
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("--- SCRIPTS.JS FORCE LOAD V13 ---");
+  console.log("--- SCRIPTS.JS FORCE LOAD V14 ---");
   renderGeneralLinks(".general", linksData.general);
   renderCourseLinks(".links", linksData.courses);
   renderUpdates();
   renderLocalClips();
+  wireInteractiveReels();
   buildHeroSub();
   updateLiveClassStatus();
   setInterval(updateLiveClassStatus, 15000);
   if (typeof initMascot === "function") initMascot();
 
-  // Batch toggle buttons
+  // Batch toggle buttons (main bar and modal)
   const batchBtns = document.querySelectorAll(".batch-btn");
+  const modalBatchBtns = document.querySelectorAll(".modal-batch-btn");
   const savedBatch = localStorage.getItem("student-batch") || "1";
   
+  function applyBatch(b) {
+    localStorage.setItem("student-batch", b);
+    batchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
+    modalBatchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
+    updateLiveClassStatus();
+    renderModalTimetable(activeTimetableTab);
+  }
+
   batchBtns.forEach(btn => {
     btn.classList.toggle("on", btn.dataset.batch === savedBatch);
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const b = btn.dataset.batch;
-      localStorage.setItem("student-batch", b);
-      batchBtns.forEach(x => x.classList.toggle("on", x.dataset.batch === b));
-      updateLiveClassStatus();
-      renderModalTimetable(activeTimetableTab);
+      applyBatch(btn.dataset.batch);
+    });
+  });
+
+  modalBatchBtns.forEach(btn => {
+    btn.classList.toggle("on", btn.dataset.batch === savedBatch);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      applyBatch(btn.dataset.batch);
     });
   });
 
@@ -577,23 +592,39 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // Timetable Modal logic
   const openTimeBtn = document.getElementById("timetable-box");
+  const calBtn = document.querySelector(".tracker-calendar-btn");
   const timeModal = document.getElementById("timetable-modal");
   const closeTimeBtn = document.getElementById("close-timetable-modal");
   
-  if (openTimeBtn && timeModal) {
-    openTimeBtn.addEventListener("click", () => {
-      renderModalTimetable();
-      timeModal.style.display = "block";
-    });
+  function openTimetableModal(e) {
+    if (e && e.target && (e.target.closest(".batch-btn") || e.target.closest(".batch-toggle-container"))) {
+      return;
+    }
+    renderModalTimetable();
+    if (timeModal) timeModal.style.display = "block";
   }
+
+  if (openTimeBtn) openTimeBtn.addEventListener("click", openTimetableModal);
+  if (calBtn) calBtn.addEventListener("click", openTimetableModal);
+
   if (closeTimeBtn && timeModal) {
     closeTimeBtn.addEventListener("click", () => {
       timeModal.style.display = "none";
     });
   }
+
   window.addEventListener("click", (event) => {
     if (event.target === timeModal) {
       timeModal.style.display = "none";
+    }
+  });
+
+  // Keyboard shortcut: Escape closes active modals
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (timeModal) timeModal.style.display = "none";
+      const gModal = document.getElementById("games-modal");
+      if (gModal) gModal.style.display = "none";
     }
   });
 });

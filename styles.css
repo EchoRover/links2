@@ -2551,6 +2551,103 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   flex-direction: column;
   gap: 1rem;
 }
+.modal-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tt-pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-soft);
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+.tt-pdf-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.modal-batch-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--surface-sunken);
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+}
+.modal-batch-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-subtle);
+}
+.modal-batch-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-subtle);
+  transition: all 0.15s ease;
+}
+.modal-batch-btn.on {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.shuffle-reels-btn {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-soft);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+.shuffle-reels-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.reel-sound-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 0.85rem;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  padding: 3px 7px;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: all 0.2s ease;
+}
+.reel-panel:hover .reel-sound-badge {
+  opacity: 1;
+  transform: scale(1.1);
+}
+.reel-panel {
+  cursor: pointer;
+}
 .modal-tab-bar {
   display: flex;
   background: var(--surface-sunken);
