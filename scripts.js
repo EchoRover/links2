@@ -1,3 +1,14 @@
+const COURSE_COLORS = (typeof window !== "undefined" && window.COURSE_COLORS) || {
+  AENL226: "#3b82f6",
+  AENL228: "#f59e0b",
+  AENP200: "#10b981",
+  AENP225: "#06b6d4",
+  AHUL256: "#ec4899",
+  AHUL261: "#8b5cf6",
+  ASBL100: "#14b8a6",
+  AGRL130: "#f97316"
+};
+
 const COURSE_TITLES = {
   AENL226: "Power Electronics and Power Systems",
   AENL228: "Measurement & Instrumentation for Energy Systems",
@@ -97,7 +108,9 @@ const linksData = {
 };
 
 const updatesData = [];
-const localClips = Array.from({ length: 16 }, (_, i) => `idk${i + 1}.mp4`);
+// 14 verified portrait 9:16 reels (idk4 is landscape 16:9, idk6 is 4:3)
+const portraitClipIndices = [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+const localClips = portraitClipIndices.map(i => `idk${i}.mp4`);
 
 function getDailyReels() {
   const today = new Date();
@@ -150,18 +163,21 @@ function renderUpdates() {
     grouped[category].push([text, expiry]);
   });
   
-  const categories = ["assignments", "quizzes"];
+  const categories = [
+    { id: "assignments", title: "📋 Assignments", tag: "Tasks & Reports" },
+    { id: "quizzes", title: "📝 Quizzes & Tests", tag: "Evaluations" }
+  ];
+
+  let totalActive = 0;
+
   categories.forEach(cat => {
-    const container = document.getElementById(cat + "-box");
+    const container = document.getElementById(cat.id + "-box");
     if (!container) return;
     
-    // Clear old elements except the header
-    const header = container.querySelector("h2");
     container.innerHTML = "";
-    if (header) container.appendChild(header);
-    
-    const items = grouped[cat] || [];
-    let activeCount = 0;
+
+    const items = grouped[cat.id] || [];
+    const validItems = [];
     
     items.forEach(([text, expiry]) => {
       const parts = String(expiry).split("-").map(Number);
@@ -169,41 +185,84 @@ function renderUpdates() {
       const [y, m, d] = parts;
       const expiryExclusive = new Date(y, m - 1, d + 1);
       if (now < expiryExclusive) {
-        const dateObj = new Date(y, m - 1, d);
-        const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dateObj.getDay()];
-        const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dateObj.getMonth()];
-
-        const colon = text.indexOf(":");
-        const code = colon >= 0 ? text.slice(0, colon).trim() : "";
-        let event = colon >= 0 ? text.slice(colon + 1).trim() : text;
-        const comma = event.lastIndexOf(",");
-        if (comma >= 0) event = event.slice(0, comma).trim();
-
-        const row = document.createElement("div");
-        row.className = "update-row";
-        row.innerHTML = `
-          <div class="update-date-badge">
-            <span class="upd-dow">${DOW}</span>
-            <span class="upd-day">${String(d).padStart(2, "0")}</span>
-            <span class="upd-mon">${MON}</span>
-          </div>
-          <div class="update-info">
-            ${code ? `<span class="upd-code" style="color: ${COURSE_COLORS[code] || 'var(--accent)'}">${code}</span>` : ""}
-            <span class="upd-text">${event}</span>
-          </div>
-        `;
-        container.appendChild(row);
-        activeCount++;
+        validItems.push({ text, expiry, y, m, d });
       }
     });
 
-    if (activeCount === 0) {
+    // Box header with active count badge
+    const headerEl = document.createElement("div");
+    headerEl.className = "box-head-row";
+    headerEl.innerHTML = `
+      <div class="box-title-wrap">
+        <h2>${cat.title}</h2>
+        <span class="box-subtitle">${cat.tag}</span>
+      </div>
+      <span class="box-count-badge ${cat.id === 'quizzes' && validItems.length > 0 ? 'alert' : ''}">
+        ${validItems.length} ${validItems.length === 1 ? 'item' : 'items'}
+      </span>
+    `;
+    container.appendChild(headerEl);
+
+    if (validItems.length === 0) {
       const p = document.createElement("div");
       p.className = "update-empty";
-      p.innerHTML = "✨ All caught up! No active tasks.";
+      p.innerHTML = "✨ All caught up! No pending tasks.";
       container.appendChild(p);
+      return;
     }
+
+    validItems.forEach(({ text, y, m, d }) => {
+      const dateObj = new Date(y, m - 1, d);
+      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dateObj.getDay()];
+      const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dateObj.getMonth()];
+
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const endOfDay = new Date(y, m - 1, d, 23, 59, 59);
+      const daysDiff = Math.ceil((endOfDay - now) / msPerDay);
+      let countdownLabel = "";
+      if (daysDiff <= 0) countdownLabel = "Due today!";
+      else if (daysDiff === 1) countdownLabel = "Due tomorrow!";
+      else countdownLabel = `⏱ in ${daysDiff} days`;
+
+      const colon = text.indexOf(":");
+      const code = colon >= 0 ? text.slice(0, colon).trim() : "";
+      let event = colon >= 0 ? text.slice(colon + 1).trim() : text;
+      const comma = event.lastIndexOf(",");
+      if (comma >= 0) event = event.slice(0, comma).trim();
+
+      const clr = (typeof COURSE_COLORS !== "undefined" && COURSE_COLORS[code]) || "var(--accent)";
+
+      const card = document.createElement("div");
+      card.className = "update-card-item";
+      card.innerHTML = `
+        <div class="update-date-badge">
+          <span class="upd-dow">${DOW}</span>
+          <span class="upd-day">${String(d).padStart(2, "0")}</span>
+          <span class="upd-mon">${MON}</span>
+        </div>
+        <div class="update-info">
+          <div class="update-tag-row">
+            ${code ? `<span class="upd-code" style="color: ${clr}; border-color: ${clr}; background: color-mix(in srgb, ${clr} 12%, transparent);">${code}</span>` : ""}
+            <span class="upd-countdown ${daysDiff <= 3 ? 'urgent' : ''}">${countdownLabel}</span>
+          </div>
+          <div class="upd-text">${event}</div>
+        </div>
+      `;
+      container.appendChild(card);
+      totalActive++;
+    });
   });
+
+  const mainHeader = document.querySelector(".updates-header");
+  if (mainHeader) {
+    let badge = mainHeader.querySelector(".agenda-count-badge");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "agenda-count-badge";
+      mainHeader.appendChild(badge);
+    }
+    badge.textContent = `${totalActive} Active`;
+  }
 }
 
 const SEM_CONFIG = { number: 5, startDate: "2026-08-03" };
@@ -299,18 +358,23 @@ function timeToMinutes(timeStr) {
   return h * 60 + m;
 }
 
+// Alias for safety
+const timetableData = {
+  1: WEEKLY_CLASSES[1], 2: WEEKLY_CLASSES[2], 3: WEEKLY_CLASSES[3], 4: WEEKLY_CLASSES[4], 5: WEEKLY_CLASSES[5],
+  monday: WEEKLY_CLASSES[1], tuesday: WEEKLY_CLASSES[2], wednesday: WEEKLY_CLASSES[3], thursday: WEEKLY_CLASSES[4], friday: WEEKLY_CLASSES[5]
+};
+
 function updateLiveClassStatus() {
   const statusEl = document.getElementById("live-class-status");
   const dotEl = document.getElementById("live-class-dot");
   if (!statusEl) return;
   
-  const savedBatch = localStorage.getItem("student-batch") || "1";
+  const savedBatch = Number(localStorage.getItem("student-batch") || "1");
   const now = new Date();
-  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-  const currentDay = days[now.getDay()];
+  const dayKey = now.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
   const currentMins = now.getHours() * 60 + now.getMinutes();
 
-  if (currentDay === "saturday" || currentDay === "sunday") {
+  if (dayKey === 0 || dayKey === 6) {
     statusEl.innerHTML = `
       <div class="tracker-hero-body">
         <div class="tracker-main-info">
@@ -326,8 +390,8 @@ function updateLiveClassStatus() {
     return;
   }
 
-  const todayClasses = (timetableData[currentDay] || []).filter(c => {
-    return !c.batch || c.batch === savedBatch;
+  const todayClasses = (WEEKLY_CLASSES[dayKey] || []).filter(c => {
+    return c.batch === undefined || c.batch === savedBatch;
   });
 
   let currentClass = null;
@@ -601,28 +665,46 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
     renderModalTimetable();
-    if (timeModal) timeModal.style.display = "block";
+    if (timeModal) {
+      timeModal.style.display = "block";
+      document.body.style.overflow = "hidden";
+    }
   }
+
+  function closeTimetableModal() {
+    if (timeModal) {
+      timeModal.style.display = "none";
+      document.body.style.overflow = "";
+    }
+  }
+
+  
+  // Wire timetable links
+  document.querySelectorAll('a[href="timetable.pdf"]').forEach(link => {
+    link.addEventListener("click", (e) => {
+      if (link.classList.contains("tt-pdf-btn")) return; // Let in-modal download button open PDF
+      e.preventDefault();
+      openTimetableModal(e);
+    });
+  });
 
   if (openTimeBtn) openTimeBtn.addEventListener("click", openTimetableModal);
   if (calBtn) calBtn.addEventListener("click", openTimetableModal);
 
   if (closeTimeBtn && timeModal) {
-    closeTimeBtn.addEventListener("click", () => {
-      timeModal.style.display = "none";
-    });
+    closeTimeBtn.addEventListener("click", closeTimetableModal);
   }
 
   window.addEventListener("click", (event) => {
     if (event.target === timeModal) {
-      timeModal.style.display = "none";
+      closeTimetableModal();
     }
   });
 
   // Keyboard shortcut: Escape closes active modals
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      if (timeModal) timeModal.style.display = "none";
+      closeTimetableModal();
       const gModal = document.getElementById("games-modal");
       if (gModal) gModal.style.display = "none";
     }
