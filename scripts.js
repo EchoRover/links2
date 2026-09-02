@@ -1,14 +1,3 @@
-const COURSE_COLORS = (typeof window !== "undefined" && window.COURSE_COLORS) || {
-  AENL226: "#3b82f6",
-  AENL228: "#f59e0b",
-  AENP200: "#10b981",
-  AENP225: "#06b6d4",
-  AHUL256: "#ec4899",
-  AHUL261: "#8b5cf6",
-  ASBL100: "#14b8a6",
-  AGRL130: "#f97316"
-};
-
 const COURSE_TITLES = {
   AENL226: "Power Electronics and Power Systems",
   AENL228: "Measurement & Instrumentation for Energy Systems",
@@ -150,6 +139,45 @@ function renderLocalClips() {
     rightVid.autoplay = true;
     rightVid.load();
     rightVid.play().catch(() => {});
+  }
+}
+
+// ================= INTERACTIVE REELS HELPER =================
+function wireInteractiveReels() {
+  const shuffleBtn = document.getElementById("shuffle-reels-btn");
+  const leftPanel = document.getElementById("reel-panel-left");
+  const rightPanel = document.getElementById("reel-panel-right");
+  const leftVid = document.getElementById("local-clip-left");
+  const rightVid = document.getElementById("local-clip-right");
+  const leftBadge = document.getElementById("sound-badge-left");
+  const rightBadge = document.getElementById("sound-badge-right");
+
+  if (shuffleBtn) {
+    shuffleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let i1 = Math.floor(Math.random() * localClips.length);
+      let i2 = Math.floor(Math.random() * localClips.length);
+      if (i1 === i2) i2 = (i1 + 1) % localClips.length;
+      if (leftVid) { leftVid.src = localClips[i1]; leftVid.load(); leftVid.play().catch(() => {}); }
+      if (rightVid) { rightVid.src = localClips[i2]; rightVid.load(); rightVid.play().catch(() => {}); }
+    });
+  }
+
+  function toggleSound(vid, badge) {
+    if (!vid) return;
+    vid.muted = !vid.muted;
+    if (badge) {
+      badge.textContent = vid.muted ? "🔇" : "🔊";
+      badge.classList.toggle("unmuted", !vid.muted);
+    }
+    if (vid.paused) vid.play().catch(() => {});
+  }
+
+  if (leftPanel && leftVid) {
+    leftPanel.addEventListener("click", () => toggleSound(leftVid, leftBadge));
+  }
+  if (rightPanel && rightVid) {
+    rightPanel.addEventListener("click", () => toggleSound(rightVid, rightBadge));
   }
 }
 
