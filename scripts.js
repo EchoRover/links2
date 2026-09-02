@@ -371,10 +371,11 @@ function updateLiveClassStatus() {
   // Lunch break check: between 12:00 and 14:00 (720 and 840 mins)
   if (!currentClass && currentMins >= 720 && currentMins < 840) {
     statusEl.innerHTML = `
-      <p>
-        <span class="class-lunch">✿ Lunch Break · 12:00 - 14:00</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
-      </p>
+      <div class="live-status-row">
+        <span class="live-tag live-tag-lunch">LUNCH BREAK</span>
+        <span class="live-free-text">12:00 – 14:00</span>
+        ${nextClass ? `<span class="live-next-chip">Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+      </div>
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-lunch";
     return;
@@ -384,13 +385,16 @@ function updateLiveClassStatus() {
     const [, endStr] = currentClass.time.split("-");
     const endMins = timeToMinutes(endStr.trim());
     const minsLeft = endMins - currentMins;
-    const timeLeftStr = minsLeft < 60 ? `${minsLeft} min` : `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
+    const timeLeftStr = minsLeft < 60 ? `${minsLeft}m` : `${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
 
     statusEl.innerHTML = `
-      <p>
-        <span class="class-active">🟢 Now: <strong>${currentClass.code} ${currentClass.type}</strong> (${roomShort(currentClass.room)}) · ends in ${timeLeftStr}</span>
-        ${nextClass ? `<span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
-      </p>
+      <div class="live-status-row">
+        <span class="live-tag live-tag-now">IN SESSION</span>
+        <span class="live-course"><strong>${currentClass.code}</strong> ${currentClass.type}</span>
+        <span class="live-room">${roomShort(currentClass.room)}</span>
+        <span class="live-countdown">ends in ${timeLeftStr}</span>
+        ${nextClass ? `<span class="live-next-chip">Next: <strong>${nextClass.code}</strong> at ${nextClass.time.split("-")[0].trim()}</span>` : ""}
+      </div>
     `;
     if (dotEl) dotEl.className = "live-class-dot dot-active";
   } else {
@@ -399,17 +403,23 @@ function updateLiveClassStatus() {
       const [startStr] = nextClass.time.split("-");
       const startMins = timeToMinutes(startStr.trim());
       const minsToStart = startMins - currentMins;
-      const timeToStartStr = minsToStart < 60 ? `${minsToStart} min` : `${Math.floor(minsToStart / 60)}h ${minsToStart % 60}m`;
+      const timeToStartStr = minsToStart < 60 ? `${minsToStart}m` : `${Math.floor(minsToStart / 60)}h ${minsToStart % 60}m`;
 
       statusEl.innerHTML = `
-        <p>
-          <span class="class-free">🌴 Free Time / Study Slot</span>
-          <span class="class-next">⏱️ Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) starts in ${timeToStartStr}</span>
-        </p>
+        <div class="live-status-row">
+          <span class="live-tag live-tag-free">FREE PERIOD</span>
+          <span class="live-free-text">Study Slot</span>
+          <span class="live-next-chip">Next: <strong>${nextClass.code} ${nextClass.type}</strong> (${roomShort(nextClass.room)}) in ${timeToStartStr}</span>
+        </div>
       `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";
     } else {
-      statusEl.innerHTML = `<p><span class="class-free">🌴 Done with classes for today!</span></p>`;
+      statusEl.innerHTML = `
+        <div class="live-status-row">
+          <span class="live-tag live-tag-done">DONE FOR TODAY</span>
+          <span class="live-free-text">All scheduled lectures complete ✿</span>
+        </div>
+      `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";
     }
   }

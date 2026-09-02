@@ -964,6 +964,71 @@ body #open-games-modal:hover {
 }
 
 
+/* ---------- Live Tracker Bar Details ---------- */
+.live-status-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  font-size: 0.82rem;
+}
+.live-tag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.live-tag-now {
+  background: color-mix(in srgb, #10b981 16%, transparent);
+  color: #10b981;
+  border: 1px solid color-mix(in srgb, #10b981 30%, transparent);
+}
+.live-tag-free {
+  background: color-mix(in srgb, #06b6d4 16%, transparent);
+  color: #06b6d4;
+  border: 1px solid color-mix(in srgb, #06b6d4 30%, transparent);
+}
+.live-tag-lunch {
+  background: color-mix(in srgb, #f59e0b 16%, transparent);
+  color: #f59e0b;
+  border: 1px solid color-mix(in srgb, #f59e0b 30%, transparent);
+}
+.live-tag-done {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.live-course {
+  font-weight: 600;
+  color: var(--text);
+}
+.live-room {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-soft);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.live-countdown {
+  font-size: 0.74rem;
+  color: var(--text-subtle);
+}
+.live-next-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  padding-left: 8px;
+  border-left: 1px solid var(--border-soft);
+}
+
 /* ---------- Course Card Meta Row ---------- */
 .course-meta-row {
   display: flex;
@@ -1138,7 +1203,7 @@ body #open-games-modal:hover {
 
 /* ============================================================
    LAPTOP / DESKTOP (Min-width: 1025px)
-   Engineered to fit comfortably within the viewport without scrolling!
+   Balanced 2-column layout engineered to fit on screen without scrolling
    ============================================================ */
 @media (min-width: 1025px) {
   html, body {
@@ -1148,7 +1213,7 @@ body #open-games-modal:hover {
   .layout {
     height: 100vh;
     max-height: 100vh;
-    padding: 12px clamp(1.25rem, 2.5vw, 2.75rem) 10px;
+    padding: 12px clamp(1.25rem, 2.2vw, 2.5rem) 10px;
     gap: 8px;
     box-sizing: border-box;
     display: flex;
@@ -1173,17 +1238,25 @@ body #open-games-modal:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 16px;
     padding: 0;
   }
+  .hero-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
   .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   #mascot-container {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
   .hero h1 {
     font-size: 1.35rem;
@@ -1200,13 +1273,14 @@ body #open-games-modal:hover {
     max-width: 580px;
   }
   .general a {
-    padding: 3px 9px;
-    font-size: 0.74rem;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 999px;
   }
   .body-grid {
     display: grid;
-    grid-template-columns: minmax(0, 2.25fr) minmax(0, 0.95fr);
-    gap: 10px;
+    grid-template-columns: minmax(0, 1.85fr) minmax(310px, 1fr);
+    gap: 14px;
     flex: 1 1 auto;
     min-height: 0;
     align-items: stretch;
@@ -1214,21 +1288,18 @@ body #open-games-modal:hover {
   .left-col {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     min-height: 0;
     justify-content: space-between;
   }
   .live-tracker-bar {
-    padding: 6px 12px !important;
-    border-radius: 10px !important;
+    padding: 7px 14px !important;
+    border-radius: 12px !important;
     gap: 10px !important;
     margin: 0 !important;
   }
   .tracker-title {
-    font-size: 0.82rem !important;
-  }
-  .live-tracker-bar .live-class-status {
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
   }
   .batch-btn {
     font-size: 0.68rem !important;
@@ -1236,86 +1307,99 @@ body #open-games-modal:hover {
   }
   .links {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
     margin: 0;
   }
   .course-card {
-    padding: 6px 8px;
-    gap: 2px;
-    border-radius: 10px;
+    padding: 8px 12px;
+    gap: 3px;
+    border-radius: 12px;
   }
   .course-code {
-    font-size: 0.58rem;
-    padding: 1px 5px;
+    font-size: 0.64rem;
+    padding: 2px 6px;
   }
   .course-spec .ltp {
-    font-size: 0.58rem;
+    font-size: 0.62rem;
   }
   .cr-badge {
-    min-width: 15px;
-    height: 15px;
-    font-size: 0.6rem;
+    min-width: 17px;
+    height: 17px;
+    font-size: 0.62rem;
   }
   .course-title {
-    font-size: 0.8rem;
-    line-height: 1.15;
-    margin: 2px 0 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.88rem;
+    line-height: 1.2;
+    margin: 2px 0 1px;
+    white-space: normal;
+    overflow: visible;
+  }
+  .course-meta-row {
+    font-size: 0.68rem;
+    margin: 1px 0 2px;
   }
   .course-links {
-    margin-top: 3px;
+    margin-top: 2px;
     padding-top: 3px;
-    gap: 1px;
+    gap: 6px;
   }
   .course-links a {
-    font-size: 0.65rem;
-    padding: 1px 3px;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+  }
+  .side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    min-height: 0;
+    justify-content: space-between;
+  }
+  .reels-card {
+    padding: 8px 10px;
+    border-radius: 12px;
+    gap: 6px;
+  }
+  .reels-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .reel-panel {
+    aspect-ratio: 9 / 16;
+    max-height: 200px;
+    border-radius: 8px;
   }
   .updates-layout {
-    padding-top: 8px;
-    margin-top: 2px;
-  }
-  .updates-layout::before {
-    font-size: 0.85rem;
-    top: -8px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    gap: 6px;
   }
   .updates {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
   .updates .box {
-    padding: 5px 8px;
+    padding: 6px 8px;
     border-radius: 8px;
   }
   .updates .box h2 {
-    font-size: 0.74rem;
-    margin-bottom: 2px;
-  }
-  .update-item {
     font-size: 0.72rem;
+    margin-bottom: 3px;
   }
-  .side-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    height: 100%;
-    min-height: 0;
-    align-self: stretch;
+  .update-row {
+    padding: 3px 0;
+    gap: 6px;
   }
-  .reel-panel {
-    height: 100%;
-    width: 100%;
-    padding: 4px;
-    aspect-ratio: auto;
-    min-height: 0;
-    border-radius: 10px;
+  .update-date-badge {
+    min-width: 32px;
+    padding: 2px;
   }
-  .reel-frame {
-    height: 100%;
-    width: 100%;
+  .upd-day {
+    font-size: 0.78rem;
+  }
+  .upd-text {
+    font-size: 0.70rem;
   }
   .site-footer {
     font-size: 0.68rem;
