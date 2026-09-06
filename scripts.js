@@ -629,6 +629,9 @@ function renderModalTimetable(dayKey) {
 
 // Academic Deadlines & Quizzes
 addUpdate("assignments", "AENP200: Complete Bomb Calorimeter Lab Report (Energy Transition Lab), 09/09/2026", "2026-09-09");
+addUpdate("assignments", "AENP200: Submit lab record before next lab, 09/09/2026", "2026-09-09");
+addUpdate("assignments", "AENL228: Submit lab record before next lab, 09/09/2026", "2026-09-09");
+addUpdate("assignments", "ASBL100: Submit lab record before next lab, 11/09/2026", "2026-09-11");
 addUpdate("quizzes", "AHUL261: Psychology Quiz (during class 14:00), 08/09/2026", "2026-09-08");
 
 // ================= INIT =================
