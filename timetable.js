@@ -2,34 +2,14 @@
 // SEM 5 TIMETABLE â€” current + next class on the home page.
 //
 // Transcribed from the official PDF (iitdabudhabi.ac.ae/timetable ->
-// "Year 3 Semester 5 B.TECH Computer Science and Engineering"), read
-// off the rendered grid rather than the text layer, then cross-checked
-// against every course's L-T-P-C credits â€” lecture, tutorial and lab
-// hours all reconcile, which is what says the block spans are right.
+// "Year 3 Semester 5 B.TECH Energy Engineering").
 //
-// REVISION 3: the 27 August 2026 reissue. 
-//   - All computer labs (ACOL331, ACOL333) moved from M3-0-022 to M3-0-004 (Computer Lab 03).
-//   - ACOD310 (Mini Project) moved from Thursday 9-10 to Friday 10:00-11:50 in M4-1-017.
+// REVISION 4: the 7 September 2026 reissue.
+//   - AHUL261 Tutorial (Group 1) moved from Wednesday 15:30 to Monday 09:00.
+//   - AENL226 Tutorial on Thursday 09:00 is now explicitly Group 1 only.
 //
-// REVISION 2: the 23 August 2026 reissue. It differs from the launch
-// version in four ways, all of them taken from the new grid:
-//   - every block now prints its own start/end time, and they are NOT
-//     round hours. A "10:00 - 10:50" lecture ends at :50, a 90-minute
-//     HUL slot is 14:00 - 15:20, AGRL130 runs 16:00 - 18:50. The old
-//     transcription rounded these to the column edges and was wrong by
-//     up to 20 minutes on the countdown.
-//   - the grid now names the rooms, so M3-0-022 and M4-0-019 are no
-//     longer guesses (see ROOMS). M4.0.019 was also respelled M4-0-019.
-//   - ACOD310 (Mini Project, 0-0-6-3) is new, and Thursday 9-10 is
-//     reserved for it.
-//   - the old "reserved for additional classes" blocks on Monday and
-//     Friday morning are gone; the sheet now says that generically in
-//     a footnote instead of holding named slots.
-//
-// Both groups are shown together. Only four entries in the week are
-// group-specific (all HUL tutorials — one Tuesday, three Wednesday);
-// those carry a G1/G2 badge and everything else applies to everyone.
-// The launch version of this comment said three and was miscounting.
+// Both groups are shown together. Group-specific entries carry a G1/G2
+// badge and everything else applies to everyone.
 // ============================================================
 
 const COURSES = {
@@ -48,6 +28,7 @@ const COURSES = {
 //   group: 0 everyone · 1 group 1 only · 2 group 2 only
 const WEEK = {
     1: [ // Monday
+        ["09:00", "09:50", "AHUL261", "M4-1-017", "tut", 1],
         ["10:00", "10:50", "AENL226", "M2-2-007", "proj", 0], // Help Session
         ["11:00", "11:50", "AENL228", "M2-2-007", "", 0],
         ["14:00", "15:20", "AHUL256", "M4-0-011", "", 0],
@@ -66,12 +47,11 @@ const WEEK = {
         ["09:00", "10:50", "AENL228", "M2-2-031", "lab", 2],
         ["11:00", "11:50", "AHUL261", "M4-1-017", "tut", 2],
         ["14:00", "15:20", "AHUL256", "M4-0-011", "", 0],
-        ["15:30", "16:20", "AHUL261", "M4-1-017", "tut", 1],
         ["15:30", "18:20", "AENP200", "M3-1-009", "lab", 2],
         ["17:00", "17:50", "AHUL256", "M4-1-017", "tut", 1],
     ],
     4: [ // Thursday
-        ["09:00", "09:50", "AENL226", "M2-2-007", "tut", 0],
+        ["09:00", "09:50", "AENL226", "M2-2-007", "tut", 1],
         ["10:00", "10:50", "ASBL100", "M2-2-007", "", 0],
         ["11:00", "12:20", "AENL226", "M4-0-011", "", 0],
         ["14:00", "15:20", "AHUL261", "M4-0-011", "", 0],
