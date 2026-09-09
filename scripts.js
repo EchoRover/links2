@@ -96,7 +96,10 @@ const linksData = {
   }
 };
 
-const updatesData = [];
+const updatesData = [
+  ["quizzes", "AHUL261: Psychology Quiz", "2026-09-10"],
+  ["quizzes", "AENL228: Quiz (Prof. Ravi Kumar)", "2026-09-14"]
+];
 // 14 verified portrait 9:16 reels (idk4 is landscape 16:9, idk6 is 4:3)
 const portraitClipIndices = [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 const localClips = portraitClipIndices.map(i => `idk${i}.mp4`);
