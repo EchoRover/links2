@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>linkeen - Mess</title>
+    <link rel="icon" type="image/png" href="sustainability.png">
+    <script>
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=12">
+<style>
+        /* ============================================================
+           MESS PAGE — scoped styles only. Shared tokens come from
+           styles.css; nothing here leaks back into it.
+           ============================================================ */
+
+        .mess-wrap { max-width: 1000px; margin: 0 auto; padding: 0 20px 56px; }
+
+        .mess-hero { display: flex; align-items: flex-end; justify-content: space-between;
+                     gap: 20px; margin: 22px 0 4px; flex-wrap: wrap; }
+        .mess-title { font-family: var(--font-serif); font-style: italic; font-weight: 500;
+                      font-size: clamp(1.5rem, 3.4vw, 2.1rem); color: var(--fg); margin: 0; }
+        .mess-title em { color: var(--coral); }
+        /* Says the page is new before anyone relies on it. Sized and coloured
+           to sit beside the title without competing with it. */
+        .tag-beta { font-family: monospace; font-style: normal; font-weight: 600;
+                    font-size: 0.5em; letter-spacing: 0.1em; text-transform: uppercase;
+                    color: var(--coral); border: 1px solid var(--coral);
+                    border-radius: 999px; padding: 2px 8px; vertical-align: 0.35em;
+                    margin-left: 6px; }
+
+        /* The status line is the reason to open the page: it answers "can I eat
+           right now" before anything has to be read or tapped. */
+        /* It was nowrap, and the closed-state line ("Breakfast tomorrow at
+           7:00 AM · in 9 hr 58 min") is wider than a phone. The two halves
+           are their own spans, so on a phone it breaks between them - meal and
+           when on one line, the countdown under it - never mid-phrase. */
+        .mess-now { display: flex; align-items: flex-start; gap: 9px; font-family: monospace;
+                    font-size: 0.92rem; color: var(--fg-soft); line-height: 1.5; min-width: 0; }
+        .mess-now .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--fg-faint);
+                         flex: 0 0 auto; margin-top: 0.45em; }
+        .mess-now .half { white-space: nowrap; }
+        .mess-now .half + .half::before { content: "\00b7"; padding: 0 0.55em;
+                                          color: var(--fg-faint); }
+        @media (max-width: 700px) {
+            .mess-now .half { display: block; }
+            .mess-now .half + .half::before { content: none; }
+        }
+        .mess-now.open .dot { background: var(--cyan); box-shadow: 0 0 9px var(--cyan-glow); }
+        .mess-now.open strong { color: var(--cyan); }
+        .mess-now strong { color: var(--fg); font-weight: 600; }
+
+        /* Not a footnote. The sheet on the wall and the food on the counter
+           have been observed to differ on the same day, so the single most
+           useful thing this page can say is that it is a guide. It sits above
+           the menu because a caveat under it is read after the damage. */
+        .warn-banner { margin: 16px 0 20px; padding: 13px 16px;
+                       border-radius: 10px; border: 1px solid var(--red);
+                       background: var(--red-soft);
+                       font-size: 0.98rem; line-height: 1.45; color: var(--fg); }
+        .warn-banner b { display: block; font-size: 1.06rem; font-weight: 700;
+                         color: var(--red); margin-bottom: 3px; }
+        .warn-banner b em { font-style: italic; }
+
+        /* Phone: a stack, each control the full width. Wider: one band, the
+           meal on the left and the week on the right, so the controls use the
+           width instead of huddling in the left third of an iPad. */
+        .mess-controls { display: flex; flex-direction: column; align-items: flex-start;
+                         gap: 12px; margin: 16px 0 6px; }
+        @media (min-width: 701px) {
+            .mess-controls { flex-direction: row; align-items: center;
+                             justify-content: space-between; gap: 24px;
+                             padding: 12px 0; border-top: 1px solid var(--rule-faint);
+                             border-bottom: 1px solid var(--rule-faint); margin: 18px 0 12px; }
+            /* the meal never shrinks; the week gives way first, down to a floor */
+            .seg-group { flex: 0 0 auto; }
+            .week { flex: 0 1 480px; min-width: 360px; }
+        }
+        .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px;
+               overflow: hidden; background: var(--bg-card); min-width: 0; }
+        .seg button { font-family: monospace; font-size: 0.86rem; padding: 8px 16px;
+                      border: none; background: transparent; color: var(--fg-soft); cursor: pointer; }
+        .seg button.on { background: var(--coral); color: var(--bg-card); }
+        .seg button:focus-visible { outline: 2px solid var(--coral-bright); outline-offset: -2px; }
+        .seg-label { font-family: monospace; font-size: 0.76rem; text-transform: uppercase;
+                     letter-spacing: 0.09em; color: var(--fg-soft); }
+        /* label and buttons wrap as one unit - at a narrower width the label
+           was stranding itself on the line above its own control */
+        .seg-group { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
+
+        /* The week strip. Seven columns that always fill the row - nothing
+           scrolls, nothing is cut off, and a day is the same width on every
+           page. The number sits in a disc: filled when selected, a ring when
+           it is today, so the two facts never share one mark. The arrows
+           page a whole week; the label says which one. */
+        .week { width: 100%; }
+        .wk-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .wk-label { flex: 1; text-align: center; font-family: monospace;
+                    font-size: 0.82rem; color: var(--fg); }
+        .wk-arrow { width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+                    border: 1px solid var(--rule); background: var(--bg-card);
+                    color: var(--fg); font-size: 1.3rem; line-height: 1;
+                    display: grid; place-items: center; padding: 0 0 3px; }
+        .wk-arrow:hover:not(:disabled) { border-color: var(--coral); color: var(--coral); }
+        .wk-arrow:disabled { opacity: 0.3; cursor: default; }
+        .wk-arrow:focus-visible { outline: 2px solid var(--coral-bright); outline-offset: 2px; }
+
+        .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .day { display: flex; flex-direction: column; align-items: center; gap: 4px;
+               padding: 6px 0 4px; border: none; background: none; cursor: pointer;
+               border-radius: 10px; font-family: monospace; }
+        .day:hover .day-num { border-color: var(--coral); }
+        .day:focus-visible { outline: 2px solid var(--coral-bright); outline-offset: 1px; }
+        .day-name { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
+                    color: var(--fg-faint); }
+        .day-num { width: 36px; height: 36px; border-radius: 50%; display: grid;
+                   place-items: center; font-size: 0.95rem; color: var(--fg);
+                   border: 1.5px solid transparent; }
+        .day.today .day-name { color: var(--coral); }
+        .day.today .day-num { border-color: var(--coral); }
+        .day.on .day-num { background: var(--coral); border-color: var(--coral);
+                           color: var(--bg-card); font-weight: 600; }
+        .day.on .day-name { color: var(--coral); }
+
+        /* "Back to today", inline on the not-today line - a link, because it
+           sits inside a sentence. */
+        .today-link { font: inherit; color: var(--coral); font-weight: 600;
+                      background: none; border: none; padding: 0; cursor: pointer;
+                      text-decoration: underline; text-underline-offset: 3px;
+                      text-decoration-color: var(--coral-soft); }
+        .today-link:hover { text-decoration-color: var(--coral); }
+        .today-link:focus-visible { outline: 2px solid var(--coral-bright);
+                                    outline-offset: 2px; border-radius: 3px; }
+
+        /* Says what the current view is showing whenever it is NOT today's
+           actual meal, so a browsed day can never be mistaken for the live one. */
+        .mess-viewing { font-family: monospace; font-size: 0.82rem; color: var(--fg-soft);
+                        margin: 4px 0 12px; min-height: 1em; }
+        .mess-viewing b { color: var(--coral); font-weight: 600; }
+
+        .mess-window { font-family: monospace; font-size: 0.88rem; color: var(--fg-soft);
+                       margin: 0 0 16px; }
+
+        /* TWO TIERS. The sheet on the wall gives all fifteen courses the same
+           green block, so the main dish and the sliced onion carry equal
+           weight and the eye has nowhere to land. Here the courses you choose
+           between are set large, and everything that simply arrives with the
+           meal is a tight label/value list underneath. */
+        /* The two or three things you choose between, side by side - they are
+           alternatives to weigh against each other, and stacked down the page
+           they read as a sequence instead. auto-fit so breakfast's two and
+           lunch's three both fill the row, and so they drop to one column on a
+           narrow screen without a second breakpoint. */
+        .mains { display: grid; gap: 0 30px; margin-bottom: 34px;
+                 grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+        .main { padding: 4px 0 18px; }
+        .main + .main { border-left: 1px solid var(--rule-faint); padding-left: 30px;
+                        margin-left: -1px; }
+        .main-name { font-family: monospace; font-size: 0.8rem; font-weight: 600;
+                     text-transform: uppercase; letter-spacing: 0.11em;
+                     color: var(--fg-soft); margin: 0 0 10px; display: flex;
+                     align-items: baseline; gap: 10px; flex-wrap: wrap; }
+        .main-pick { font-size: 0.68rem; letter-spacing: 0.06em; color: var(--coral);
+                     text-transform: none; }
+        .main-items { list-style: none; margin: 0; padding: 0;
+                      display: flex; flex-direction: column; gap: 9px; }
+        .main-items li { font-size: 1.18rem; line-height: 1.32; color: var(--fg);
+                         font-weight: 500; }
+
+        /* This half is read, not decoration. It was set faint and small on the
+           grounds that it is secondary - but secondary means it comes second,
+           not that it should be hard to read. Same size as body copy, label in
+           a tone you can actually see. */
+        .rest-head { font-family: monospace; font-size: 0.8rem; font-weight: 600;
+                     text-transform: uppercase; letter-spacing: 0.11em;
+                     color: var(--fg-soft); margin: 0 0 14px;
+                     padding-top: 18px; border-top: 1px solid var(--rule); }
+        /* Two independent columns, not a grid: in a grid every row is as
+           tall as its tallest cell, so a one-line SOUP beside a four-line
+           SALAD got three lines of nothing under it. */
+        .sides { margin: 0; columns: 2; column-gap: 44px; }
+        .side { display: grid; grid-template-columns: 158px 1fr; gap: 16px;
+                align-items: baseline; padding: 10px 0;
+                border-bottom: 1px solid var(--rule-faint);
+                break-inside: avoid; }
+        .side dt { font-family: monospace; font-size: 0.9rem; font-weight: 600;
+                   letter-spacing: 0.05em; color: var(--fg-soft); line-height: 1.5; }
+        .side dd { margin: 0; font-size: 1.05rem; color: var(--fg); line-height: 1.4; }
+        .side dd i { font-style: normal; color: var(--fg-soft); padding: 0 3px; }
+
+        /* Below this the three do not fit side by side, so they stack - and
+           auto-fit would have wrapped the third onto its own row mid-group,
+           keeping its divider and reading as an indent. One row or one column,
+           never a ragged two-and-one. */
+        @media (max-width: 800px) {
+            .mains { grid-auto-flow: row; grid-auto-columns: auto; }
+            .main + .main { border-left: none; padding-left: 0; margin-left: 0;
+                            border-top: 1px solid var(--rule-faint); padding-top: 16px; }
+        }
+        @media (max-width: 760px) {
+            .sides { columns: 1; }
+        }
+
+        .mess-empty { font-family: monospace; font-size: 0.9rem; color: var(--fg-soft);
+                      padding: 26px 0; }
+
+        /* ---- trial reporting ---- */
+        /* The dish name IS the control. It has to look like the text it
+           replaced, not like a button - so no border, no background, inherited
+           type, and only the underline on hover/focus admits it is tappable.
+           The revealed button follows the name inline, after its last line, so
+           a two-line dish still wraps the way a plain <li> did. */
+        .dish { display: inline; }
+        .dish-name { font: inherit; color: inherit; text-align: left;
+                     padding: 0; margin: 0; border: none; background: none;
+                     cursor: pointer; }
+        .dish-name:hover { text-decoration: underline;
+                           text-decoration-color: var(--fg-faint);
+                           text-underline-offset: 3px; }
+        .dish-name:focus-visible { outline: 2px solid var(--coral);
+                                   outline-offset: 2px; border-radius: 3px; }
+        .main-items .dish { display: block; }
+        .main-items .dish-name { display: inline-block; max-width: 100%; }
+        /* An inline-block's baseline is its LAST line, so a two-line dish
+           was dragging the row's baseline - and the label beside it - down
+           to line two. Top-aligned, the line keeps the strut's baseline and
+           the label sits on the first line again. */
+        .side .dish-name { vertical-align: top; }
+        /* The grey tap flash iOS paints over a button reads as a glitch on
+           something that looks like text; the underline is the feedback. */
+        .dish-name { -webkit-tap-highlight-color: transparent; }
+        .dish-name:active { text-decoration: underline;
+                            text-decoration-color: var(--coral);
+                            text-underline-offset: 3px; }
+
+        /* Revealed by tapping the dish, not by hover - this is opened on a
+           phone, where a control that needs a mouse to appear does not exist. */
+        .flag { font-family: monospace; font-size: 0.64rem; letter-spacing: 0.04em;
+                margin-left: 8px; padding: 1px 7px; border-radius: 999px;
+                border: 1px solid var(--rule); background: transparent;
+                color: var(--fg-faint); cursor: pointer; vertical-align: 2px;
+                white-space: nowrap; }
+        .flag:hover { border-color: var(--red); color: var(--red); }
+        .flag.done { border-color: var(--rule-faint); color: var(--fg-faint);
+                     cursor: default; opacity: 0.7; }
+        .flag:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+        .main-items .flag { display: inline-block; margin: 5px 0 0; vertical-align: 0; }
+        /* after the display rule above, or it loses to it and hidden shows */
+        .flag[hidden] { display: none; }
+
+        .instead { display: flex; gap: 6px; margin: 7px 0 2px; max-width: 380px; }
+        .instead input { flex: 1; min-width: 0; font: inherit; font-size: 0.9rem;
+                         padding: 6px 10px; border-radius: 8px;
+                         border: 1px solid var(--rule); background: var(--bg-card);
+                         color: var(--fg); }
+        .instead button { font-family: monospace; font-size: 0.78rem;
+                          padding: 6px 12px; border-radius: 8px; cursor: pointer;
+                          border: 1px solid var(--coral); background: var(--coral);
+                          color: var(--bg-card); }
+
+        /* A bordered box spans the content; a plain paragraph keeps a readable
+           measure. Mixing the two rules is what made the page look ragged on a
+           wide screen - the warning box and this one both have edges, and
+           edges that stop in different places read as a mistake. */
+        .trial { margin: 30px 0 0; padding: 16px 18px; border-radius: 12px;
+                 border: 1px solid var(--coral); background: var(--coral-soft); }
+        .trial p { max-width: 74ch; }
+        .trial h3 { font-family: monospace; font-size: 0.8rem; font-weight: 600;
+                    text-transform: uppercase; letter-spacing: 0.1em;
+                    color: var(--coral); margin: 0 0 8px; }
+        .trial p { margin: 0 0 10px; font-size: 0.92rem; line-height: 1.5;
+                   color: var(--fg-soft); }
+        .trial b { color: var(--fg); }
+        .trial-acts { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 10px; }
+        .trial-btn { font-family: monospace; font-size: 0.82rem;
+                     padding: 8px 14px; border-radius: 999px; cursor: pointer;
+                     border: 1px solid var(--rule); background: var(--bg-card);
+                     color: var(--fg); }
+        .trial-btn:hover:not(:disabled) { border-color: var(--coral); }
+        .trial-btn.warn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
+        .trial-btn:disabled { opacity: 0.6; cursor: default; }
+        /* Reserves its line so a reply does not shove the box taller, but it
+           is the last thing in the box now that the festivals note is gone -
+           its paragraph margin was just dead space under the buttons. */
+        .trial-say { min-height: 1.2em; margin-bottom: 0 !important;
+                     font-family: monospace;
+                     font-size: 0.8rem; color: var(--cyan); }
+        .trial-say.bad { color: var(--red); }
+        .trial-why { font-size: 0.84rem !important; }
+        .trial-over { margin: 26px 0 0; font-family: monospace;
+                      font-size: 0.82rem; color: var(--fg-soft); }
+
+        .mess-note { margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--rule-faint);
+                     font-family: monospace; font-size: 0.82rem; color: var(--fg-soft); }
+
+        /* Seven day buttons will not fit a phone at desktop padding, and .seg
+           clips overflow, so they were being cut off rather than wrapping.
+           Each control takes the full width and its buttons share it evenly -
+           the day row stays one tap target per day at any size. */
+        @media (max-width: 700px) {
+            .mess-controls { gap: 10px; }
+            .seg-group { width: 100%; }
+            .seg { flex: 1; }
+            .seg button { flex: 1; padding: 9px 4px; font-size: 0.82rem;
+                          text-align: center; }
+        }
+
+        @media (max-width: 620px) {
+            .main-items li { font-size: 1.12rem; }
+            /* one column: the divider becomes a rule between stacked blocks */
+            .main + .main { border-left: none; padding-left: 0; margin-left: 0;
+                            border-top: 1px solid var(--rule-faint); padding-top: 16px; }
+            .side { grid-template-columns: 130px 1fr; gap: 12px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- animated background layer -->
+    <div id="bg" aria-hidden="true"></div>
+
+    <main class="mess-wrap">
+                <header class="topbar">
+            <div class="brand">
+                <a class="brand-text" href="/">← linkeen<small>mess</small></a>
+            </div>
+            <div class="topbar-actions">
+                <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">&#9686;</button>
+            </div>
+        </header>
+
+        <div class="mess-hero">
+            <div>
+                <h1 class="mess-title">Mess <em>menu</em> <span class="tag-beta">beta</span></h1>
+            </div>
+            <div class="mess-now" id="mess-now"><span class="dot"></span><span id="mess-now-text">&hellip;</span></div>
+        </div>
+
+        <p class="warn-banner">
+            <b>The mess has not read this menu.</b>
+            Results may vary. Wildly.
+        </p>
+
+        <div class="mess-controls">
+            <div class="seg-group">
+                <span class="seg-label">Meal</span>
+                <div class="seg" id="seg-meal"></div>
+            </div>
+            <div class="week">
+                <div class="wk-head">
+                    <button type="button" class="wk-arrow" id="wk-prev"
+                            aria-label="Previous week">&lsaquo;</button>
+                    <span class="wk-label" id="wk-label"></span>
+                    <button type="button" class="wk-arrow" id="wk-next"
+                            aria-label="Next week">&rsaquo;</button>
+                </div>
+                <div class="days" id="day-strip" role="tablist" aria-label="Day"></div>
+            </div>
+        </div>
+
+        <p class="mess-viewing" id="mess-viewing"></p>
+        <p class="mess-window" id="mess-window"></p>
+
+        <div id="mess-body"></div>
+
+        <p class="mess-note" id="mess-note"></p>
+
+    </main>
+
+    <script src="mess-data-gen.js" defer></script>
+    <script src="mess-data.js" defer></script>
+    <script src="mess.js" defer></script>
+</body>
+
+</html>
