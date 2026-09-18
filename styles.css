@@ -493,7 +493,7 @@ body #open-games-modal:hover {
 .general:hover { transform: none; }
 
 /* linkCS pill */
-.general a.cs-link {
+a.cs-link {
   position: relative;
   background: var(--accent-warm-soft);
   color: var(--accent-warm);
@@ -505,27 +505,27 @@ body #open-games-modal:hover {
   gap: 4px;
   z-index: 100;
 }
-.general a.cs-link:hover { z-index: 200; }
-:root[data-theme="dark"] .general a.cs-link { color: var(--accent-warm); }
-.general a.cs-link .cs-arrow {
+a.cs-link:hover { z-index: 200; }
+:root[data-theme="dark"] a.cs-link { color: var(--accent-warm); }
+a.cs-link .cs-arrow {
   font-size: 0.72rem;
   opacity: 0.85;
   transition: transform 0.25s ease;
   display: inline-block;
 }
-.general a.cs-link:hover {
+a.cs-link:hover {
   background: var(--accent-warm);
   color: var(--surface);
   border-color: var(--accent-warm);
   border-style: solid;
   transform: translateY(-2px) rotate(2deg);
 }
-:root[data-theme="dark"] .general a.cs-link:hover { color: var(--accent-warm-soft); }
-.general a.cs-link:hover .cs-arrow { transform: translate(2px, -2px) rotate(15deg); }
+:root[data-theme="dark"] a.cs-link:hover { color: var(--accent-warm-soft); }
+a.cs-link:hover .cs-arrow { transform: translate(2px, -2px) rotate(15deg); }
 
 /* shared bubble look — applied to ::before (top) and ::after (bottom) */
-.general a.cs-link::before,
-.general a.cs-link::after {
+a.cs-link::before,
+a.cs-link::after {
   position: absolute;
   right: 0;
   background: var(--surface-elevated);
@@ -546,23 +546,23 @@ body #open-games-modal:hover {
 }
 
 /* TOP bubble — "you and i are polar opposites" */
-.general a.cs-link::before {
+a.cs-link::before {
   content: attr(data-quip-top);
   bottom: calc(100% + 8px);
   transform: translateY(4px) rotate(-2deg);
 }
-.general a.cs-link:hover::before {
+a.cs-link:hover::before {
   opacity: 1;
   transform: translateY(0) rotate(-2deg);
 }
 
 /* BOTTOM bubble — "If your code crashes..." */
-.general a.cs-link::after {
+a.cs-link::after {
   content: attr(data-quip);
   top: calc(100% + 8px);
   transform: translateY(-4px) rotate(2deg);
 }
-.general a.cs-link:hover::after {
+a.cs-link:hover::after {
   opacity: 1;
   transform: translateY(0) rotate(2deg);
 }
@@ -1364,14 +1364,14 @@ body #open-games-modal:hover {
   box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 
-.general a.cs-link {
+a.cs-link {
   border: 1.5px dashed var(--accent-warm);
   color: var(--accent-warm);
   background: color-mix(in srgb, var(--accent-warm) 6%, transparent);
   font-weight: 700;
 }
 
-.general a.cs-link:hover {
+a.cs-link:hover {
   background: var(--accent-warm);
   color: #fff;
   border-style: solid;
@@ -3527,3 +3527,19 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
     }
 }
 
+
+/* Adjust topbar tooltips so they don't overflow the top edge */
+.topbar-actions a.cs-link::before {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateY(-4px) rotate(-2deg);
+}
+.topbar-actions a.cs-link:hover::before {
+  transform: translateY(0) rotate(-2deg);
+}
+.topbar-actions a.cs-link::after {
+  top: calc(100% + 42px);
+}
+.topbar-actions a.cs-link:hover::after {
+  transform: translateY(0) rotate(2deg);
+}
