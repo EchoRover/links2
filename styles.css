@@ -3526,20 +3526,3 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
         letter-spacing: 0.06em;
     }
 }
-
-
-/* Adjust topbar tooltips so they don't overflow the top edge */
-.topbar-actions a.cs-link::before {
-  bottom: auto;
-  top: calc(100% + 8px);
-  transform: translateY(-4px) rotate(-2deg);
-}
-.topbar-actions a.cs-link:hover::before {
-  transform: translateY(0) rotate(-2deg);
-}
-.topbar-actions a.cs-link::after {
-  top: calc(100% + 42px);
-}
-.topbar-actions a.cs-link:hover::after {
-  transform: translateY(0) rotate(2deg);
-}
