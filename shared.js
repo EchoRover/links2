@@ -43,9 +43,11 @@ function renderGeneralLinks(selector, data) {
     const klass    = typeof value === "object" ? value.className : null;
     const quip     = typeof value === "object" ? value.quip      : null;
     const quipTop  = typeof value === "object" ? value.quipTop   : null;
+    const linkId   = typeof value === "object" ? value.id        : null;
 
     const link = document.createElement("a");
     link.href = url;
+    if (linkId) link.id = linkId;
     
     // Internal links (no http/https) should stay in the same tab
     if (url.startsWith("http")) {

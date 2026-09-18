@@ -32,11 +32,9 @@ const linksData = {
     Common: "common",
     "Free Time": "free",
     Campus: "campus",
-    linkCS: {
-      url: "https://linkcs.vercel.app",
-      className: "cs-link",
-      quip: "If your code crashes, talk to them ↗",
-      quipTop: "you and i are polar opposites"
+    Games: {
+      url: "javascript:void(0)",
+      id: "open-games-modal"
     }
   },
   courses: {
