@@ -1,11 +1,11 @@
 ﻿// ============================================================
-// ROOM OCCUPANCY â€” the "who's in which room" dashboard.
+// ROOM OCCUPANCY — the "who's in which room" dashboard.
 //
 // Data comes from rooms-data.js (OCC / ROOM_NAMES / PROGRAMS /
 // COURSE_TITLES). timetable.js is loaded first and this file leans
 // on its helpers (tmin, t12, left, ymd) and its calendar (TERM,
 // NO_CLASS, DAY_NAME) so term bounds and holidays live in exactly
-// one place. Its own render is a no-op here â€” no #tt-body on this
+// one place. Its own render is a no-op here — no #tt-body on this
 // page.
 //
 // Two views in one:
@@ -39,7 +39,7 @@ function roomSlots(room, day) {
 function floorOf(code) {
     const m = code.match(/^M(\d)-(\d)-/);
     if (!m) return "";
-    return `M${m[1]} Â· ${m[2] === "0" ? "G" : m[2] + "F"}`;
+    return `M${m[1]} · ${m[2] === "0" ? "G" : m[2] + "F"}`;
 }
 
 function badge(w) {
@@ -56,7 +56,7 @@ function slotLabel(x) {
 
 // ---------- day selection ----------
 
-// Weekdays only â€” the sheets schedule nothing on Sat/Sun. On a weekend
+// Weekdays only — the sheets schedule nothing on Sat/Sun. On a weekend
 // (or holiday) the switcher defaults to the next teaching day.
 let viewDay = null;
 
@@ -96,7 +96,7 @@ function statusHTML(room, now) {
 
     if (cur) {
         const then = nxt && nxt.from <= cur.to + 10
-            ? ` Â· then ${nxt.code} at ${t12(nxt.s)}` : "";
+            ? ` · then ${nxt.code} at ${t12(nxt.s)}` : "";
         return `${slotLabel(cur)}<br>${cur.who.map(badge).join("")}` +
             `<span class="st-when">ends in <b>${left(cur.to - mins)}</b> (${t12(cur.e)})${then}</span>`;
     }
@@ -142,7 +142,7 @@ function renderRooms() {
                 const state = !isToday ? "" : mins >= x.to ? " past" : (mins >= x.from ? " live" : "");
                 dayHTML += `
                 <div class="slot-row${state}">
-                    <span class="slot-time">${t12(x.s)} â€“ ${t12(x.e)}</span>
+                    <span class="slot-time">${t12(x.s)} – ${t12(x.e)}</span>
                     <div class="slot-main">${slotLabel(x)}
                         <div class="slot-progs">${x.who.map(badge).join("")}</div>
                     </div>
@@ -185,7 +185,7 @@ document.addEventListener("click", (e) => {
     if (card) card.classList.toggle("open");
 });
 
-// Theme toggle â€” scripts.js isn't loaded on sub-pages, so wire it here
+// Theme toggle — scripts.js isn't loaded on sub-pages, so wire it here
 // (same pattern as the bus page).
 document.getElementById("theme-toggle").addEventListener("click", () => {
     const cur = document.documentElement.getAttribute("data-theme");

@@ -1,8 +1,15 @@
 // ============================================================
-// SEM 5 TIMETABLE â€” current + next class on the home page.
+// SEM 5 TIMETABLE — current + next class on the home page.
 //
 // Transcribed from the official PDF (iitdabudhabi.ac.ae/timetable ->
 // "Year 3 Semester 5 B.TECH Energy Engineering").
+//
+// REVISION 5 (2 Oct 2026):
+//   - 8 September PDF reissue: ASBL100 Friday lecture 08:00 -> 09:00.
+//   - Prof. Das's email of 28 Sep replaces every AENL226 slot:
+//     Mon 10:00-11:20 lecture, Tue 11:00 tutorial/help, Thu 08:30-09:50
+//     lecture, Thu 11:00 tutorial/help. AENL228's Monday lecture moves
+//     to 11:30-12:20. The PDF has not caught up with this yet.
 //
 // REVISION 4: the 7 September 2026 reissue.
 //   - AHUL261 Tutorial (Group 1) moved from Wednesday 15:30 to Monday 09:00.
@@ -29,14 +36,14 @@ const COURSES = {
 const WEEK = {
     1: [ // Monday
         ["09:00", "09:50", "AHUL261", "M4-1-017", "tut", 1],
-        ["10:00", "10:50", "AENL226", "M2-2-007", "proj", 0], // Help Session
-        ["11:00", "11:50", "AENL228", "M2-2-007", "", 0],
+        ["10:00", "11:20", "AENL226", "M2-2-007", "", 0],
+        ["11:30", "12:20", "AENL228", "M2-2-007", "", 0],
         ["14:00", "15:20", "AHUL256", "M4-0-011", "", 0],
         ["16:00", "18:50", "AGRL130", "M4-0-011", "", 0],
     ],
     2: [ // Tuesday
         ["10:00", "10:50", "ASBL100", "M2-2-007", "", 0],
-        ["11:00", "12:20", "AENL226", "M4-0-011", "", 0],
+        ["11:00", "11:50", "AENL226", "M4-0-011", "tut", 0],
         ["14:00", "15:20", "AHUL261", "M4-0-011", "", 0],
         ["15:30", "16:20", "AHUL256", "M4-1-017", "tut", 2],
         ["16:00", "18:50", "AENP225", "M3-1-009", "lab", 1],
@@ -51,15 +58,15 @@ const WEEK = {
         ["17:00", "17:50", "AHUL256", "M4-1-017", "tut", 1],
     ],
     4: [ // Thursday
-        ["09:00", "09:50", "AENL226", "M2-2-007", "tut", 1],
+        ["08:30", "09:50", "AENL226", "M2-2-007", "", 0],
         ["10:00", "10:50", "ASBL100", "M2-2-007", "", 0],
-        ["11:00", "12:20", "AENL226", "M4-0-011", "", 0],
+        ["11:00", "11:50", "AENL226", "M4-0-011", "tut", 0],
         ["14:00", "15:20", "AHUL261", "M4-0-011", "", 0],
         ["16:00", "17:50", "AENL228", "M2-2-031", "lab", 1],
         ["16:00", "18:50", "AENP225", "M3-1-009", "lab", 2],
     ],
     5: [ // Friday
-        ["08:00", "08:50", "ASBL100", "M2-2-007", "", 0],
+        ["09:00", "09:50", "ASBL100", "M2-2-007", "", 0],
         ["10:00", "11:50", "ASBL100", "M3-1-031", "lab", 0],
     ],
 };
@@ -102,7 +109,7 @@ function ymd(d) {
 //
 // These do NOT decode arithmetically and it is not close: M4-1-017 is
 // "classroom 7" and M4-0-011 is "classroom 3". No string rule produces
-// both. So this is a lookup, and anything not in it is NOT guessed â€”
+// both. So this is a lookup, and anything not in it is NOT guessed —
 // an unconfirmed room shows its raw code under a "room code" label
 // instead of a friendly number that might send you to the wrong door.
 //
@@ -110,27 +117,27 @@ function ymd(d) {
 // nothing here is inferred any more. The two labs are called "Computer
 // Lab 02", not a classroom number, so they carry their own label.
 const ROOMS = {
-    "M4-1-017": { bldg: "M4", floor: "1F", no: "7", ok: true },
-    "M4-0-011": { bldg: "M4", floor: "G", no: "3", ok: true },
+    "M4-1-017": { bldg: "M4", floor: "1F", no: "7", ok: true, name: "Classroom 7" },
+    "M4-0-011": { bldg: "M4", floor: "G", no: "3", ok: true, name: "Classroom 3" },
     "M3-0-022": { bldg: "M3", floor: "G", no: "02", ok: true, lab: true },
     "M3-0-004": { bldg: "M3", floor: "G", no: "03", ok: true, lab: true },
     "M4-0-019": { bldg: "M4", floor: "G", no: "5", ok: true },
     "M4.0.019": { bldg: "M4", floor: "G", no: "5", ok: true },  // spelling used on the earlier sheet
-    "M2-2-007": { bldg: "M2", floor: "2F", no: "7", ok: true },
-    "M2-2-031": { bldg: "M2", floor: "2F", no: "31", ok: true, lab: true },
-    "M3-1-009": { bldg: "M3", floor: "1F", no: "9", ok: true, lab: true },
-    "M3-1-031": { bldg: "M3", floor: "1F", no: "31", ok: true, lab: true },
+    "M2-2-007": { bldg: "M2", floor: "2F", no: "7", ok: true, name: "M2-2-007" },
+    "M2-2-031": { bldg: "M2", floor: "2F", no: "31", ok: true, lab: true, name: "Measurement Lab" },
+    "M3-1-009": { bldg: "M3", floor: "1F", no: "9", ok: true, lab: true, name: "Energy Lab" },
+    "M3-1-031": { bldg: "M3", floor: "1F", no: "31", ok: true, lab: true, name: "Biology Lab" },
 };
 
 function whereIs(code) {
     // Some blocks carry no room at all (the ACOD310 hold). Say that
     // plainly rather than printing a bare "?" that reads like a bug.
-    if (!code) return { raw: "", no: "â€”", sub: "not listed", ok: false, none: true };
+    if (!code) return { raw: "", no: "—", sub: "not listed", ok: false, none: true };
     const r = ROOMS[code];
-    if (r) return { raw: code, no: r.no, sub: `${r.bldg} Â· ${r.floor}`, ok: !!r.ok, lab: !!r.lab };
+    if (r) return { raw: code, no: r.no, sub: `${r.bldg} · ${r.floor}`, ok: !!r.ok, lab: !!r.lab, name: r.name };
     const m = String(code).match(/^([A-Za-z]\d+)[.\-](\d)[.\-](\d+)$/);
     if (!m) return { raw: code, no: code, sub: "", ok: false };
-    return { raw: code, no: m[3], sub: `${m[1].toUpperCase()} Â· ${m[2] === "0" ? "G" : m[2] + "F"}`, ok: false };
+    return { raw: code, no: m[3], sub: `${m[1].toUpperCase()} · ${m[2] === "0" ? "G" : m[2] + "F"}`, ok: false };
 }
 
 function left(mins) {
@@ -148,7 +155,7 @@ function countPlate(mins, verb) {
     return { lab: verb, no: String(h), sub: m ? `h ${m}m` : (h === 1 ? "hour" : "hours") };
 }
 
-// Everything on a given weekday â€” both groups, in time order.
+// Everything on a given weekday — both groups, in time order.
 function dayEntries(dow) {
     return (WEEK[dow] || [])
         .map(([s, e, code, room, kind, grp]) => ({
@@ -209,7 +216,7 @@ function renderTimetable() {
             <div class="tt-main">
                 <span class="tt-tag">${tagText}<b class="tt-kind tt-k-${x.kind || "lec"}">${L.kind}</b>${x.grp ? `<b class="tt-g">G${x.grp}</b>` : ""}</span>
                 <span class="tt-code">${L.code}<em>${L.name}</em></span>
-                <span class="tt-clock">${t12(x.s)} â€“ ${t12(x.e)}</span>
+                <span class="tt-clock">${t12(x.s)} – ${t12(x.e)}</span>
             </div>
             ${plate("room" + (w.ok ? "" : " tt-p-raw"),
                 { lab: w.none ? "room" : w.ok ? (w.lab ? "computer lab" : "classroom") : "room code",
@@ -231,7 +238,7 @@ function renderTimetable() {
     const list = off ? [] : dayEntries(now.getDay()).filter((x) => x.kind !== "free");
 
     // Both groups are on screen, so more than one thing can be running
-    // or starting next â€” G1 and G2 diverge on three tutorials a week.
+    // or starting next — G1 and G2 diverge on three tutorials a week.
     const current = list.filter((x) => mins >= x.from && mins < x.to);
     const later = list.filter((x) => x.from > mins);
     const nextAt = later.length ? Math.min(...later.map((x) => x.from)) : null;

@@ -173,6 +173,9 @@ function placeName(code, isNarrow = false) {
     const w = whereIs(code);
     if (w.none) return { name: "Room not listed", code: "", soft: true };
     if (!w.ok) return { name: w.raw, code: "", soft: true };
+    // A spoken name beats the derived one: M2-2-007 is not "Classroom 7"
+    // (that is M4-1-017), and the energy rooms are not computer labs.
+    if (w.name) return { name: w.name, code: w.name === w.raw ? "" : w.raw, soft: false };
     const label = w.lab ? (isNarrow ? `Lab ${w.no}` : `Computer Lab ${w.no}`) : `Classroom ${w.no}`;
     return { name: label, code: w.raw, soft: false };
 }

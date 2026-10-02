@@ -1,11 +1,11 @@
 // ============================================================
 // UI behaviors: hide-mode toggle, interactive dot canvas,
 // cursor ambient, more-toggle, linkeen tap, course-box equalize.
-// (Theme toggle lives in scripts.js â€” do not add a second one
+// (Theme toggle lives in scripts.js — do not add a second one
 //  here or the two would cancel each other out on every click.)
 // ============================================================
 
-// HIDE-MODE toggle â€” only revealed when scrolled to the bottom
+// HIDE-MODE toggle — only revealed when scrolled to the bottom
 (function () {
     const btn = document.getElementById('play-toggle');
     if (!btn) return;
@@ -25,8 +25,8 @@
     check();
 })();
 
-// ELECTRONS â€” small lights sliding along circuit paths, with tiny perpendicular
-// wobble. No mouse interaction, no physics â€” just constant motion. Lightweight.
+// ELECTRONS — small lights sliding along circuit paths, with tiny perpendicular
+// wobble. No mouse interaction, no physics — just constant motion. Lightweight.
 (function () {
     const canvas = document.getElementById('dots');
     if (!canvas) return;
@@ -133,7 +133,7 @@
     });
 })();
 
-// More-toggle â€” expand/collapse the secondary quick links
+// More-toggle — expand/collapse the secondary quick links
 (function () {
     const btn = document.getElementById('more-toggle');
     const sec = document.getElementById('quick-secondary');
@@ -144,11 +144,11 @@
         sec.setAttribute('aria-hidden', String(expanded));
         sec.classList.toggle('open');
         const label = btn.querySelector('.util-more-label');
-        if (label) label.textContent = expanded ? '+ more' : 'Ã— hide';
+        if (label) label.textContent = expanded ? '+ more' : '× hide';
     });
 })();
 
-// LINKCS / LINKEEN pill â€” tap-toggle the popup on touch devices
+// LINKCS / LINKEEN pill — tap-toggle the popup on touch devices
 (function () {
     const el = document.getElementById('pill-linkcs') || document.getElementById('pill-linkeen');
     if (!el) return;

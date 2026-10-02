@@ -98,8 +98,9 @@ const linksData = {
 };
 
 const updatesData = [
-  ["quizzes", "AHUL261: Psychology Quiz", "2026-09-10"],
-  ["quizzes", "AENL228: Quiz (Prof. Ravi Kumar)", "2026-09-14"]
+  ["assignments", "AENP200: Phase 1 lab report (both experiments)", "2026-10-07"],
+  ["quizzes", "AENP200: Mid-sem lab evaluation (regular lab slot)", "2026-10-14"],
+  ["quizzes", "Mid-semester exams (26 to 30 Oct)", "2026-10-26"]
 ];
 // 14 verified portrait 9:16 reels (idk4 is landscape 16:9, idk6 is 4:3)
 const portraitClipIndices = [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -349,14 +350,15 @@ function roomLabel(code) {
 
 const WEEKLY_CLASSES = {
   1: [ // Monday
-    { code: "AENL226", name: "Power Electronics and Power Systems", time: "10:00-10:50", room: "M2-2-007", type: "Help Session" },
-    { code: "AENL228", name: "Measurement & Instrumentation", time: "11:00-11:50", room: "M2-2-007", type: "Lecture" },
+    { code: "AHUL261", name: "Introduction to Psychology", time: "09:00-09:50", room: "M4-1-017", type: "Tutorial", batch: 1 },
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "10:00-11:20", room: "M2-2-007", type: "Lecture" },
+    { code: "AENL228", name: "Measurement & Instrumentation", time: "11:30-12:20", room: "M2-2-007", type: "Lecture" },
     { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
     { code: "AGRL130", name: "Innovation & Sustainability", time: "16:00-18:50", room: "M4-0-011", type: "Lecture" }
   ],
   2: [ // Tuesday
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-10:50", room: "M2-2-007", type: "Lecture" },
-    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-12:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-11:50", room: "M4-0-011", type: "Tutorial / Help" },
     { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
     { code: "AHUL256", name: "Critical Thinking", time: "15:30-16:20", room: "M4-1-017", type: "Tutorial", batch: 2 },
     { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-18:50", room: "M3-1-009", type: "Lab", batch: 1 }
@@ -367,20 +369,19 @@ const WEEKLY_CLASSES = {
     { code: "AENL228", name: "Measurement Lab", time: "09:00-10:50", room: "M2-2-031", type: "Lab", batch: 2 },
     { code: "AHUL261", name: "Introduction to Psychology", time: "11:00-11:50", room: "M4-1-017", type: "Tutorial", batch: 2 },
     { code: "AHUL256", name: "Critical Thinking", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
-    { code: "AHUL261", name: "Introduction to Psychology", time: "15:30-16:20", room: "M4-1-017", type: "Tutorial", batch: 1 },
     { code: "AENP200", name: "Energy Technology Lab", time: "15:30-18:20", room: "M3-1-009", type: "Lab", batch: 2 },
     { code: "AHUL256", name: "Critical Thinking", time: "17:00-17:50", room: "M4-1-017", type: "Tutorial", batch: 1 }
   ],
   4: [ // Thursday
-    { code: "AENL226", name: "Power Electronics and Power Systems", time: "09:00-09:50", room: "M2-2-007", type: "Tutorial" },
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "08:30-09:50", room: "M2-2-007", type: "Lecture" },
     { code: "ASBL100", name: "Introductory Biology for Engineers", time: "10:00-10:50", room: "M2-2-007", type: "Lecture" },
-    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-12:20", room: "M4-0-011", type: "Lecture" },
+    { code: "AENL226", name: "Power Electronics and Power Systems", time: "11:00-11:50", room: "M4-0-011", type: "Tutorial / Help" },
     { code: "AHUL261", name: "Introduction to Psychology", time: "14:00-15:20", room: "M4-0-011", type: "Lecture" },
     { code: "AENL228", name: "Measurement Lab", time: "16:00-17:50", room: "M2-2-031", type: "Lab", batch: 1 },
     { code: "AENP225", name: "Electrical Energy Lab", time: "16:00-18:50", room: "M3-1-009", type: "Lab", batch: 2 }
   ],
   5: [ // Friday
-    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "08:00-08:50", room: "M2-2-007", type: "Lecture" },
+    { code: "ASBL100", name: "Introductory Biology for Engineers", time: "09:00-09:50", room: "M2-2-007", type: "Lecture" },
     { code: "ASBL100", name: "Introductory Biology Lab", time: "10:00-11:50", room: "M3-1-031", type: "Lab" }
   ]
 };
@@ -396,6 +397,24 @@ const timetableData = {
   monday: WEEKLY_CLASSES[1], tuesday: WEEKLY_CLASSES[2], wednesday: WEEKLY_CLASSES[3], thursday: WEEKLY_CLASSES[4], friday: WEEKLY_CLASSES[5]
 };
 
+// Days with no teaching, from the academic calendar. Keep in step with
+// NO_CLASS in timetable.js (the index page does not load that file).
+const DAYS_OFF = {
+  "2026-08-28": "Prophet's Birthday",
+  "2026-10-02": "Gandhi Jayanti",
+  "2026-10-17": "Mid-sem break", "2026-10-18": "Mid-sem break",
+  "2026-10-19": "Mid-sem break", "2026-10-20": "Mid-sem break",
+  "2026-10-21": "Mid-sem break",
+  "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
+  "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
+  "2026-10-30": "Mid-sem exams"
+};
+
+function dayOffReason(d) {
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return DAYS_OFF[key] || null;
+}
+
 function updateLiveClassStatus() {
   const statusEl = document.getElementById("live-class-status");
   const dotEl = document.getElementById("live-class-dot");
@@ -405,6 +424,24 @@ function updateLiveClassStatus() {
   const now = new Date();
   const dayKey = now.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
   const currentMins = now.getHours() * 60 + now.getMinutes();
+
+  const offReason = dayOffReason(now);
+  if (offReason && dayKey >= 1 && dayKey <= 5) {
+    const exams = offReason === "Mid-sem exams";
+    statusEl.innerHTML = `
+      <div class="tracker-hero-body">
+        <div class="tracker-main-info">
+          <div class="tracker-class-name">
+            <span class="live-tag live-tag-free">${exams ? "EXAMS" : "NO CLASSES"}</span>
+            <strong>${offReason}</strong>
+          </div>
+          <div class="tracker-prof-line">${exams ? "Regular timetable is paused · check the exam schedule" : "Regular timetable is off today ✿"}</div>
+        </div>
+      </div>
+    `;
+    if (dotEl) dotEl.className = "live-class-dot dot-free";
+    return;
+  }
 
   if (dayKey === 0 || dayKey === 6) {
     statusEl.innerHTML = `

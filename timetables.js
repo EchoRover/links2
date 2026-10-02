@@ -55,7 +55,7 @@ const BY_PROGRAM = (() => {
 
 const PROG_KEYS = Object.keys(PROGRAMS).filter(k => BY_PROGRAM[k]);
 
-let current = localStorage.getItem("linkeen_cohort") || "y3cse";
+let current = localStorage.getItem("linkeen_cohort") || "y3een";
 if (!BY_PROGRAM[current]) current = PROG_KEYS[0];
 
 function esc(s) {

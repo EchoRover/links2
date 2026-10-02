@@ -1,5 +1,5 @@
 // ============================================================
-// BUILDING VIEWER â€” one or several buildings, every floor.
+// BUILDING VIEWER — one or several buildings, every floor.
 //
 // Each <code>-data.js pushes onto window.BUILDINGS, so a page shows
 // whichever data files it loads: m3.html loads one, both.html loads
@@ -205,12 +205,12 @@ function liveState(code) {
     if (!t || !code) return null;
     return SLOTS.find(s => s.room === code && s.day === t.day && t.mins >= s.from && t.mins < s.to) || null;
 }
-// null = not a timetabled room Â· true = free right now Â· false = in use
+// null = not a timetabled room · true = free right now · false = in use
 const freeNow = r => r.code ? !liveState(r.code) : null;
 
 // ---------- colour ----------
 
-let mode = "free";        // "free" = grey building, availability lit Â· "type" = by room type
+let mode = "free";        // "free" = grey building, availability lit · "type" = by room type
 
 function paint() {
     dirty = true;
@@ -347,7 +347,7 @@ function renderSide() {
     if (!sel) { side.innerHTML = `<p class="side-empty">Click a room.</p>`; return; }
     const { room: r, floor, b } = sel.userData;
     let h = `<div class="side-head"><h3 class="side-name">${r.name || "Unnamed space"}</h3>` +
-            `<span class="side-code">${r.code ? r.code + " Â· " : ""}${b.building} Â· level ${floor.level}</span></div>`;
+            `<span class="side-code">${r.code ? r.code + " · " : ""}${b.building} · level ${floor.level}</span></div>`;
 
     if (r.code) {
         const t = today();
@@ -364,13 +364,13 @@ function renderSide() {
         } else h += `<span class="st-free">no classes today</span>`;
         h += `</div>`;
         h += `<div class="slots">` + day.map(s => `<div class="slot-row${t && t.mins >= s.to ? " past" : ""}">
-              <span class="slot-time">${t12(s.s)}â€“${t12(s.e)}</span>
+              <span class="slot-time">${t12(s.s)}–${t12(s.e)}</span>
               <span><span class="slot-course">${s.code}</span> ${COURSE_TITLES[s.code] || ""}</span></div>`).join("")
              + `</div>` || `<div class="slot-row">nothing scheduled today</div>`;
     } else if (!sel.userData.plate) {
         h += `<p class="side-empty" style="margin-top:10px">Not a timetabled room.</p>`;
     }
-    h += `<div class="side-meta">` + (r.area ? `${r.area} mÂ² Â· ` : "") +
+    h += `<div class="side-meta">` + (r.area ? `${r.area} m² · ` : "") +
          `${(RKIND[r.kind] || { label: "floor plate" }).label}<br>` +
          (r.i >= 0 ? `board room #${r.i}` : `from the CAD envelope`) +
          `<br>board fit IoU ${floor.iou}</div>`;
@@ -514,12 +514,12 @@ function geoStatus(msg, kind) {
 // Why a fix might not be possible at all, in plain terms.
 async function geoDiagnose() {
     const bits = [];
-    if (!window.isSecureContext) bits.push("this page is not a secure context, so the browser will refuse to give a position â€” open it over https or via localhost / 127.0.0.1");
+    if (!window.isSecureContext) bits.push("this page is not a secure context, so the browser will refuse to give a position — open it over https or via localhost / 127.0.0.1");
     if (!navigator.geolocation) bits.push("this browser exposes no geolocation API");
     try {
         if (navigator.permissions) {
             const st = await navigator.permissions.query({ name: "geolocation" });
-            if (st.state === "denied") bits.push("location permission is denied for this site â€” allow it in the padlock menu, and check the browser is allowed Location Services in macOS System Settings > Privacy & Security");
+            if (st.state === "denied") bits.push("location permission is denied for this site — allow it in the padlock menu, and check the browser is allowed Location Services in macOS System Settings > Privacy & Security");
         }
     } catch (e) { /* Safari has no permissions query for geolocation */ }
     return bits;
@@ -528,12 +528,12 @@ async function geoDiagnose() {
 document.getElementById("b-locate").addEventListener("click", async () => {
     const bad = await geoDiagnose();
     if (bad.length) return geoStatus(bad.join("<br><br>"), "warn");
-    geoStatus("locatingâ€¦");
+    geoStatus("locating…");
     navigator.geolocation.getCurrentPosition(pos => {
         const { latitude: lat, longitude: lon, accuracy: acc } = pos.coords;
         const g = fitGeo(CAL);
         if (!g) {
-            geoStatus(`Got a position (Â±${Math.round(acc)} m), but <b>the map is not calibrated</b>, so ` +
+            geoStatus(`Got a position (±${Math.round(acc)} m), but <b>the map is not calibrated</b>, so ` +
                       `there is nothing to place it on yet.<br><br>` +
                       `Nothing links latitude and longitude to this model's grid until you say where ` +
                       `you are once. Click the room you are standing in, press <b>I am here</b>. Then ` +
@@ -545,7 +545,7 @@ document.getElementById("b-locate").addEventListener("click", async () => {
         const [x, z] = geoToModel(lat, lon, g);
         showMe(x, z, acc);
         dirty = true;
-        geoStatus(`Placed, marker on the plan.<br><br>Fix is <b>Â±${Math.round(acc)} m</b>. ` +
+        geoStatus(`Placed, marker on the plan.<br><br>Fix is <b>±${Math.round(acc)} m</b>. ` +
                   `That is wider than most of these rooms, so read it as which building and which ` +
                   `end of it, not which room.`, "ok");
     }, err => geoStatus(`The browser refused: <b>${err.message}</b>.<br><br>` +
@@ -559,7 +559,7 @@ document.getElementById("b-here").addEventListener("click", async () => {
     if (!sel || sel.userData.plate) return geoStatus("Click the room you are standing in first, then press this.", "warn");
     const bad = await geoDiagnose();
     if (bad.length) return geoStatus(bad.join("<br><br>"), "warn");
-    geoStatus("taking a readingâ€¦");
+    geoStatus("taking a reading…");
     navigator.geolocation.getCurrentPosition(pos => {
         const r = sel.userData.room, b = sel.userData.b;
         let sx = 0, sz = 0;
@@ -574,7 +574,7 @@ document.getElementById("b-here").addEventListener("click", async () => {
         geoStatus(CAL.length < 2
             ? `Point 1 recorded in <b>${CAL[0].room}</b>.<br><br>Now walk to a room far away and do it again.`
             : g ? `<b>Calibrated</b> from ${CAL[0].room} and ${CAL[1].room}, ${g.sep.toFixed(0)} m apart.<br><br>` +
-                  `Press <b>locate me</b>. This is stored in your browser only â€” ` +
+                  `Press <b>locate me</b>. This is stored in your browser only — ` +
                   `<a href="#" id="geo-copy">copy the two readings</a> so they can be baked into the ` +
                   `page and nobody has to do this again.`
                 : `Those two points are too close together to work out a rotation. Try rooms further apart.`,
@@ -596,9 +596,9 @@ const NAMES = BS.map(b => b.building).join(" + ");
 const H1 = document.querySelector(".b-title");
 if (H1) H1.innerHTML = BS.length > 1 ? `${NAMES}, <em>every floor</em>`
                                      : `${NAMES}, <em>${LEVELS.length > 1 ? "both floors" : "level " + LEVELS[0]}</em>`;
-document.title = `${NAMES} in 3D Â· linkeen`;
+document.title = `${NAMES} in 3D · linkeen`;
 const META = document.querySelector(".brand-meta");
-if (META) META.textContent = `${NAMES.toLowerCase()} Â· 3d`;
+if (META) META.textContent = `${NAMES.toLowerCase()} · 3d`;
 
 buildFloorBar(); applyFloors(); applyExplode(); paint(); resize(); place();
 new ResizeObserver(resize).observe(cvs);

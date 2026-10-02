@@ -134,7 +134,7 @@
                     <h1 class="b-title">M2 + M3 + M4, <em>all floors</em></h1>
                     <p class="b-sub">Combined 3D view of all classrooms and labs inside M2, M3, and M4, mapped from CAD footprints and university timetables. Drag to orbit, scroll to zoom, right-drag to pan. Click any room to track occupancy.</p>
                 </div>
-                <div class="b-now"><span class="live-dot2"></span><span>now</span><span id="b-clock">â€¦</span></div>
+                <div class="b-now"><span class="live-dot2"></span><span>now</span><span id="b-clock">…</span></div>
             </section>
 
             <div class="b-bar">
@@ -158,7 +158,7 @@
                 <div class="b-canvas">
                     <canvas id="scene"></canvas>
                     <div id="tags"></div>
-                    <div class="b-help">drag orbit Â· scroll zoom Â· right-drag pan</div>
+                    <div class="b-help">drag orbit · scroll zoom · right-drag pan</div>
                     <div class="b-legend" id="b-legend"></div>
                 </div>
                 <aside class="b-side" id="b-side"><p class="side-empty">Click a room.</p></aside>
@@ -171,17 +171,17 @@
                 inside the big rooms that keeps splitting them.
                 <b>What is still rough.</b> Scale is a bounding-box fit onto M4's CAD footprint, not yet a
                 proper four-corner registration, so every dimension carries a few percent of the
-                photograph's perspective. Sanity check: the Lectures Hall comes out 131 mÂ².
+                photograph's perspective. Sanity check: the Lectures Hall comes out 131 m².
                 <b>Not in here yet.</b> Doors, stairs, the corridor and the top-centre service rooms on the
-                ground floor, and the Library and conference rooms on the first floor â€” the detector
+                ground floor, and the Library and conference rooms on the first floor — the detector
                 missed those and they get added by hand in the plan editor.
             </p>
         </div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="timetable.js"></script>
-    <script src="rooms-data.js"></script>
+    <script src="timetable.js?v=2"></script>
+    <script src="rooms-data.js?v=2"></script>
     <script src="m2-data.js"></script>
     <script src="m3-data.js"></script>
     <script src="m4-data.js"></script>

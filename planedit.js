@@ -1,5 +1,5 @@
 ﻿// ============================================================
-// PLAN EDITOR â€” correct the auto-detected rooms by hand.
+// PLAN EDITOR — correct the auto-detected rooms by hand.
 //
 // The evacuation boards are the source of truth for layout. The
 // colour segmentation in tools/build_board.py gets most rooms in
@@ -273,8 +273,8 @@ function renderSide() {
         h += `<h4>room ${sel}</h4>
               <input id="ed-name" placeholder="name, e.g. Lectures Hall" value="${(r.name || "").replace(/"/g, "&quot;")}">
               <select id="ed-code">
-                <option value="">â€” timetable code (optional) â€”</option>
-                ${codes.map(c => `<option value="${c}"${c === r.code ? " selected" : ""}${used.has(c) && c !== r.code ? " disabled" : ""}>${c} Â· ${ROOM_NAMES[c] || "?"}${used.has(c) && c !== r.code ? " (used)" : ""}</option>`).join("")}
+                <option value="">— timetable code (optional) —</option>
+                ${codes.map(c => `<option value="${c}"${c === r.code ? " selected" : ""}${used.has(c) && c !== r.code ? " disabled" : ""}>${c} · ${ROOM_NAMES[c] || "?"}${used.has(c) && c !== r.code ? " (used)" : ""}</option>`).join("")}
               </select>
               <button class="ed-btn danger" id="ed-del" style="width:100%">delete this room</button>`;
     } else {
@@ -284,7 +284,7 @@ function renderSide() {
 
     const named = rooms.filter(r => r.name || r.code).length;
     const placed = codes.filter(c => used.has(c)).length;
-    h += `<div class="ed-count"><b>${rooms.length}</b> rooms Â· <b>${named}</b> named<br>
+    h += `<div class="ed-count"><b>${rooms.length}</b> rooms · <b>${named}</b> named<br>
           <b>${placed}</b> of <b>${codes.length}</b> timetable codes placed</div>`;
 
     h += `<div class="ed-list">` + rooms.map((r, i) =>
@@ -346,7 +346,7 @@ document.getElementById("ed-export").addEventListener("click", ev => {
     }
     const txt = "const BOARDS = " + JSON.stringify(out) + ";\n";
     navigator.clipboard.writeText(txt).then(() => {
-        ev.target.textContent = "copied âœ“";
+        ev.target.textContent = "copied ✓";
         setTimeout(() => ev.target.textContent = "export", 1500);
     }, () => {
         const a = document.createElement("a");
