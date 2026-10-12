@@ -410,6 +410,21 @@ const DAYS_OFF = {
   "2026-10-30": "Mid-sem exams"
 };
 
+// One-off timing changes for a single date. Each entry replaces the time of
+// that course's classes on that day; the weekly table above stays as is.
+const CLASS_CHANGES = {
+  "2026-10-13": [{ code: "ASBL100", time: "09:30-11:00" }]
+};
+
+function classesOn(d) {
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const changes = CLASS_CHANGES[key] || [];
+  return (WEEKLY_CLASSES[d.getDay()] || []).map(c => {
+    const change = changes.find(ch => ch.code === c.code);
+    return change ? { ...c, time: change.time } : c;
+  });
+}
+
 function dayOffReason(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   return DAYS_OFF[key] || null;
@@ -459,7 +474,7 @@ function updateLiveClassStatus() {
     return;
   }
 
-  const todayClasses = (WEEKLY_CLASSES[dayKey] || []).filter(c => {
+  const todayClasses = classesOn(now).filter(c => {
     return c.batch === undefined || c.batch === savedBatch;
   });
 
@@ -614,7 +629,9 @@ function renderModalTimetable(dayKey) {
   });
   
   const currentBatch = Number(localStorage.getItem("student-batch") || "1");
-  const dayClasses = WEEKLY_CLASSES[dayKey] || [];
+  // The tab for today's weekday shows today's actual classes, changes included.
+  const now = new Date();
+  const dayClasses = now.getDay() === dayKey ? classesOn(now) : (WEEKLY_CLASSES[dayKey] || []);
   
   // Sort chronologically
   const sortedClasses = [...dayClasses].sort((a, b) => {
