@@ -412,6 +412,7 @@ const DAYS_OFF = {
 
 // One-off timing changes for a single date. Each entry replaces the time of
 // that course's classes on that day; the weekly table above stays as is.
+// Keep in step with CLASS_CHANGES in timetable.js.
 const CLASS_CHANGES = {
   "2026-10-13": [{ code: "ASBL100", time: "09:30-11:00" }]
 };
@@ -421,7 +422,7 @@ function classesOn(d) {
   const changes = CLASS_CHANGES[key] || [];
   return (WEEKLY_CLASSES[d.getDay()] || []).map(c => {
     const change = changes.find(ch => ch.code === c.code);
-    return change ? { ...c, time: change.time } : c;
+    return change ? { ...c, time: change.time, special: true } : c;
   });
 }
 
@@ -629,9 +630,11 @@ function renderModalTimetable(dayKey) {
   });
   
   const currentBatch = Number(localStorage.getItem("student-batch") || "1");
-  // The tab for today's weekday shows today's actual classes, changes included.
-  const now = new Date();
-  const dayClasses = now.getDay() === dayKey ? classesOn(now) : (WEEKLY_CLASSES[dayKey] || []);
+  // Each tab shows the next date that weekday falls on (today counts), so a
+  // one-off change for tomorrow already shows on tomorrow's tab.
+  const tabDate = new Date();
+  tabDate.setDate(tabDate.getDate() + (dayKey - tabDate.getDay() + 7) % 7);
+  const dayClasses = classesOn(tabDate);
   
   // Sort chronologically
   const sortedClasses = [...dayClasses].sort((a, b) => {
@@ -673,7 +676,7 @@ function renderModalTimetable(dayKey) {
         <div class="timeline-meta">
           <div class="timeline-code-row">
             <span class="timeline-code">${c.code}</span>
-            <span class="timeline-type">${c.type}</span>
+            <span class="timeline-type">${c.special ? "Special · " : ""}${c.type}</span>
           </div>
           <div class="timeline-room">📍 ${roomLabel(c.room)}${batchLabel}</div>
         </div>

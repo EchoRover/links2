@@ -156,11 +156,21 @@ function countPlate(mins, verb) {
 }
 
 // Everything on a given weekday — both groups, in time order.
-function dayEntries(dow) {
+// One-off timing changes for a single date, from announcements rather than
+// the PDF. Keep in step with CLASS_CHANGES in scripts.js.
+const CLASS_CHANGES = {
+    "2026-10-13": [{ code: "ASBL100", s: "09:30", e: "11:00" }],
+};
+
+// Pass a date key to get that day's actual classes, changes included.
+function dayEntries(dow, key) {
+    const changes = (key && CLASS_CHANGES[key]) || [];
     return (WEEK[dow] || [])
-        .map(([s, e, code, room, kind, grp]) => ({
-            s, e, code, room, kind, grp, from: tmin(s), to: tmin(e),
-        }))
+        .map(([s, e, code, room, kind, grp]) => {
+            const ch = changes.find((c) => c.code === code);
+            if (ch) { s = ch.s; e = ch.e; }
+            return { s, e, code, room, kind, grp, from: tmin(s), to: tmin(e), special: !!ch };
+        })
         .sort((a, b) => a.from - b.from || a.grp - b.grp);
 }
 
@@ -171,7 +181,7 @@ function nextDayWithClass(after) {
         d.setDate(d.getDate() + i);
         if (ymd(d) > TERM.end) return null;
         if (NO_CLASS[ymd(d)]) continue;
-        const list = dayEntries(d.getDay()).filter((x) => x.kind !== "free");
+        const list = dayEntries(d.getDay(), ymd(d)).filter((x) => x.kind !== "free");
         if (list.length) return { date: d, list };
     }
     return null;
@@ -235,7 +245,7 @@ function renderTimetable() {
     }
 
     const off = NO_CLASS[today];
-    const list = off ? [] : dayEntries(now.getDay()).filter((x) => x.kind !== "free");
+    const list = off ? [] : dayEntries(now.getDay(), ymd(now)).filter((x) => x.kind !== "free");
 
     // Both groups are on screen, so more than one thing can be running
     // or starting next — G1 and G2 diverge on three tutorials a week.

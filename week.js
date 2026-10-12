@@ -248,7 +248,7 @@ function renderWeek() {
             <span class="wk-hd-num">${date.getDate()}</span>
         </div>`;
 
-        const rawEntries = dayEntries(d).filter((x) => x.kind !== "free");
+        const rawEntries = dayEntries(d, key).filter((x) => x.kind !== "free");
         const filtered = GROUP === 0 ? rawEntries : rawEntries.filter((x) => x.grp === 0 || x.grp === GROUP);
         const items = (off || !inTerm) ? [] : lay(filtered);
 
@@ -272,7 +272,7 @@ function renderWeek() {
                     <span class="wk-name">${c ? c.name : x.code}${x.grp ? `<b class="wk-grp">G${x.grp}</b>` : ""}</span>
                     <span class="wk-meta">
                         <span class="wk-place${p.soft ? " wk-soft" : ""}">${p.name}</span>
-                        <b class="wk-kind">${KIND_WORD[x.kind] || "Lecture"}</b>
+                        <b class="wk-kind">${x.special ? "Special · " : ""}${KIND_WORD[x.kind] || "Lecture"}</b>
                     </span>
                 </div>
             </div>`;
