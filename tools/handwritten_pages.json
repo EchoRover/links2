@@ -1,0 +1,43 @@
+{
+  "_about": "Hand transcriptions of the AENL226 Power Systems pages that are handwriting with no text layer (iPad exports). build_slide_index.py merges these into notes/index.json so search can find them. Keys are notes/<file> without .pdf, then the 1-based page number.",
+  "AENL226/PS-L2-3-system-modelling": {
+    "5": "Generation, transmission, distribution. Real power balance: sum of PG over NG generators = sum of PL over n load buses + Ploss total. Any deviation will be reflected in frequency.",
+    "6": "Single line diagram: generator, transformer T1, transmission line, transformer T2, buses 1 to 5, motor, load. Difference between power transformer and distribution transformer.",
+    "7": "Every device has capabilities in terms of active and reactive power. Loads described in terms of active and reactive power consumption.",
+    "8": "Components of a power system: generators (synchronous, induction, DFIG), transformers, transmission lines, loads (motors, heating, electronic loads), distribution feeders, voltage and power control devices STATCOM, TCSC, SVC.",
+    "9": "Synchronous generator: controls are possible, real power PG and voltage VG. PG is the input; field current If controls QG and VG. Independent P and Q control.",
+    "10": "Induction generator / motor: no independent P and Q control, consumes reactive power, used in small hydro. Load models R, L, RLC, Pload, Qload.",
+    "11": "Loads: load characteristic, P, Q, power factor. Frequency and voltage dependent load. Other types of generators: wind energy conversion system, induction, PMSG, DFIG.",
+    "12": "Doubly fed induction generator (DFIG) with AC/DC and DC/AC converters, grid frequency. Solar PV system: PV panel, DC/DC converter, DC/AC inverter, grid.",
+    "13": "5-bus power system example: generator buses 1, 2, 4 and load buses 3, 5 with PL, QL at each bus.",
+    "14": "PG1 + PG2 + PG4 = PL2 + PL3 + PL4 + PL5 + line losses Ploss 1-2, 2-3, 3-4, 4-5, 5-1, 2-5. Representation of components: synchronous generator as a voltage source in series with an inductive reactance.",
+    "15": "Generators used in thermal, large hydro and nuclear plants are synchronous generators with independent P and Q control. Small hydro uses induction generators. Wind energy conversion system: induction generator, permanent magnet synchronous generator (PMSG), doubly fed induction generator (DFIG)."
+  },
+  "AENL226/PS-L4-per-unit": {
+    "2": "5-bus power system: generator buses 1, 2, 4 and load buses 3, 5.",
+    "3": "PG1 + PG2 + PG4 = sum of loads + line losses. Synchronous generator represented as voltage source in series with inductive reactance.",
+    "9": "One of the ratings is selected as the overall system base. Generator 5 MVA 11 kV, transformers 11/230 kV and 230/13 kV, motor 13 kV. Per-unit values of individual devices are on different bases; equivalent circuits can be connected together only if all parameters are brought to the same base.",
+    "10": "Equivalent circuit parameters are given at the rating of that device (data sheet or testing). Select a base MVA or kVA and base voltage, usually one of the ratings of the existing devices."
+  },
+  "AENL226/PS-L5-component-models-bus-types": {
+    "1": "Component models: synchronous generator, transformer, short transmission line. Medium transmission line pi model and T model (T model creates an additional node). Long transmission line approximated by pi or T. Loads as R, L, C combination, Vs, Is. Solar PV. Induction motor as load.",
+    "2": "Generator bus gives power into the network; load bus takes power out. Categories of buses: generator bus, load bus, reference bus. Pi = Pgen i - Pload i, Qi = Qgen i - Qload i (scheduled power). Bus data table: known and unknown P, Q, |V|, delta for gen bus, load bus and slack bus.",
+    "3": "S12 = P12 + jQ12. Day-ahead forecast of generation and load, system operator balancing and dispatch. Safe operation checks: bus voltages within permissible limits Vmin <= Vi <= Vmax (0.9 to 1.1 or 0.95 to 1.05 pu), line and transformer power flows within limits Sij min <= Sij <= Sij max, e.g. 100 MVA <= S12 <= 500 MVA on 100 MVA base.",
+    "4": "n buses: 2n variables known and 2n unknown, 2n equations to solve. Bus table |V|, delta, P, Q. Slack bus is the reference generator bus with delta1 = 0 and |V1| known, P1 and Q1 unknown, takes up the losses. Balancing and scheduling: sum PG = sum PL + Ploss (I squared R).",
+    "5": "4-bus system bus data. Gen-load pattern or scenario from the system operator. Topology and line data table: rij, xij, Bij/2 for lines 1-2, 2-3, 3-4, 4-1, 4-2. Ii = sum Yij Vj. Nodal analysis: nodal equation at node 1.",
+    "6": "Nodal equations written in matrix form by inspection: Y11 is the sum of admittances of all branches connected at bus 1; Y12 is minus the admittance between buses 1 and 2."
+  },
+  "AENL226/PS-L6-7-power-flow-ybus": {
+    "1": "Bus data and line data. Line table: start bus, end bus, r, x, b. Read data; algorithm for Ybus formation: for i, for j, if i == j Y(i,i) = sum of all admittances connected, else Y(i,j) = -yij. Ii = sum Yij Vj. Pi = Pgen i - Pload i real power injected at bus i, Qi = Qgen i - Qload i reactive power injected.",
+    "2": "If Pgen > Pload then Pi positive (generator bus), else negative (load bus). Si = Vi Ii* = Pi + jQi; Ii = (Pi - jQi) / Vi*. Basic power flow equation (Pi - jQi)/Vi* = sum Yij Vj. Recap 10/09/26: real power balancing, reactive power balancing. Approximate transformer equivalent circuit (series reactance) is acceptable at power transformer level.",
+    "3": "Transformer exact equivalent circuit with core branch Rc, Xm. Approximation: core loss current 2 to 6 percent of load current is neglected, xT >> rT. At low voltage levels (400 V, 11 kV and below) the full model is used; a distribution transformer's load varies through the day. Balanced three-phase system assumption.",
+    "4": "Systems below 11 kV: 11 kV / 400 V / 230 V distribution needs complete three-phase modelling of each component, Y11 as a 3x3 matrix (detailed modelling). Synchronous generator can provide active and reactive power and control them independently.",
+    "5": "Qgen controlled by excitation. Transmission line capacity in MVA, transformer capacity in MVA/kVA, S12 max = 500 MVA, S12 = sqrt(P12^2 + Q12^2). Power factor of loads at transmission level should be close to unity. a) Real power load-generation balance affects frequency. b) Reactive power load-generation balance affects bus voltages. Three levels of control.",
+    "6": "Primary control (local, fastest; generators sense frequency change), secondary control (automatic generation control, coordinates generators), tertiary control (slowest). Planning load-generation balance day ahead. GENCOs (generation companies), DISCOMs (distribution), independent system operator. One day in advance: generators give availability, distribution companies give load demand.",
+    "7": "Day-ahead scheduling table in 15-minute blocks (96 per day, 00:00 to 00:15 ... 23:45): generator capacity, available, allocated, forecast load demand. Total generation = total load + total losses + reserves (fast and slow). Tutorial 1, Tutorial 2, Ybus code."
+  },
+  "AENL226/PS-notes-with-L6": {
+    "2": "Bus data and line data. Ybus formation algorithm: Y(i,i) = sum of all admittances connected to bus i, Y(i,j) = -yij. Ii = sum Yij Vj. Pi = Pgen i - Pload i, Qi = Qgen i - Qload i.",
+    "3": "Pi positive at generator buses, negative at load buses. Si = Vi Ii* = Pi + jQi. Basic power flow equation (Pi - jQi)/Vi* = sum Yij Vj."
+  }
+}
