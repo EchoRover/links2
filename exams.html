@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>EEN · YR 3 · IITD-AD · mid-sems</title>
+  <link rel="icon" type="image/png" href="sustainability.png">
+  <script>
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=17">
+  <style>
+    /* One row per paper, date on the left like the agenda cards on the home
+       page. Kept to the site's cream/sage paper: this is a reading page, not
+       a grid, so it does not need week.html's neutral ground. */
+    .ex-intro { margin: 6px 0 14px; }
+    .ex-intro h1 { font-family: var(--font-serif); font-weight: 500; font-size: 1.9rem; margin: 0; color: var(--text); }
+    .ex-intro h1 em { font-family: 'Caveat', cursive; font-style: normal; color: var(--accent); font-size: 1.15em; margin-left: 4px; }
+    .ex-intro p { margin: 4px 0 0; color: var(--text-muted); font-size: .92rem; }
+    .ex-intro a { color: var(--accent-strong); }
+
+    .ex-list { display: flex; flex-direction: column; gap: 10px; }
+    .ex-row {
+      display: grid; grid-template-columns: 64px 1fr; gap: 14px;
+      padding: 12px 14px; border-radius: 12px;
+      background: var(--surface-elevated); border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--c);
+    }
+    .ex-row.done { opacity: .5; }
+    .ex-row.today { box-shadow: 0 0 0 2px var(--c); }
+
+    .ex-date { text-align: center; line-height: 1.05; padding-top: 2px; }
+    .ex-date .dow { font-size: .72rem; color: var(--text-subtle); }
+    .ex-date .day { font-family: var(--font-serif); font-size: 1.9rem; color: var(--text); }
+    .ex-date .mon { font-size: .72rem; color: var(--text-subtle); }
+
+    .ex-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+    .ex-code { font-weight: 600; font-size: .8rem; color: var(--c); }
+    .ex-name { font-family: var(--font-serif); font-size: 1.12rem; color: var(--text); }
+    .ex-when { margin-left: auto; font-size: .8rem; color: var(--text-muted); white-space: nowrap; }
+    .ex-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 3px; font-size: .82rem; color: var(--text-muted); }
+    .ex-meta b { color: var(--text); font-weight: 600; }
+    .ex-early { color: var(--accent-warm); font-weight: 600; }
+    .ex-meta a { color: var(--accent-strong); }
+
+    .ex-topics { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+    .ex-topics label { display: flex; align-items: flex-start; gap: 8px; font-size: .9rem; color: var(--text); cursor: pointer; }
+    .ex-topics input { accent-color: var(--c); margin-top: 3px; flex: none; }
+    .ex-topics input:checked + span { color: var(--text-subtle); text-decoration: line-through; }
+    .ex-topics a { color: var(--accent-strong); text-decoration: none; margin-left: 4px; }
+    .ex-none { margin-top: 6px; font-size: .85rem; color: var(--text-subtle); font-style: italic; }
+    .ex-note { margin-top: 6px; font-size: .84rem; color: var(--text-muted); }
+
+    @media (max-width: 560px) {
+      .ex-row { grid-template-columns: 46px 1fr; gap: 10px; padding: 10px 12px; }
+      .ex-date .day { font-size: 1.5rem; }
+      .ex-intro h1 { font-size: 1.5rem; }
+      .ex-intro h1 em { white-space: nowrap; }
+      .ex-when { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body class="archive-page">
+
+  <!-- animated background layer -->
+  <div id="bg" aria-hidden="true"></div>
+
+  <div class="layout">
+    <div class="main-content">
+      <div class="container">
+
+        <header class="topbar">
+          <div class="brand">
+            <a class="brand-text" href="/">← linkeen<small>mid-sems</small></a>
+          </div>
+          <div class="topbar-actions">
+            <button class="button" id="theme-toggle" type="button" aria-label="Toggle theme">◐</button>
+          </div>
+        </header>
+
+        <section class="ex-intro">
+          <h1>Mid-sem portions <em>24–29 Oct</em></h1>
+          <p>Year 3 EEN papers, in order. Tick topics as you revise; ticks stay on this device only.</p>
+        </section>
+
+        <div class="ex-list" id="ex-list"></div>
+
+        <footer class="site-footer">
+          <span class="footer-quote" id="footer-quote">linkeen · mid-sems</span>
+          <span>2026 ✿</span>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js?v=16"></script>
+  <script src="exams.js?v=1"></script>
+
+</body>
+</html>

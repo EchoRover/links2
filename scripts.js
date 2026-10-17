@@ -28,6 +28,7 @@ const linksData = {
     "Campus Tools": "campustools",
     Mess: "mess",
     Week: "week",
+    Exams: "exams",
     Timetables: "timetables",
     Common: "common",
     "Free Time": "free",
@@ -100,7 +101,11 @@ const linksData = {
 const updatesData = [
   ["assignments", "AENP200: Phase 1 lab report (both experiments)", "2026-10-07"],
   ["quizzes", "AENP200: Mid-sem lab evaluation (regular lab slot)", "2026-10-14"],
-  ["quizzes", "Mid-semester exams (26 to 30 Oct)", "2026-10-26"]
+  ["quizzes", "AHUL256: Mid-sem exam · report 10:00 · <a href=\"exams\">portions →</a>", "2026-10-24"],
+  ["quizzes", "ASBL100: Mid-sem exam · report 11:00 · <a href=\"exams\">portions →</a>", "2026-10-26"],
+  ["quizzes", "AHUL261: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-27"],
+  ["quizzes", "AENL226: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-28"],
+  ["quizzes", "AENL228: Mid-sem exam · report 08:00 (early) · <a href=\"exams\">portions →</a>", "2026-10-29"]
 ];
 // 14 verified portrait 9:16 reels (idk4 is landscape 16:9, idk6 is 4:3)
 const portraitClipIndices = [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -405,9 +410,9 @@ const DAYS_OFF = {
   "2026-10-17": "Mid-sem break", "2026-10-18": "Mid-sem break",
   "2026-10-19": "Mid-sem break", "2026-10-20": "Mid-sem break",
   "2026-10-21": "Mid-sem break",
+  "2026-10-24": "Mid-sem exams",
   "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
-  "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
-  "2026-10-30": "Mid-sem exams"
+  "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams"
 };
 
 // One-off timing changes for a single date. Each entry replaces the time of
@@ -451,7 +456,7 @@ function updateLiveClassStatus() {
             <span class="live-tag live-tag-free">${exams ? "EXAMS" : "NO CLASSES"}</span>
             <strong>${offReason}</strong>
           </div>
-          <div class="tracker-prof-line">${exams ? "Regular timetable is paused · check the exam schedule" : "Regular timetable is off today ✿"}</div>
+          <div class="tracker-prof-line">${exams ? "Regular timetable is paused · <a href=\"exams\" onclick=\"event.stopPropagation()\">exam times &amp; portions →</a>" : "Regular timetable is off today ✿"}</div>
         </div>
       </div>
     `;
@@ -694,6 +699,9 @@ addUpdate("assignments", "AENP200: Submit lab record before next lab, 09/09/2026
 addUpdate("assignments", "AENL228: Submit lab record before next lab, 09/09/2026", "2026-09-09");
 addUpdate("assignments", "ASBL100: Submit lab record before next lab, 11/09/2026", "2026-09-11");
 addUpdate("quizzes", "AHUL261: Psychology Quiz (during class 14:00), 08/09/2026", "2026-09-08");
+addUpdate("assignments", "AENL226: Assignment 2 · Newton-Raphson load flow code (one ZIP: code + output + results + data + refs), 19/10/2026", "2026-10-19");
+addUpdate("assignments", "Mid-sem course evaluation for every registered course (Academics mail), 19/10/2026", "2026-10-19");
+addUpdate("assignments", "AENL226: Problem Set 1 on Blackboard · do it before the mid-sem, 28/10/2026", "2026-10-28");
 
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {

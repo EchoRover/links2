@@ -83,9 +83,9 @@ const NO_CLASS = {
     "2026-10-17": "Mid-sem break", "2026-10-18": "Mid-sem break",
     "2026-10-19": "Mid-sem break", "2026-10-20": "Mid-sem break",
     "2026-10-21": "Mid-sem break",
+    "2026-10-24": "Mid-sem exams",
     "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
     "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
-    "2026-10-30": "Mid-sem exams",
 };
 
 const DAY_NAME = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
