@@ -126,6 +126,16 @@ function setTick(code, t, on) {
   try { on ? localStorage.setItem(tickKey(code, t), "1") : localStorage.removeItem(tickKey(code, t)); } catch (e) {}
 }
 
+// Open/closed state per paper, "1"/"0". Unset means "open only if it is
+// the next paper", so a fresh device lands on the paper that matters.
+function openKey(code) { return `exams:open:${code}`; }
+function getOpen(code) {
+  try { return localStorage.getItem(openKey(code)); } catch (e) { return null; }
+}
+function setOpen(code, on) {
+  try { localStorage.setItem(openKey(code), on ? "1" : "0"); } catch (e) {}
+}
+
 function esc(s) {
   return String(s).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 }
@@ -151,44 +161,54 @@ function renderExams() {
   // Finished papers sink to the bottom; the rest stay in date order.
   rows.sort((a, b) => (a.days < 0) - (b.days < 0) || a.date - b.date);
 
+  const next = rows.find((r) => r.days >= 0);
+
   list.innerHTML = rows.map(({ ex, date, days }) => {
     const clr = (typeof COURSE_COLORS !== "undefined" && COURSE_COLORS[ex.code]) || "var(--accent)";
     const topics = ex.topics.map((tp) => (typeof tp === "string" ? { t: tp } : tp));
     const ticked = topics.filter((tp) => getTick(ex.code, tp.t)).length;
     const early = Number(ex.report.slice(0, 2)) < 9;
+    const saved = getOpen(ex.code);
+    const open = saved === null ? next && next.ex === ex : saved === "1";
+    const pct = topics.length ? Math.round((ticked / topics.length) * 100) : 0;
 
     const body = topics.length
       ? `<ul class="ex-topics">${topics.map((tp) => `
           <li><label>
             <input type="checkbox" data-code="${ex.code}" data-t="${esc(tp.t)}"${getTick(ex.code, tp.t) ? " checked" : ""}>
             <span>${esc(tp.t)}</span>
-          </label>${tp.link ? `<a class="ex-open" href="${esc(tp.link)}" target="_blank" rel="noopener" aria-label="Open ${esc(tp.t)}">slides ↗</a>` : ""}</li>`).join("")}
+          </label>${tp.link ? `<a class="ex-open" href="${esc(tp.link)}" target="_blank" rel="noopener" aria-label="Open slides: ${esc(tp.t)}" title="Open slides">↗</a>` : ""}</li>`).join("")}
         </ul>`
       : ex.note ? "" : `<div class="ex-none">Portions not announced yet.</div>`;
 
     return `
-      <article class="ex-row${days < 0 ? " done" : ""}${days === 0 ? " today" : ""}" style="--c:${clr}">
-        <div class="ex-date">
-          <div class="dow">${DOW[date.getDay()]}</div>
-          <div class="day">${String(date.getDate()).padStart(2, "0")}</div>
-          <div class="mon">${MON[date.getMonth()]}</div>
-        </div>
-        <div>
-          <div class="ex-head">
-            <span class="ex-code">${ex.code}</span>
-            <span class="ex-name">${esc(ex.name)}</span>
-            <span class="ex-when">${whenLabel(days)}</span>
+      <details class="ex-row${days < 0 ? " done" : ""}${days === 0 ? " today" : ""}" style="--c:${clr}" data-code="${ex.code}"${open ? " open" : ""}>
+        <summary class="ex-sum">
+          <div class="ex-date">
+            <div class="dow">${DOW[date.getDay()]}</div>
+            <div class="day">${String(date.getDate()).padStart(2, "0")}</div>
+            <div class="mon">${MON[date.getMonth()]}</div>
           </div>
+          <div>
+            <div class="ex-head">
+              <span class="ex-code">${ex.code}</span>
+              <span class="ex-name">${esc(ex.name)}</span>
+              <span class="ex-when">${whenLabel(days)}</span>
+            </div>
+            ${topics.length ? `<div class="ex-prog"><span class="ex-bar"><i data-bar="${ex.code}" style="width:${pct}%"></i></span><span data-count="${ex.code}">${ticked}/${topics.length}</span></div>` : ""}
+          </div>
+          <span class="ex-chev" aria-hidden="true">›</span>
+        </summary>
+        <div class="ex-body">
           <div class="ex-meta">
             <span>report <b>${ex.report}</b>${early ? ` <span class="ex-early">early</span>` : ""}</span>
             <span>starts <b>${ex.start}</b></span>
-            ${topics.length ? `<span data-count="${ex.code}">${ticked}/${topics.length} revised</span>` : ""}
             ${EXAM_BB[ex.code] ? `<a href="${EXAM_BB[ex.code]}" target="_blank" rel="noopener">Blackboard ↗</a>` : ""}
           </div>
-          ${body}
           ${ex.note ? `<div class="ex-note">${esc(ex.note)}</div>` : ""}
+          ${body}
         </div>
-      </article>`;
+      </details>`;
   }).join("");
 }
 
@@ -200,8 +220,20 @@ document.addEventListener("change", (e) => {
   const count = document.querySelector(`[data-count="${box.dataset.code}"]`);
   if (ex && count) {
     const n = ex.topics.filter((tp) => getTick(ex.code, typeof tp === "string" ? tp : tp.t)).length;
-    count.textContent = `${n}/${ex.topics.length} revised`;
+    count.textContent = `${n}/${ex.topics.length}`;
+    const bar = document.querySelector(`[data-bar="${box.dataset.code}"]`);
+    if (bar) bar.style.width = `${Math.round((n / ex.topics.length) * 100)}%`;
   }
+});
+
+// Remember taps on the summary, not "toggle": toggle also fires when
+// renderExams inserts an open <details>, which would pin the auto-opened
+// paper open forever. Keyboard Enter/Space on a summary also fires click.
+document.addEventListener("click", (e) => {
+  const sum = e.target.closest && e.target.closest("summary.ex-sum");
+  if (!sum) return;
+  const row = sum.parentElement;
+  setOpen(row.dataset.code, !row.open);  // click runs before the flip
 });
 
 renderExams();
