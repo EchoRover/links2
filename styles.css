@@ -3534,41 +3534,39 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
 }
 
 /* ---------- Quick links as grouped rows (uni / schedule / campus) ----------
-   Overrides the pill styles above: chips read as a list, not a wall of
-   buttons. Games keeps its own pill via the #open-games-modal rules. */
-.general.general { display: flex; flex-direction: column; gap: 4px; align-items: stretch; max-width: 640px; }
-.gen-row { display: flex; align-items: baseline; gap: 10px; }
+   Grouping is what calms the hero down; each link stays a real button
+   (border, fill, a pressable bottom edge) so it still reads as clickable.
+   Games keeps its own green pill via the #open-games-modal rules. */
+.general.general { display: flex; flex-direction: column; gap: 6px; align-items: stretch; max-width: 660px; }
+.gen-row { display: flex; align-items: center; gap: 10px; }
 .gen-label {
-  flex: none; width: 66px; text-align: right;
+  flex: none; width: 62px; text-align: right;
   font-family: "Source Serif 4", Georgia, serif; font-style: italic;
   font-size: 0.8rem; color: var(--text-subtle);
 }
-.gen-links { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; }
+.gen-links { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
 .general .gen-links a:not(#open-games-modal) {
-  background: none; border: none; box-shadow: none;
-  padding: 3px 8px; border-radius: 6px;
-  font-size: 0.82rem; font-weight: 500; color: var(--text);
-}
-.general .gen-links a:not(#open-games-modal) + a:not(#open-games-modal)::before {
-  content: "·"; color: var(--text-subtle); margin: 0 8px 0 -8px; pointer-events: none;
+  padding: 3px 10px; border-radius: 8px;
+  font-size: 0.78rem; font-weight: 500; color: var(--text);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 2px 0 var(--border-soft);
+  transition: transform .12s ease, box-shadow .12s ease, background .15s, color .15s, border-color .15s;
 }
 .general .gen-links a:not(#open-games-modal):hover {
-  background: var(--accent-soft); color: var(--accent-strong); transform: none; box-shadow: none;
+  background: var(--accent-soft); color: var(--accent-strong); border-color: var(--accent);
+  box-shadow: 0 2px 0 var(--accent); transform: translateY(-1px);
 }
+.general .gen-links a:not(#open-games-modal):active { transform: translateY(2px); box-shadow: 0 0 0 var(--accent); }
 :root[data-theme="dark"] .general .gen-links a:not(#open-games-modal):hover {
-  background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-elevated)); color: var(--accent);
 }
-.general .gen-links #open-games-modal { margin-left: 10px; }
+.general .gen-links #open-games-modal { margin-left: 4px; }
 
 @media (max-width: 768px) {
-  .general.general { width: 100%; gap: 2px; }
-  .gen-row { gap: 6px; }
-  /* Wrap rather than side-scroll: a clipped row hid Games entirely. */
-  .gen-label { width: 54px; text-align: left; font-size: 0.72rem; }
-  .gen-links { flex: 1; min-width: 0; flex-wrap: wrap; overflow: visible; row-gap: 0; }
-  .general .gen-links a:not(#open-games-modal) { font-size: 0.78rem; padding: 3px 6px; }
-  /* No dots here: a wrapped line would start with a stray one. */
-  .general .gen-links a:not(#open-games-modal) + a:not(#open-games-modal)::before { content: none; }
-  .gen-links { column-gap: 4px; }
-  .general .gen-links #open-games-modal { margin-left: 6px; }
+  .general.general { width: 100%; gap: 6px; }
+  .gen-row { gap: 8px; align-items: flex-start; }
+  .gen-label { width: 52px; text-align: left; font-size: 0.72rem; padding-top: 4px; }
+  .gen-links { flex: 1; min-width: 0; gap: 5px; }
+  .general .gen-links a:not(#open-games-modal) { font-size: 0.76rem; padding: 3px 8px; }
 }
