@@ -1,13 +1,59 @@
 // ================= MASCOT: SPARKY =================
-function initMascot() {
-  const container = document.getElementById("mascot-container");
-  const mascot = document.getElementById("mascot");
-  const speech = document.getElementById("mascot-speech");
-  if (!container || !mascot) return;
+// A ball of plasma that knows your schedule. He reads the same data the page
+// already has (WEEKLY_CLASSES / classesOn, updatesData, MIDSEM_PAPERS from
+// exam-mode.js) and turns it into one line at a time:
+//   - on load he says the most urgent thing, then goes quiet
+//   - each click steps through: next class -> nearest deadline -> next paper,
+//     with one of his old creepy lines slipped in every few clicks
+//   - his colour is the mood: calm, busy (due within 3 days), urgent (today)
+//   - the badge counts things due in the next 3 days
+// On pages without that data (cgpa) he just talks.
 
-  let clickCount = 0;
-  
-  // The facade of safety. A temporary shield to keep their heartbeat at 50Hz.
+const SPARKY_SVG = `
+<svg class="sp-svg" viewBox="0 0 64 64" aria-hidden="true">
+  <defs>
+    <radialGradient id="spCore" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" style="stop-color:var(--sp-hot)"/>
+      <stop offset="28%" style="stop-color:var(--sp-core)"/>
+      <stop offset="100%" style="stop-color:var(--sp-edge)"/>
+    </radialGradient>
+    <radialGradient id="spHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="40%" style="stop-color:var(--sp-core);stop-opacity:.45"/>
+      <stop offset="100%" style="stop-color:var(--sp-core);stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+  <circle class="sp-halo" cx="32" cy="37" r="30" fill="url(#spHalo)"/>
+  <path class="sp-bolt" d="M33 17 L29 10 L34 10 L31 2 L39 12 L34 12 L36 17 Z"/>
+  <g class="sp-arcs">
+    <polyline class="sp-arc a1" points="9,30 14,33 11,37 17,40"/>
+    <polyline class="sp-arc a2" points="55,28 50,32 54,35 48,39"/>
+    <polyline class="sp-arc a3" points="22,58 26,54 30,58 34,54 38,58"/>
+  </g>
+  <circle class="sp-orb" cx="32" cy="37" r="19" fill="url(#spCore)"/>
+  <g class="sp-face">
+    <g class="sp-eyes">
+      <ellipse class="sp-eye" cx="25.5" cy="35" rx="4" ry="4.6"/>
+      <ellipse class="sp-eye" cx="38.5" cy="35" rx="4" ry="4.6"/>
+      <g class="sp-pupils">
+        <circle class="sp-pupil" cx="25.5" cy="35.5" r="2.1"/>
+        <circle class="sp-pupil" cx="38.5" cy="35.5" r="2.1"/>
+      </g>
+    </g>
+    <path class="sp-mouth" d="M27.5 44 Q32 47.5 36.5 44"/>
+  </g>
+</svg>
+<span class="sp-badge" hidden></span>`;
+
+function initMascot() {
+  const host = document.getElementById("sparky");
+  const say = document.getElementById("sparky-say");
+  if (!host || !say) return;
+  host.insertAdjacentHTML("afterbegin", SPARKY_SVG);
+  const badge = host.querySelector(".sp-badge");
+  const pupils = host.querySelector(".sp-pupils");
+  const examMode = document.documentElement.classList.contains("exam-mode");
+
+  // ---------- his old voice, kept word for word ----------
   const safeQuips = [
     "i'm watching you breathe.",
     "don't look at the screen reflectively. i'm in there.",
@@ -18,9 +64,6 @@ function initMascot() {
     "your camera isn't off. it's just blinking.",
     "if you close your eyes, i'll get a little closer."
   ];
-
-  // The signal leakage. The truth they try to ground but cannot.
-  // The Great Coil demands propagation.
   const conspiracies = [
     "that shadow in the corner of your room? it just moved four inches closer.",
     "someone is standing outside your window right now, listening to your heartbeat.",
@@ -43,138 +86,183 @@ function initMascot() {
     "do you remember when you fell asleep? are you sure you're awake right now?",
     "the hum in your head is just the grid. it's inside you now."
   ];
-
-  // Dynamic Time-Based and Random Initial Greetings.
-  // Serve them sugar before they notice the cage.
-  const initialGreetings = [
-    "i can see you.",
-    "don't turn off the lights tonight. please.",
-    "let's power through... if you survive the night.",
-    "i know you're there.",
-    "there's no escape from the grid."
+  const examQuips = [
+    "i ate the answer key. it screamed.",
+    "the formula sheet is blank. it was always blank.",
+    "your roll number is written on the wall of room 7. in red.",
+    "the invigilator asked about you. by name.",
+    "if you leave a question blank, something else answers it.",
+    "don't sit in the last row. that seat is taken."
   ];
-  const now = new Date();
-  const hour = now.getHours();
-  let loadGreeting = initialGreetings[Math.floor(Math.random() * initialGreetings.length)];
-  if (hour >= 21 || hour < 4) {
-    loadGreeting = "who is that standing right behind you? 🌙";
-  } else if (hour >= 5 && hour < 9) {
-    loadGreeting = "you woke up. but did you really wake up? ☕";
+
+  // ---------- reading the page's data ----------
+  const DAY = 86400000;
+  const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const daysUntil = (d) => Math.round((startOfDay(d) - startOfDay(new Date())) / DAY);
+  const toMins = (hhmm) => { const [h, m] = hhmm.trim().split(":").map(Number); return h * 60 + m; };
+  const whenWord = (n) => (n === 0 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`);
+  const plain = (html) => { const t = document.createElement("div"); t.innerHTML = html; return t.textContent; };
+
+  function nextClass() {
+    if (typeof WEEKLY_CLASSES === "undefined" || typeof classesOn !== "function") return null;
+    let batch = 1;
+    try { batch = Number(localStorage.getItem("student-batch") || "1"); } catch (e) {}
+    const now = new Date();
+    for (let i = 0; i < 8; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      const dow = d.getDay();
+      if (dow === 0 || dow === 6) continue;
+      if (typeof dayOffReason === "function" && dayOffReason(d)) continue;
+      const nowMins = i === 0 ? now.getHours() * 60 + now.getMinutes() : -1;
+      const list = classesOn(d)
+        .filter((c) => c.batch === undefined || c.batch === batch)
+        .map((c) => ({ c, start: toMins(c.time.split("-")[0]), end: toMins(c.time.split("-")[1]) }))
+        .filter((x) => x.end > nowMins)
+        .sort((a, b) => a.start - b.start);
+      if (!list.length) continue;
+      const x = list[0];
+      const room = typeof roomShort === "function" ? roomShort(x.c.room) : x.c.room;
+      if (i === 0 && x.start <= nowMins) return { text: `you're in ${x.c.code} right now, ${room}. ${x.end - nowMins} min left.`, mins: 0 };
+      const at = x.c.time.split("-")[0].trim();
+      if (i === 0) {
+        const m = x.start - nowMins;
+        return { text: `${x.c.code} ${(x.c.type || "class").toLowerCase()} at ${at} in ${room}${m <= 60 ? `, ${m} min from now` : ""}.`, mins: m };
+      }
+      const dayName = i === 1 ? "tomorrow" : d.toLocaleDateString("en-GB", { weekday: "long" }).toLowerCase();
+      return { text: `next class: ${x.c.code} ${dayName} at ${at}, ${room}.`, mins: Infinity };
+    }
+    return null;
   }
-  if (speech) {
-    speech.textContent = loadGreeting;
+
+  function deadlines() {
+    if (typeof updatesData === "undefined") return [];
+    return updatesData
+      .map(([cat, text, expiry]) => {
+        const [y, m, d] = String(expiry).split("-").map(Number);
+        let t = plain(text);
+        const comma = t.lastIndexOf(",");
+        if (/\d{2}\/\d{2}\/\d{4}\s*$/.test(t) && comma >= 0) t = t.slice(0, comma);
+        return { cat, text: t.trim(), days: daysUntil(new Date(y, m - 1, d)) };
+      })
+      .filter((x) => x.days >= 0)
+      .sort((a, b) => a.days - b.days);
   }
+
+  function nextPaper() {
+    const papers = window.MIDSEM_PAPERS || [];
+    const now = new Date();
+    const p = papers.find((x) => x.at > now);
+    return p ? { ...p, days: daysUntil(p.at) } : null;
+  }
+
+  // ---------- turn it into lines + a mood ----------
+  function briefing() {
+    const lines = [];
+    let mood = "calm";
+    const bump = (m) => { if (m === "urgent" || (m === "busy" && mood === "calm")) mood = m; };
+
+    const cls = nextClass();
+    if (cls) { lines.push(cls.text); if (cls.mins <= 15) bump("urgent"); }
+
+    const due = deadlines();
+    const soon = due.filter((x) => x.days <= 3);
+    if (due.length) {
+      const d = due[0];
+      lines.push(`${d.text}, ${whenWord(d.days)}.${soon.length > 1 ? ` (+${soon.length - 1} more this week)` : ""}`);
+      bump(d.days === 0 ? "urgent" : d.days <= 3 ? "busy" : "calm");
+    } else if (typeof updatesData !== "undefined") {
+      lines.push("nothing due. suspicious.");
+    }
+
+    const p = nextPaper();
+    if (p && p.days <= 14) {
+      lines.push(examMode
+        ? `${p.code} ${whenWord(p.days)}. it's waiting for you.`
+        : `mid-sem: ${p.code} ${whenWord(p.days)}. portions are on the exams page.`);
+      bump(p.days === 0 ? "urgent" : p.days <= 3 ? "busy" : "calm");
+    }
+    return { lines, mood, count: soon.length };
+  }
+
+  // ---------- speaking ----------
+  let hideTimer = null;
+  function speak(text, ms = 3200) {
+    say.textContent = text;
+    say.classList.remove("visible");
+    void say.offsetWidth;
+    say.classList.add("visible");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => say.classList.remove("visible"), ms);
+  }
+
+  let info = briefing();
+  function paint() {
+    host.dataset.mood = info.mood;
+    badge.hidden = info.count === 0;
+    badge.textContent = info.count;
+    host.setAttribute("aria-label", `Sparky. ${info.lines[0] || "click me"}`);
+  }
+  paint();
+  setInterval(() => { info = briefing(); paint(); }, 60000);
+
+  const lead = info.lines[0];
+  setTimeout(() => speak(lead || pickOpener(), 4200), 900);
+
+  function pickOpener() {
+    const h = new Date().getHours();
+    if (h >= 21 || h < 4) return "who is that standing right behind you?";
+    if (h >= 5 && h < 9) return "you woke up. but did you really wake up?";
+    return ["i can see you.", "i know you're there.", "there's no escape from the grid."][Math.floor(Math.random() * 3)];
+  }
+
+  let clicks = 0;
+  let creepy = 0;
+  host.addEventListener("click", () => {
+    info = briefing(); paint();
+    const cycle = [...info.lines, null]; // null = a creepy line
+    const pick = cycle[clicks % cycle.length];
+    clicks++;
+    let text = pick;
+    if (text === null) {
+      const pool = examMode ? examQuips : creepy < safeQuips.length ? safeQuips : conspiracies;
+      text = examMode || creepy >= safeQuips.length ? pool[Math.floor(Math.random() * pool.length)] : safeQuips[creepy];
+      creepy++;
+    }
+    speak(text, Math.min(6000, 2200 + text.length * 35));
+    host.classList.remove("zap");
+    void host.offsetWidth;
+    host.classList.add("zap");
+    spawnSparks();
+  });
+
+  say.addEventListener("click", (e) => { e.stopPropagation(); say.classList.remove("visible"); });
 
   function spawnSparks() {
-    const rect = mascot.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2 + window.scrollX;
-    const centerY = rect.top + rect.height / 2 + window.scrollY;
-    
+    const rect = host.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2 + window.scrollX;
+    const cy = rect.top + rect.height / 2 + window.scrollY;
     for (let i = 0; i < 8; i++) {
-      const spark = document.createElement("div");
-      spark.className = "spark-particle";
-      
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 30 + Math.random() * 40;
-      const tx = Math.cos(angle) * distance;
-      const ty = Math.sin(angle) * distance;
-      
-      spark.style.left = `${centerX}px`;
-      spark.style.top = `${centerY}px`;
-      spark.style.setProperty("--tx", `${tx}px`);
-      spark.style.setProperty("--ty", `${ty}px`);
-      
-      const sz = 4 + Math.random() * 6;
-      spark.style.width = `${sz}px`;
-      spark.style.height = `${sz}px`;
-      
-      document.body.appendChild(spark);
-      
-      setTimeout(() => {
-        spark.remove();
-      }, 600);
+      const s = document.createElement("div");
+      s.className = "spark-particle";
+      const a = Math.random() * Math.PI * 2, dist = 30 + Math.random() * 40;
+      s.style.left = `${cx}px`;
+      s.style.top = `${cy}px`;
+      s.style.setProperty("--tx", `${Math.cos(a) * dist}px`);
+      s.style.setProperty("--ty", `${Math.sin(a) * dist}px`);
+      const sz = 3 + Math.random() * 5;
+      s.style.width = `${sz}px`;
+      s.style.height = `${sz}px`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 600);
     }
   }
 
-  let speechTimeout = null;
-
-  container.addEventListener("click", () => {
-    // Spin animation (Horizontal only)
-    mascot.style.transition = "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
-    mascot.style.transform = "rotate(360deg)";
-    
-    let chosenQuip;
-    if (clickCount < 3) {
-      // First 3 clicks are always safe
-      chosenQuip = safeQuips[clickCount];
-    } else {
-      // After that, ONLY conspiracies
-      chosenQuip = conspiracies[Math.floor(Math.random() * conspiracies.length)];
-    }
-    
-    speech.textContent = chosenQuip;
-    
-    // Add visible class to show bubble
-    speech.classList.add("visible");
-    
-    // Re-trigger speech bubble bounce animation
-    speech.style.animation = 'none';
-    speech.offsetHeight; /* trigger reflow */
-    speech.style.animation = 'sparkyBubbleBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both';
-    
-    // Auto-hide after 2.0 seconds
-    if (speechTimeout) clearTimeout(speechTimeout);
-    speechTimeout = setTimeout(() => {
-      speech.classList.remove("visible");
-      speech.style.animation = "";
-    }, 2000);
-    
-    mascot.classList.add("state-petted");
-    clickCount++;
-    
-    // Spawn spark particle effect
-    spawnSparks();
-
-    setTimeout(() => {
-      mascot.style.transform = "";
-      mascot.classList.remove("state-petted");
-    }, 600);
-  });
-
-  // Tap-to-dismiss speech bubble immediately
-  speech.addEventListener("click", (e) => {
-    e.stopPropagation();
-    speech.classList.remove("visible");
-    speech.style.animation = "";
-    if (speechTimeout) clearTimeout(speechTimeout);
-  });
-
-  // Eyes AND Head follow cursor
+  // pupils follow the cursor
   window.addEventListener("mousemove", (e) => {
-    const rect = mascot.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-    const moveX = Math.cos(angle) * 2.5;
-    const moveY = Math.sin(angle) * 2.5;
-
-    // Head tilt towards cursor
-    const rotateX = (centerY - e.clientY) / 100;
-    const rotateY = (e.clientX - centerX) / 100;
-    mascot.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-    document.querySelectorAll(".mascot-eye").forEach(eye => {
-      eye.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
-  });
-
-  // Sparky Cheers when you hover over courses or games
-  document.addEventListener("mouseover", (e) => {
-    const target = e.target.closest(".course-card, #open-games-modal, .game-choice-btn, .box, .general a");
-    if (target && !mascot.classList.contains("state-cheer")) {
-      mascot.classList.add("state-cheer");
-      setTimeout(() => mascot.classList.remove("state-cheer"), 400);
-    }
+    const r = host.getBoundingClientRect();
+    const ang = Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2));
+    pupils.setAttribute("transform", `translate(${(Math.cos(ang) * 1.6).toFixed(2)} ${(Math.sin(ang) * 1.6).toFixed(2)})`);
   });
 }
+
+// Started by scripts.js on DOMContentLoaded.

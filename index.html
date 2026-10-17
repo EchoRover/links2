@@ -15,9 +15,9 @@
   <!-- games.css FIRST so styles.css overrides its #games-section positioning -->
   <link rel="stylesheet" href="games.css">
   <link rel="stylesheet" href="styles.css?v=19">
-  <link rel="stylesheet" href="mascot.css?v=16">
-  <link rel="stylesheet" href="exam-mode.css?v=1">
-  <script src="exam-mode.js?v=1"></script>
+  <link rel="stylesheet" href="mascot.css?v=17">
+  <link rel="stylesheet" href="exam-mode.css?v=2">
+  <script src="exam-mode.js?v=2"></script>
 </head>
 <body>
 
@@ -94,17 +94,9 @@
               <p class="hero-eyebrow">Year 3 · Semester 5 · Aug-Dec 2026</p>
               <div class="title-with-mascot">
                 <h1>B.Tech Energy Engineering</h1>
-                <div id="mascot-container">
-                  <div id="mascot">
-                    <div class="mascot-face">
-                      <div class="mascot-eye left"></div>
-                      <div class="mascot-eye right"></div>
-                      <div class="mascot-mouth"></div>
-                      <div class="mascot-blush"></div>
-                    </div>
-                    <div class="mascot-aura"></div>
-                  </div>
-                  <div id="mascot-speech">hi! i'm sparky.</div>
+                <div class="sparky-wrap">
+                  <button type="button" id="sparky" aria-label="Sparky"></button>
+                  <div id="sparky-say" role="status" aria-live="polite"></div>
                 </div>
               </div>
               <p class="hero-sub" id="hero-sub">y3 · running studies, links, updates &amp; the off-clock</p>
@@ -187,8 +179,8 @@
   </div>
 
   <script src="shared.js?v=17"></script>
-  <script src="scripts.js?v=21"></script>
-  <script src="mascot.js?v=16"></script>
+  <script src="scripts.js?v=22"></script>
+  <script src="mascot.js?v=17"></script>
   <script src="gamesscript.js"></script>
 
 </body>

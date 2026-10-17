@@ -25,6 +25,9 @@
     { code: "AENL228", at: new Date(2026, 9, 29, 8, 30) }
   ];
 
+  // Sparky reads this for his "next paper" line, exam mode or not.
+  window.MIDSEM_PAPERS = PAPERS;
+
   const flag = new URLSearchParams(location.search).get("scary");
   const now = new Date();
   const on = flag === "1" || (flag !== "0" && now >= EXAM_START && now < EXAM_END);
@@ -74,18 +77,6 @@
     "Nobody remembers who set this paper."
   ];
 
-  const MASCOT = [
-    "i ate the answer key. it screamed.",
-    "the formula sheet is blank. it was always blank.",
-    "they found the last student who crammed. part of him.",
-    "your roll number is written on the wall of room 7. in red.",
-    "i can hear your revision. it's not enough.",
-    "the invigilator asked about you. by name.",
-    "stop scrolling. it's right behind the timetable.",
-    "if you leave a question blank, something else answers it.",
-    "the hall lights go out at question 4. they always do.",
-    "don't sit in the last row. that seat is taken."
-  ];
 
   function greeting() {
     const p = nextPaper();
@@ -192,19 +183,6 @@
     if (quote) quote.innerHTML = `<span class="q-body">${pick(QUOTES)}</span>`;
     const updTitle = document.querySelector(".updates-title");
     if (updTitle) updTitle.textContent = "What awaits you";
-
-    // Mascot: whatever it was about to say, it says this instead.
-    const speech = document.getElementById("mascot-speech");
-    if (speech) {
-      let mine = false;
-      const swap = () => {
-        if (mine) { mine = false; return; }
-        mine = true;
-        speech.textContent = pick(MASCOT);
-      };
-      swap();
-      new MutationObserver(swap).observe(speech, { childList: true, characterData: true, subtree: true });
-    }
 
     // The theme button no longer turns the lights on.
     const toggle = document.getElementById("theme-toggle");

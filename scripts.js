@@ -254,9 +254,10 @@ function renderUpdates() {
       const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dateObj.getDay()];
       const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dateObj.getMonth()];
 
+      // Whole calendar days, so the count doesn't tick over in the evening.
       const msPerDay = 1000 * 60 * 60 * 24;
-      const endOfDay = new Date(y, m - 1, d, 23, 59, 59);
-      const daysDiff = Math.ceil((endOfDay - now) / msPerDay);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const daysDiff = Math.round((dateObj - today) / msPerDay);
       let countdownLabel = "";
       if (daysDiff <= 0) countdownLabel = "Due today!";
       else if (daysDiff === 1) countdownLabel = "Due tomorrow!";

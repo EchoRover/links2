@@ -98,18 +98,24 @@ html.exam-mode .avatar {
   91% { transform: none; }
 }
 
-/* sparky is not sparky */
-html.exam-mode #mascot { background: #120203; box-shadow: 0 0 22px rgba(255, 0, 20, .55), inset 0 0 12px #000; border-color: #5a0a0f; }
-html.exam-mode .mascot-eye { background: #ff1a26; box-shadow: 0 0 8px #ff1a26; }
-html.exam-mode .mascot-mouth { border-color: #ff1a26; }
-html.exam-mode #mascot::before,
-html.exam-mode #mascot::after { background: #120203; border-color: #ff1a26; height: 13px; border-radius: 50% 50% 0 0 / 90% 90% 0 0; }
-html.exam-mode #mascot { border-color: #ff1a26; }
-html.exam-mode .mascot-aura { background: radial-gradient(circle, rgba(255, 0, 20, .35), transparent 70%); }
-html.exam-mode #mascot-speech {
-  background: #0d0405; color: #f0d6d0; border-color: #5a0a0f;
+/* sparky is not sparky: a dark orb lit from the rim, slit eyes, teeth */
+html.exam-mode #sparky,
+html.exam-mode #sparky[data-mood] { --sp-hot: #1a0002; --sp-core: #5a0008; --sp-edge: #ff1a26; }
+html.exam-mode #sparky .sp-orb { filter: drop-shadow(0 0 8px #ff1a26); }
+html.exam-mode #sparky .sp-halo { opacity: .9; }
+html.exam-mode #sparky .sp-bolt { fill: #ff1a26; stroke: #2a0003; }
+html.exam-mode #sparky .sp-arc { stroke: #ff1a26; filter: drop-shadow(0 0 3px #ff1a26); }
+html.exam-mode #sparky .sp-eye { fill: #ff2a36; transform-box: fill-box; transform-origin: center; transform: scaleY(.28) rotate(-8deg); filter: drop-shadow(0 0 3px #ff2a36); }
+html.exam-mode #sparky .sp-eye:nth-of-type(2) { transform: scaleY(.28) rotate(8deg); }
+html.exam-mode #sparky .sp-pupil { display: none; }
+html.exam-mode #sparky .sp-mouth { stroke: #ff2a36; stroke-width: 1.4; stroke-linejoin: round;
+  d: path("M25.5 44 L28 46 L30 43.5 L32 46.5 L34 43.5 L36 46 L38.5 44"); }
+html.exam-mode #sparky .sp-badge { background: #ff1a26; box-shadow: 0 0 0 2px #090405, 0 0 8px #ff1a26; }
+html.exam-mode #sparky-say {
+  background: #0d0405; color: #f0d6d0; border-color: #8a020b;
   font-family: "Special Elite", "Courier New", monospace;
 }
+html.exam-mode #sparky-say::after { background: #0d0405; border-color: #8a020b; }
 
 /* features keep their layout; panels just sit in the dark with a red edge */
 html.exam-mode .course-card,
