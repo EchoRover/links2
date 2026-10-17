@@ -10,22 +10,100 @@
 // by text rather than index so reordering the list does not move ticks.
 // ============================================================
 
+// Slides live in notes/<code>/, mirrored from Blackboard (17 Oct).
+const N = (code, file) => `notes/${code}/${file}.pdf`;
+// Critical Thinking is a single deck, so topics jump to a page instead.
+const CT = (page) => `notes/AHUL256/critical-thinking-slides.pdf#page=${page}`;
+
 const EXAMS = [
   { code: "AHUL256", name: "Critical Thinking",
     date: "2026-10-24", report: "10:00", start: "10:30",
-    topics: [] },
+    note: "Everything taught till 7 Oct. All of it sits in one 174-slide deck; each link opens at its section.",
+    topics: [
+      { t: "1.1 What is philosophy?", link: CT(2) },
+      { t: "2.1 The brain is an inference machine", link: CT(16) },
+      { t: "1.2 How do philosophers arrive at truth?", link: CT(31) },
+      { t: "5.1 Methods for discovering truth", link: CT(37) },
+      { t: "5.2 Logical statements", link: CT(50) },
+      { t: "5.3 Arguments", link: CT(54) },
+      { t: "5.4 Deductive, inductive, abductive inferences", link: CT(58) },
+      { t: "5.5 Informal fallacies", link: CT(92) },
+      { t: "Philosophy of the Americas", link: CT(109) },
+      { t: "African, Indian and Chinese philosophy", link: CT(117) },
+      { t: "4.1 Historiography", link: CT(141) },
+      { t: "4.2 Classical philosophy", link: CT(144) },
+      { t: "4.3 Jewish, Christian and Islamic philosophy", link: CT(159) }
+    ] },
   { code: "ASBL100", name: "Introductory Biology for Engineers",
     date: "2026-10-26", report: "11:00", start: "11:30",
-    topics: [] },
+    note: "Everything taught till 27 Oct. Lecture 4 was never put on Blackboard.",
+    topics: [
+      { t: "L1 Introduction", link: N("ASBL100", "L01-introduction") },
+      { t: "L2 Darwinian evolution, origin of life", link: N("ASBL100", "L02-evolution-origin-of-life") },
+      { t: "L3 Evolution", link: N("ASBL100", "L03-evolution") },
+      { t: "L5 DNA", link: N("ASBL100", "L05-dna") },
+      { t: "L6 Genetics and heredity I", link: N("ASBL100", "L06-genetics-heredity-1") },
+      { t: "L7 Genetics and heredity II", link: N("ASBL100", "L07-genetics-heredity-2") },
+      { t: "L8 Genetics and heredity III", link: N("ASBL100", "L08-genetics-heredity-3") },
+      { t: "L9 Carbohydrates", link: N("ASBL100", "L09-carbohydrates") },
+      { t: "L10 Proteins I", link: N("ASBL100", "L10-proteins-1") },
+      { t: "L11 Proteins II", link: N("ASBL100", "L11-proteins-2") },
+      { t: "L12 Proteins III", link: N("ASBL100", "L12-proteins-3") },
+      { t: "L13 Membranes I", link: N("ASBL100", "L13-membrane-1") },
+      { t: "L14 Membranes II", link: N("ASBL100", "L14-membrane-2") },
+      { t: "L15 Membrane transport", link: N("ASBL100", "L15-membrane-transport") },
+      { t: "L16 Replication", link: N("ASBL100", "L16-replication") },
+      { t: "L17 Transcription and translation", link: N("ASBL100", "L17-transcription-translation") },
+      { t: "L18 Cells", link: N("ASBL100", "L18-cells") },
+      { t: "L19 (AKP)", link: N("ASBL100", "L19-akp") },
+      { t: "L20 Cell cycle", link: N("ASBL100", "L20-cell-cycle") },
+      { t: "L21 Cell division", link: "https://iida.blackboard.com/ultra/courses/_190_1/outline" }
+    ] },
   { code: "AHUL261", name: "Introduction to Psychology",
     date: "2026-10-27", report: "14:00", start: "14:30",
-    topics: [] },
+    note: "Everything taught so far.",
+    topics: [
+      { t: "Introduction", link: N("AHUL261", "01-introduction") },
+      { t: "History of psychology", link: N("AHUL261", "02-history-of-psychology") },
+      { t: "Thinking like a psychological scientist", link: N("AHUL261", "03-thinking-like-a-psych-scientist") },
+      { t: "Research designs", link: N("AHUL261", "04-research-designs") },
+      { t: "Self and identity", link: N("AHUL261", "05-self-and-identity") },
+      { t: "Sensation and perception", link: N("AHUL261", "06-sensation-and-perception") },
+      { t: "Conditioning and learning", link: N("AHUL261", "07-conditioning-and-learning") },
+      { t: "Memory and forgetting", link: N("AHUL261", "08-memory-and-forgetting") }
+    ] },
   { code: "AENL226", name: "Power Electronics and Power Systems",
     date: "2026-10-28", report: "14:00", start: "14:30",
-    topics: [] },
+    note: "Everything taught till 26 Oct, both halves.",
+    topics: [
+      { t: "PS L1 Course overview", link: N("AENL226", "PS-L1-course-overview") },
+      { t: "PS L2–3 System modelling", link: N("AENL226", "PS-L2-3-system-modelling") },
+      { t: "PS L4 Per-unit", link: N("AENL226", "PS-L4-per-unit") },
+      { t: "PS L5 Component models and bus types", link: N("AENL226", "PS-L5-component-models-bus-types") },
+      { t: "PS L6–7 Power flow equations and Ybus", link: N("AENL226", "PS-L6-7-power-flow-ybus") },
+      { t: "PS Notes to read with L6", link: N("AENL226", "PS-notes-with-L6") },
+      { t: "PS Ybus formation", link: N("AENL226", "PS-ybus-formation") },
+      { t: "PS Power flow notes", link: N("AENL226", "PS-power-flow-notes") },
+      { t: "PE L1 Introduction", link: N("AENL226", "PE-L1-introduction") },
+      { t: "PE L2 Power switches", link: N("AENL226", "PE-L2-power-switches") },
+      { t: "PE L3 Switch losses", link: N("AENL226", "PE-L3-switch-losses") },
+      { t: "PE L4 DC-DC converters, part 1", link: N("AENL226", "PE-L4-dc-dc-part1") },
+      { t: "Tutorial 1 Per-unit", link: N("AENL226", "T1-per-unit") },
+      { t: "Tutorial 2 Ybus", link: N("AENL226", "T2-ybus") },
+      { t: "Tutorial 2 branch data (4-bus, 30-bus)", link: N("AENL226", "T2-ybus-branch-data") },
+      { t: "Tutorial 3 Power flow", link: N("AENL226", "T3-power-flow") },
+      { t: "Tutorial 3 Newton-Raphson data", link: N("AENL226", "T3-newton-raphson-data") },
+      { t: "PE Problem set 1", link: N("AENL226", "PE-problem-set-1") },
+      { t: "PE Problem sheet 2", link: N("AENL226", "PE-problem-sheet-2") }
+    ] },
   { code: "AENL228", name: "Measurement & Instrumentation for Energy Systems",
     date: "2026-10-29", report: "08:00", start: "08:30",
-    topics: [] }
+    note: "Modules 1 and 2.",
+    topics: [
+      { t: "Module 1 slides", link: N("AENL228", "module-1-slides") },
+      { t: "Module 2 slides, part 1", link: N("AENL228", "module-2-slides-part-1") },
+      { t: "Assignment 1", link: N("AENL228", "assignment-1") }
+    ] }
 ];
 
 // Blackboard course pages, same URLs as the course cards on the home page.
@@ -86,7 +164,7 @@ function renderExams() {
             <span>${esc(tp.t)}${tp.link ? ` <a href="${esc(tp.link)}" target="_blank" rel="noopener">↗</a>` : ""}</span>
           </label></li>`).join("")}
         </ul>`
-      : `<div class="ex-none">Portions not announced yet.</div>`;
+      : ex.note ? "" : `<div class="ex-none">Portions not announced yet.</div>`;
 
     return `
       <article class="ex-row${days < 0 ? " done" : ""}${days === 0 ? " today" : ""}" style="--c:${clr}">
