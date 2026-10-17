@@ -35,7 +35,7 @@
     .ex-row.done { opacity: .5; }
     .ex-row.today { box-shadow: 0 0 0 2px var(--c); }
     .ex-sum {
-      display: grid; grid-template-columns: 52px 1fr 18px; gap: 12px; align-items: center;
+      display: grid; grid-template-columns: 52px minmax(0, 1fr) 18px; gap: 12px; align-items: center;
       padding: 10px 14px; cursor: pointer; list-style: none; user-select: none;
     }
     .ex-sum::-webkit-details-marker { display: none; }
@@ -54,11 +54,21 @@
     .ex-bar { flex: 1; height: 5px; border-radius: 99px; background: var(--border-soft); overflow: hidden; }
     .ex-bar i { display: block; height: 100%; background: var(--c); border-radius: inherit; transition: width .25s ease; }
 
+    .ex-next {
+      margin-top: 3px; font-size: .78rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .ex-body { padding: 0 14px 12px; border-top: 1px dashed var(--border-soft); }
     .ex-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: .82rem; color: var(--text-muted); }
     .ex-meta b { color: var(--text); font-weight: 600; }
     .ex-early { color: var(--accent-warm); font-weight: 600; }
     .ex-meta a { color: var(--accent-strong); }
+    .ex-reset {
+      margin-left: auto; padding: 2px 10px; border-radius: 999px; cursor: pointer;
+      font: inherit; font-size: .76rem; color: var(--text-muted);
+      background: none; border: 1px solid var(--border-soft);
+    }
+    .ex-reset[data-armed] { color: var(--accent-warm); border-color: var(--accent-warm); }
 
     .ex-topics { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 2px 18px; }
     @media (min-width: 760px) { .ex-topics { grid-template-columns: 1fr 1fr; } }
@@ -105,8 +115,12 @@
     .ss-snip mark { background: color-mix(in srgb, var(--c) 28%, transparent); color: var(--text); border-radius: 3px; padding: 0 2px; }
 
     @media (max-width: 560px) {
-      .ex-sum { grid-template-columns: 40px 1fr 14px; gap: 10px; padding: 9px 12px; }
-      .ex-body { padding: 0 12px 10px; }
+      .ex-sum { grid-template-columns: 40px minmax(0, 1fr) 14px; gap: 10px; padding: 9px 12px; }
+      .ex-next {
+      margin-top: 3px; font-size: .78rem; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ex-body { padding: 0 12px 10px; }
       .ex-date .day { font-size: 1.35rem; }
       .ex-intro h1 { font-size: 1.5rem; }
       .ex-intro h1 em { white-space: nowrap; }
@@ -155,7 +169,7 @@
   </div>
 
   <script src="shared.js?v=17"></script>
-  <script src="exams.js?v=4"></script>
+  <script src="exams.js?v=5"></script>
   <script src="slide-search.js?v=1"></script>
 
 </body>

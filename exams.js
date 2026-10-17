@@ -140,6 +140,16 @@ function esc(s) {
   return String(s).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 }
 
+// Ticked count plus the first unticked topic, which the card shows as
+// "next" so you can pick up where you stopped without opening it.
+function progress(ex) {
+  const ts = ex.topics.map((tp) => (typeof tp === "string" ? tp : tp.t));
+  const done = ts.filter((t) => getTick(ex.code, t));
+  const next = ts.find((t) => !getTick(ex.code, t));
+  return { n: done.length, total: ts.length, next };
+}
+function nextLabel(p) { return p.next ? `next · ${p.next}` : "all revised ✓"; }
+
 function whenLabel(days) {
   if (days < 0) return "done";
   if (days === 0) return "today";
@@ -166,7 +176,8 @@ function renderExams() {
   list.innerHTML = rows.map(({ ex, date, days }) => {
     const clr = (typeof COURSE_COLORS !== "undefined" && COURSE_COLORS[ex.code]) || "var(--accent)";
     const topics = ex.topics.map((tp) => (typeof tp === "string" ? { t: tp } : tp));
-    const ticked = topics.filter((tp) => getTick(ex.code, tp.t)).length;
+    const prog = progress(ex);
+    const ticked = prog.n;
     const early = Number(ex.report.slice(0, 2)) < 9;
     const saved = getOpen(ex.code);
     const open = saved === null ? next && next.ex === ex : saved === "1";
@@ -195,7 +206,8 @@ function renderExams() {
               <span class="ex-name">${esc(ex.name)}</span>
               <span class="ex-when">${whenLabel(days)}</span>
             </div>
-            ${topics.length ? `<div class="ex-prog"><span class="ex-bar"><i data-bar="${ex.code}" style="width:${pct}%"></i></span><span data-count="${ex.code}">${ticked}/${topics.length}</span></div>` : ""}
+            ${topics.length ? `<div class="ex-prog"><span class="ex-bar"><i data-bar="${ex.code}" style="width:${pct}%"></i></span><span data-count="${ex.code}">${ticked}/${topics.length}</span></div>
+            <div class="ex-next" data-next="${ex.code}">${esc(nextLabel(prog))}</div>` : ""}
           </div>
           <span class="ex-chev" aria-hidden="true">›</span>
         </summary>
@@ -204,6 +216,7 @@ function renderExams() {
             <span>report <b>${ex.report}</b>${early ? ` <span class="ex-early">early</span>` : ""}</span>
             <span>starts <b>${ex.start}</b></span>
             ${EXAM_BB[ex.code] ? `<a href="${EXAM_BB[ex.code]}" target="_blank" rel="noopener">Blackboard ↗</a>` : ""}
+            ${topics.length ? `<button class="ex-reset" type="button" data-reset="${ex.code}"${ticked ? "" : " hidden"}>reset ticks</button>` : ""}
           </div>
           ${ex.note ? `<div class="ex-note">${esc(ex.note)}</div>` : ""}
           ${body}
@@ -212,18 +225,42 @@ function renderExams() {
   }).join("");
 }
 
+function updateProgress(code) {
+  const ex = EXAMS.find((x) => x.code === code);
+  if (!ex) return;
+  const p = progress(ex);
+  const q = (attr) => document.querySelector(`[${attr}="${code}"]`);
+  if (q("data-count")) q("data-count").textContent = `${p.n}/${p.total}`;
+  if (q("data-bar")) q("data-bar").style.width = `${Math.round((p.n / p.total) * 100)}%`;
+  if (q("data-next")) q("data-next").textContent = nextLabel(p);
+  if (q("data-reset")) q("data-reset").hidden = p.n === 0;
+}
+
 document.addEventListener("change", (e) => {
   const box = e.target;
   if (!box.matches || !box.matches(".ex-topics input")) return;
   setTick(box.dataset.code, box.dataset.t, box.checked);
-  const ex = EXAMS.find((x) => x.code === box.dataset.code);
-  const count = document.querySelector(`[data-count="${box.dataset.code}"]`);
-  if (ex && count) {
-    const n = ex.topics.filter((tp) => getTick(ex.code, typeof tp === "string" ? tp : tp.t)).length;
-    count.textContent = `${n}/${ex.topics.length}`;
-    const bar = document.querySelector(`[data-bar="${box.dataset.code}"]`);
-    if (bar) bar.style.width = `${Math.round((n / ex.topics.length) * 100)}%`;
+  updateProgress(box.dataset.code);
+});
+
+// Reset asks for a second tap instead of confirm(), which would block the
+// page; the button reverts if the second tap does not come within 3 s.
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest && e.target.closest(".ex-reset");
+  if (!btn) return;
+  const code = btn.dataset.reset;
+  if (!btn.dataset.armed) {
+    btn.dataset.armed = "1";
+    btn.textContent = "tap again to clear";
+    setTimeout(() => { delete btn.dataset.armed; btn.textContent = "reset ticks"; }, 3000);
+    return;
   }
+  const ex = EXAMS.find((x) => x.code === code);
+  ex.topics.forEach((tp) => setTick(code, typeof tp === "string" ? tp : tp.t, false));
+  document.querySelectorAll(`.ex-topics input[data-code="${code}"]`).forEach((b) => { b.checked = false; });
+  delete btn.dataset.armed;
+  btn.textContent = "reset ticks";
+  updateProgress(code);
 });
 
 // Remember taps on the summary, not "toggle": toggle also fires when
