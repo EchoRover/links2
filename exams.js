@@ -161,8 +161,8 @@ function renderExams() {
       ? `<ul class="ex-topics">${topics.map((tp) => `
           <li><label>
             <input type="checkbox" data-code="${ex.code}" data-t="${esc(tp.t)}"${getTick(ex.code, tp.t) ? " checked" : ""}>
-            <span>${esc(tp.t)}${tp.link ? ` <a href="${esc(tp.link)}" target="_blank" rel="noopener">↗</a>` : ""}</span>
-          </label></li>`).join("")}
+            <span>${esc(tp.t)}</span>
+          </label>${tp.link ? `<a class="ex-open" href="${esc(tp.link)}" target="_blank" rel="noopener" aria-label="Open ${esc(tp.t)}">slides ↗</a>` : ""}</li>`).join("")}
         </ul>`
       : ex.note ? "" : `<div class="ex-none">Portions not announced yet.</div>`;
 
