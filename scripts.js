@@ -22,7 +22,8 @@ const linksData = {
       CGPA: "cgpa",
       Teams: "https://teams.microsoft.com/",
       Outlook: "https://outlook.office.com/",
-      Blackboard: "https://iida.blackboard.com/ultra/course"
+      Blackboard: "https://iida.blackboard.com/ultra/course",
+      Kortext: "https://read.kortext.com/library/books"
     },
     schedule: {
       Week: "week",
@@ -50,15 +51,18 @@ const linksData = {
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Anandarup Das, Prof. Ashu Verma", cabin: "Faculty Cabin", room: "M2-2-007 / M4-0-011", 
       links: {
-        "Blackboard": "https://iida.blackboard.com/ultra/courses/_162_1/outline"
-      } 
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_162_1/outline",
+        "Textbook (Batarseh)": "https://read.kortext.com/reader/epub/1408491",
+        "Textbook (Sen)": "https://read.kortext.com/reader/epub/43193"
+      }
     },
     "AENL228 (Measurement & Instrumentation for Energy Systems)": { 
       credits: 3, ltp: "2-0-2", 
       prof: "Prof. K. Ravi Kumar", cabin: "Faculty Cabin", room: "M2-2-007 / M2-2-031", 
       links: {
-        "Blackboard": "https://iida.blackboard.com/ultra/courses/_163_1/outline"
-      } 
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_163_1/outline",
+        "Textbook (Morris)": "https://read.kortext.com/reader/epub/609338"
+      }
     },
     "AENP200 (Energy Technology Lab)": { 
       credits: 1.5, ltp: "0-0-3", 
@@ -85,8 +89,9 @@ const linksData = {
       credits: 4, ltp: "3-1-0", 
       prof: "Prof. Yashpal Ashokrao Jogdand", cabin: "Faculty Cabin", room: "M4-0-011 / M4-1-017", 
       links: {
-        "Blackboard": "https://iida.blackboard.com/ultra/courses/_183_1/outline"
-      } 
+        "Blackboard": "https://iida.blackboard.com/ultra/courses/_183_1/outline",
+        "Textbook (Feldman)": "https://read.kortext.com/reader/epub/2934055"
+      }
     },
     "ASBL100 (Introductory Biology for Engineers)": { 
       credits: 4, ltp: "3-0-2", 
