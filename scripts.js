@@ -114,83 +114,6 @@ const updatesData = [
   ["quizzes", "AENL226: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-28"],
   ["quizzes", "AENL228: Mid-sem exam · report 08:00 (early) · <a href=\"exams\">portions →</a>", "2026-10-29"]
 ];
-// 14 verified portrait 9:16 reels (idk4 is landscape 16:9, idk6 is 4:3)
-const portraitClipIndices = [1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-const localClips = portraitClipIndices.map(i => `idk${i}.mp4`);
-
-function getDailyReels() {
-  const today = new Date();
-  const dateSeed = today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
-  
-  // Simple deterministic hash based on date seed
-  let index1 = dateSeed % localClips.length;
-  let index2 = (dateSeed * 7 + 13) % localClips.length;
-  
-  // Ensure they are not the same video
-  if (index1 === index2) {
-    index2 = (index1 + 1) % localClips.length;
-  }
-  
-  return [localClips[index1], localClips[index2]];
-}
-
-function renderLocalClips() {
-  const [vid1, vid2] = getDailyReels();
-  const leftVid = document.getElementById("local-clip-left");
-  const rightVid = document.getElementById("local-clip-right");
-  
-  if (leftVid) {
-    leftVid.src = vid1;
-    leftVid.muted = true;
-    leftVid.volume = 0;
-    leftVid.playsInline = true;
-    leftVid.loop = true;
-    leftVid.autoplay = true;
-    leftVid.load();
-    leftVid.play().catch(() => {});
-  }
-  if (rightVid) {
-    rightVid.src = vid2;
-    rightVid.muted = true;
-    rightVid.volume = 0;
-    rightVid.playsInline = true;
-    rightVid.loop = true;
-    rightVid.autoplay = true;
-    rightVid.load();
-    rightVid.play().catch(() => {});
-  }
-}
-
-// ================= SHUFFLE REELS HELPER (NO AUDIO) =================
-function wireInteractiveReels() {
-  const shuffleBtn = document.getElementById("shuffle-reels-btn");
-  const leftVid = document.getElementById("local-clip-left");
-  const rightVid = document.getElementById("local-clip-right");
-
-  if (shuffleBtn) {
-    shuffleBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      let i1 = Math.floor(Math.random() * localClips.length);
-      let i2 = Math.floor(Math.random() * localClips.length);
-      if (i1 === i2) i2 = (i1 + 1) % localClips.length;
-      if (leftVid) {
-        leftVid.src = localClips[i1];
-        leftVid.muted = true;
-        leftVid.volume = 0;
-        leftVid.load();
-        leftVid.play().catch(() => {});
-      }
-      if (rightVid) {
-        rightVid.src = localClips[i2];
-        rightVid.muted = true;
-        rightVid.volume = 0;
-        rightVid.load();
-        rightVid.play().catch(() => {});
-      }
-    });
-  }
-}
-
 function addUpdate(category, text, expiry) { updatesData.push([category, text, expiry]); }
 
 function renderUpdates() {
@@ -717,8 +640,6 @@ window.addEventListener("DOMContentLoaded", () => {
   renderGeneralLinks(".general", linksData.general);
   renderCourseLinks(".links", linksData.courses);
   renderUpdates();
-  renderLocalClips();
-  wireInteractiveReels();
   buildHeroSub();
   updateLiveClassStatus();
   setInterval(updateLiveClassStatus, 15000);
