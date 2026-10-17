@@ -37,8 +37,25 @@ function wireThemeToggle() {
 function renderGeneralLinks(selector, data) {
   const container = document.querySelector(selector);
   if (!container) return;
+  appendGeneralLinks(container, data);
+}
 
+// An object value with no `url` is a group: it becomes a labelled row
+// (e.g. "schedule  Week · Exams · …") instead of a single link.
+function appendGeneralLinks(container, data) {
   for (const [name, value] of Object.entries(data)) {
+    if (typeof value === "object" && !value.url) {
+      const row = document.createElement("div");
+      row.className = "gen-row";
+      row.innerHTML = `<span class="gen-label">${name}</span>`;
+      const links = document.createElement("div");
+      links.className = "gen-links";
+      appendGeneralLinks(links, value);
+      row.appendChild(links);
+      container.appendChild(row);
+      continue;
+    }
+
     const url      = typeof value === "string" ? value : value.url;
     const klass    = typeof value === "object" ? value.className : null;
     const quip     = typeof value === "object" ? value.quip      : null;

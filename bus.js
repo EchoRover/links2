@@ -10,6 +10,7 @@
 //   Mon-Fri night shift includes a dedicated KCA 3 ⇄ KCA 1 shuttle
 //   operated by Coaster 4 from 7:00 PM to 11:40 PM (KCA3 -> KCA1 -> KCA3).
 //
+// KCA 1&2 -> KCA 3 is 5 min (was coded as 3, giving times like 8:43).
 // Times are stored as "HH:MM" 24h for math, rendered as 12h.
 // ============================================================
 
@@ -77,7 +78,7 @@ const ITINERARIES = {
         {
             dirId: "toCampus",
             originOffset: 0,
-            destOffset: 3,
+            destOffset: 5,
             desc: "Dorms → Campus Shuttle (stops at KCA 3)"
         },
         {
@@ -92,7 +93,7 @@ const ITINERARIES = {
     "kca3->campus": [
         {
             dirId: "toCampus",
-            originOffset: 3,
+            originOffset: 5,
             destOffset: 15,
             desc: "Dorms → Campus Shuttle"
         }
@@ -100,8 +101,8 @@ const ITINERARIES = {
     "kca3->kca1": [
         {
             dirId: "toDorms",
-            originOffset: 18,
-            destOffset: 21,
+            originOffset: 20,
+            destOffset: 25,
             desc: "Campus ➔ Dorms Shuttle (returning to KCA 1&2)"
         },
         {
@@ -125,7 +126,7 @@ const ITINERARIES = {
         {
             dirId: "toDorms",
             originOffset: 0,
-            destOffset: 18,
+            destOffset: 20,
             desc: "Campus → Dorms Shuttle"
         }
     ]
@@ -510,14 +511,14 @@ function renderActiveTracker(now) {
     if (active.dirId === "toCampus") {
         stops = [
             { name: "KCA 1&2", time: active.baseTime, offset: 0 },
-            { name: "KCA 3", time: addMins(active.baseTime, 3), offset: 3 },
+            { name: "KCA 3", time: addMins(active.baseTime, 5), offset: 5 },
             { name: "Campus", time: addMins(active.baseTime, 15), offset: 15 }
         ];
     } else if (active.dirId === "toDorms") {
         stops = [
             { name: "Campus", time: active.baseTime, offset: 0 },
             { name: "KCA 1&2", time: addMins(active.baseTime, 15), offset: 15 },
-            { name: "KCA 3", time: addMins(active.baseTime, 18), offset: 18 }
+            { name: "KCA 3", time: addMins(active.baseTime, 20), offset: 20 }
         ];
     } else if (active.dirId === "kca3Loop") {
         stops = [

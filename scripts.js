@@ -15,27 +15,34 @@ const COURSE_TITLES = {
 // ============================================================
 
 const linksData = {
+  // Grouped into labelled rows: eighteen loose pills read as noise.
   general: {
-    ERP: "https://iitdadierp.iitd.ac.in/student/login",
-    CGPA: "cgpa",
-    Teams: "https://teams.microsoft.com/",
-    Outlook: "https://outlook.office.com/",
-    Blackboard: "https://iida.blackboard.com/ultra/course",
-    TimeTable: "timetable.pdf",
-    Bus: "bus",
-    Rooms: "rooms",
-    "3D Map": "both",
-    "Campus Tools": "campustools",
-    Mess: "mess",
-    Week: "week",
-    Exams: "exams",
-    Timetables: "timetables",
-    Common: "common",
-    "Free Time": "free",
-    Campus: "campus",
-    Games: {
-      url: "javascript:void(0)",
-      id: "open-games-modal"
+    uni: {
+      ERP: "https://iitdadierp.iitd.ac.in/student/login",
+      CGPA: "cgpa",
+      Teams: "https://teams.microsoft.com/",
+      Outlook: "https://outlook.office.com/",
+      Blackboard: "https://iida.blackboard.com/ultra/course"
+    },
+    schedule: {
+      Week: "week",
+      Exams: "exams",
+      TimeTable: "timetable.pdf",
+      Timetables: "timetables",
+      Common: "common",
+      "Free Time": "free"
+    },
+    campus: {
+      Mess: "mess",
+      Bus: "bus",
+      Rooms: "rooms",
+      "3D Map": "both",
+      Campus: "campus",
+      "Campus Tools": "campustools",
+      Games: {
+        url: "javascript:void(0)",
+        id: "open-games-modal"
+      }
     }
   },
   courses: {
