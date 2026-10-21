@@ -55,7 +55,7 @@ const EXAMS = [
       { t: "L16 Replication", link: N("ASBL100", "L16-replication") },
       { t: "L17 Transcription and translation", link: N("ASBL100", "L17-transcription-translation") },
       { t: "L18 Cells", link: N("ASBL100", "L18-cells") },
-      { t: "L19 (AKP)", link: N("ASBL100", "L19-akp") },
+      { t: "L19 Biology for engineers (Prof. Ashok Kumar Patel)", link: N("ASBL100", "L19-akp") },
       { t: "L20 Cell cycle", link: N("ASBL100", "L20-cell-cycle") },
       { t: "L21 Cell division", link: N("ASBL100", "L21-cell-division") },
       { t: "Sample paper (prof's suggested format)", link: N("ASBL100", "sample-paper") }
@@ -75,7 +75,7 @@ const EXAMS = [
     ] },
   { code: "AENL226", name: "Power Electronics and Power Systems",
     date: "2026-10-28", report: "14:00", start: "14:30",
-    note: "Everything taught till 26 Oct, both halves.",
+    note: "Everything taught so far, both halves.",
     topics: [
       { t: "PS L1 Course overview", link: N("AENL226", "PS-L1-course-overview") },
       { t: "PS L2–3 System modelling", link: N("AENL226", "PS-L2-3-system-modelling") },
