@@ -15,7 +15,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "2a01193d729d";
+const VERSION = "744d0088ff32";
 const SHELL = [
 "/archive",
 "/archive.js",
@@ -37,6 +37,9 @@ const SHELL = [
 "/boards-data.js",
 "/both",
 "/building.js",
+"/bus-core.js",
+"/bus-next.css",
+"/bus-next.js",
 "/bus",
 "/bus.js",
 "/campus-data.js",

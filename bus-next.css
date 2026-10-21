@@ -1,0 +1,22 @@
+/* bus-next.css — the next-shuttle card bus-next.js adds under the live class tracker. */
+.bus-next {
+  display: flex; align-items: center; gap: 12px;
+  /* sits right under the live tracker: cancel .left-col's 1.4rem flex gap, keep the tracker's 12px margin */
+  margin: -1.4rem 0 0; padding: 10px 14px; border-radius: 14px;
+  background: var(--surface-elevated); border: 1px solid var(--border-soft);
+  color: var(--text);
+}
+.bus-next:hover { border-color: var(--accent); }
+.bn-link { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; color: inherit; text-decoration: none; }
+.bn-icon { font-size: 1.4rem; line-height: 1; }
+.bn-body { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.bn-route { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--text-subtle); }
+.bn-main { font-family: var(--font-serif); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.bn-in { font-family: inherit; font-size: .9rem; color: var(--accent); margin-left: 4px; }
+.bn-sub { font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.bn-swap {
+  flex: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+  font: inherit; font-size: 1rem; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border-soft);
+}
+.bn-swap:hover { color: var(--text); border-color: var(--accent); }
