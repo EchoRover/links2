@@ -362,6 +362,7 @@ function populateDestinations() {
         btn.addEventListener("click", () => {
             currentDest = btn.dataset.dest;
             localStorage.setItem("bus-destination", currentDest);
+            if (typeof BusLocate !== "undefined") BusLocate.remember(currentLoc, currentDest);
             el.querySelectorAll("[data-dest]").forEach(b => b.classList.toggle("on", b === btn));
             tick(true);
         });
@@ -443,6 +444,37 @@ bindDayToggle();
 bindLocationToggle();
 document.getElementById("swap-btn")?.addEventListener("click", swapLocationAndDestination);
 document.getElementById("jump-next")?.addEventListener("click", scrollToNext);
+
+// ---------- "use my location" (bus-locate.js) ----------
+// Sets From to the nearest stop and To to where you're probably going.
+// Once allowed, it runs by itself whenever the page opens or comes back.
+(function wireLocate() {
+    const btn = document.getElementById("locate-btn");
+    const status = document.getElementById("locate-status");
+    if (!btn || typeof BusLocate === "undefined" || !BusLocate.enabled) return;
+    btn.hidden = false;
+
+    function applyLocated(r) {
+        status.hidden = false;
+        status.textContent = BusLocate.describe(r);
+        if (r.error || !r.near) return;
+        const route = BusLocate.apply(r.stop);
+        currentLoc = route.loc;
+        currentDest = route.dest;
+        document.querySelectorAll("[data-loc]").forEach(b => b.classList.toggle("on", b.dataset.loc === currentLoc));
+        populateDestinations();
+        tick(true);
+    }
+
+    btn.addEventListener("click", () => {
+        status.hidden = false;
+        status.textContent = "Finding your stop…";
+        BusLocate.detect().then(applyLocated);
+    });
+    const auto = () => BusLocate.allowed().then(ok => { if (ok) BusLocate.detect().then(applyLocated); });
+    auto();
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) auto(); });
+})();
 
 setInterval(tick, 1000);
 

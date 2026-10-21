@@ -14,9 +14,10 @@
 .bn-main { font-family: var(--font-serif); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
 .bn-in { font-family: inherit; font-size: .9rem; color: var(--accent); margin-left: 4px; }
 .bn-sub { font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.bn-swap {
+.bn-where { font-size: .78rem; color: var(--accent); margin-top: 2px; }
+.bn-btn {
   flex: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
   font: inherit; font-size: 1rem; color: var(--text-muted);
   background: var(--surface); border: 1px solid var(--border-soft);
 }
-.bn-swap:hover { color: var(--text); border-color: var(--accent); }
+.bn-btn:hover { color: var(--text); border-color: var(--accent); }
