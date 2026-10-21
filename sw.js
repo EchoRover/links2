@@ -15,7 +15,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "d31054a0d0ed";
+const VERSION = "cb36ab71cfb9";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -66,7 +66,6 @@ const SHELL = [
 "/flappybird",
 "/flappycell.css",
 "/free",
-"/gambling",
 "/games.css",
 "/games.js",
 "/gamesscript.js",

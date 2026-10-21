@@ -1,16 +1,19 @@
 
 // ====== Games Modal Logic ======
 document.addEventListener("DOMContentLoaded", function() {
-	const openBtn = document.getElementById("open-games-modal");
 	const modal = document.getElementById("games-modal");
 	const closeBtn = document.getElementById("close-games-modal");
 	const gameBtns = document.querySelectorAll(".game-choice-btn");
 
-	if (openBtn && modal) {
-		openBtn.addEventListener("click", () => {
+	// Delegated: the Games pill is rendered by scripts.js on window's
+	// DOMContentLoaded, which fires after this document listener, so the
+	// pill does not exist yet when this runs.
+	document.addEventListener("click", (e) => {
+		if (modal && e.target.closest("#open-games-modal")) {
+			e.preventDefault();
 			modal.style.display = "block";
-		});
-	}
+		}
+	});
 	if (closeBtn && modal) {
 		closeBtn.addEventListener("click", () => {
 			modal.style.display = "none";
