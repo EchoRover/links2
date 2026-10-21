@@ -110,16 +110,25 @@ const linksData = {
   }
 };
 
+// Every deadline, one line each, in date order. The date is the last day it
+// shows (inclusive) and the only place the date is written.
 const updatesData = [
+  ["quizzes", "AHUL261: Psychology Quiz (during class 14:00)", "2026-09-08"],
+  ["assignments", "AENP200: Complete Bomb Calorimeter Lab Report (Energy Transition Lab)", "2026-09-09"],
+  ["assignments", "AENP200: Submit lab record before next lab", "2026-09-09"],
+  ["assignments", "AENL228: Submit lab record before next lab", "2026-09-09"],
+  ["assignments", "ASBL100: Submit lab record before next lab", "2026-09-11"],
   ["assignments", "AENP200: Phase 1 lab report (both experiments)", "2026-10-07"],
   ["quizzes", "AENP200: Mid-sem lab evaluation (regular lab slot)", "2026-10-14"],
+  ["assignments", "AENL226: Assignment 2 · Newton-Raphson load flow code (one ZIP: code + output + results + data + refs)", "2026-10-19"],
+  ["assignments", "Mid-sem course evaluation for every registered course (Academics mail)", "2026-10-19"],
   ["quizzes", "AHUL256: Mid-sem exam · report 10:00 · <a href=\"exams\">portions →</a>", "2026-10-24"],
   ["quizzes", "ASBL100: Mid-sem exam · report 11:00 · <a href=\"exams\">portions →</a>", "2026-10-26"],
   ["quizzes", "AHUL261: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-27"],
   ["quizzes", "AENL226: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-28"],
+  ["assignments", "AENL226: Problem Set 1 on Blackboard · do it before the mid-sem", "2026-10-28"],
   ["quizzes", "AENL228: Mid-sem exam · report 08:00 (early) · <a href=\"exams\">portions →</a>", "2026-10-29"]
 ];
-function addUpdate(category, text, expiry) { updatesData.push([category, text, expiry]); }
 
 function renderUpdates() {
   const now = new Date();
@@ -194,8 +203,6 @@ function renderUpdates() {
       const colon = text.indexOf(":");
       const code = colon >= 0 ? text.slice(0, colon).trim() : "";
       let event = colon >= 0 ? text.slice(colon + 1).trim() : text;
-      const comma = event.lastIndexOf(",");
-      if (comma >= 0) event = event.slice(0, comma).trim();
 
       const clr = (typeof COURSE_COLORS !== "undefined" && COURSE_COLORS[code]) || "var(--accent)";
 
@@ -628,16 +635,6 @@ function renderModalTimetable(dayKey) {
 
   container.innerHTML = rowsHtml.join("");
 }
-
-// Academic Deadlines & Quizzes
-addUpdate("assignments", "AENP200: Complete Bomb Calorimeter Lab Report (Energy Transition Lab), 09/09/2026", "2026-09-09");
-addUpdate("assignments", "AENP200: Submit lab record before next lab, 09/09/2026", "2026-09-09");
-addUpdate("assignments", "AENL228: Submit lab record before next lab, 09/09/2026", "2026-09-09");
-addUpdate("assignments", "ASBL100: Submit lab record before next lab, 11/09/2026", "2026-09-11");
-addUpdate("quizzes", "AHUL261: Psychology Quiz (during class 14:00), 08/09/2026", "2026-09-08");
-addUpdate("assignments", "AENL226: Assignment 2 · Newton-Raphson load flow code (one ZIP: code + output + results + data + refs), 19/10/2026", "2026-10-19");
-addUpdate("assignments", "Mid-sem course evaluation for every registered course (Academics mail), 19/10/2026", "2026-10-19");
-addUpdate("assignments", "AENL226: Problem Set 1 on Blackboard · do it before the mid-sem, 28/10/2026", "2026-10-28");
 
 // ================= INIT =================
 window.addEventListener("DOMContentLoaded", () => {

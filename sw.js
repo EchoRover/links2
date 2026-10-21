@@ -15,8 +15,9 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "a5cf1e2643e1";
+const VERSION = "d31054a0d0ed";
 const SHELL = [
+"/404",
 "/announce.js",
 "/archive",
 "/archive.js",
@@ -125,6 +126,7 @@ const FONTS = [
 "https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap",
 "https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap",
 "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500;1,600&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;1,400;1,500&display=swap",
 "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap"
 ];
 const SLIDES = [
