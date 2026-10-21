@@ -1,11 +1,12 @@
 // ============================================================
 // offline.js — on every page: registers sw.js, shows an "offline" pill
-// when there's no connection, and saves all slides in the background so
-// the whole site works without wifi.
+// when there's no connection, and tells the service worker to save every
+// slide deck so the whole site works without wifi.
 //
-// Slides (~80 MB) download after the first visit, three at a time, and
-// resume on the next visit if interrupted. Skipped on mobile data or Data
-// Saver; /exams has a "Save now" button that overrides that.
+// The worker does the downloading (~80 MB, three at a time), so it keeps
+// going when you switch pages, and resumes on the next visit if cut off.
+// It starts on every visit, mobile data included: the point is that the
+// whole site is on your phone after one open.
 // window.linkeenOffline exposes status() and saveSlides() for /exams.
 // ============================================================
 
@@ -14,23 +15,31 @@
 
   const SLIDE_CACHE = "linkeen-slides";
   let slideList = null;
-  let saving = null;
+  let done = null;
   const listeners = new Set();
+  let last = null;
 
   navigator.serviceWorker.register("/sw.js").catch(() => {});
 
+  navigator.serviceWorker.addEventListener("message", (e) => {
+    const d = e.data || {};
+    if (d.type === "slides") slideList = d.slides;
+    if (d.type === "progress") {
+      last = d;
+      listeners.forEach((fn) => fn(d));
+      if (!d.saving && done) { done(); done = null; }
+    }
+  });
+
+  function worker() {
+    return navigator.serviceWorker.ready.then((reg) => navigator.serviceWorker.controller || reg.active);
+  }
+
   function askSlides() {
     if (slideList) return Promise.resolve(slideList);
-    return navigator.serviceWorker.ready.then((reg) => new Promise((resolve) => {
-      const onMsg = (e) => {
-        if (e.data && e.data.type === "slides") {
-          navigator.serviceWorker.removeEventListener("message", onMsg);
-          slideList = e.data.slides;
-          resolve(slideList);
-        }
-      };
-      navigator.serviceWorker.addEventListener("message", onMsg);
-      (navigator.serviceWorker.controller || reg.active).postMessage("slides?");
+    return worker().then((w) => new Promise((resolve) => {
+      const t = setInterval(() => { if (slideList) { clearInterval(t); resolve(slideList); } }, 50);
+      w.postMessage("slides?");
     }));
   }
 
@@ -38,38 +47,15 @@
     const list = await askSlides();
     const cache = await caches.open(SLIDE_CACHE);
     const have = new Set((await cache.keys()).map((r) => new URL(r.url).pathname));
-    return { total: list.length, saved: list.filter((s) => have.has(s)).length, saving: !!saving };
+    return { total: list.length, saved: list.filter((s) => have.has(s)).length, saving: !!(last && last.saving) };
   }
-
-  function emit(s) { listeners.forEach((fn) => fn(s)); }
 
   function saveSlides() {
-    if (saving) return saving;
-    saving = (async () => {
-      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
-      const list = await askSlides();
-      const cache = await caches.open(SLIDE_CACHE);
-      const have = new Set((await cache.keys()).map((r) => new URL(r.url).pathname));
-      const todo = list.filter((s) => !have.has(s));
-      let saved = list.length - todo.length;
-      emit({ total: list.length, saved, saving: true });
-      const worker = async () => {
-        while (todo.length) {
-          const s = todo.shift();
-          try { await cache.add(s); saved++; } catch (e) { /* lost connection: next visit resumes */ }
-          emit({ total: list.length, saved, saving: true });
-        }
-      };
-      await Promise.all([worker(), worker(), worker()]);
-      saving = null;
-      emit({ total: list.length, saved, saving: false });
-    })();
-    return saving;
-  }
-
-  function onMeteredConnection() {
-    const c = navigator.connection;
-    return !!(c && (c.saveData || c.type === "cellular"));
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+    return worker().then((w) => new Promise((resolve) => {
+      done = resolve;
+      w.postMessage("save");
+    }));
   }
 
   // ---------- offline pill ----------
@@ -89,12 +75,11 @@
     } else if (el) el.remove();
   }
 
-  window.addEventListener("online", () => { pill(); if (!onMeteredConnection()) saveSlides(); });
+  window.addEventListener("online", () => { pill(); saveSlides(); });
   window.addEventListener("offline", pill);
   window.addEventListener("load", () => {
     pill();
-    // Let the page settle first; slides are a background job.
-    if (navigator.onLine && !onMeteredConnection()) setTimeout(() => saveSlides().catch(() => {}), 4000);
+    if (navigator.onLine) saveSlides().catch(() => {});
   });
 
   // ---------- "Install" button (home top bar) ----------

@@ -2,8 +2,9 @@
 // sw.js — makes linkeen work with no wifi.
 //
 // On install it saves every page, script, style and image (SHELL) and the
-// Google Fonts (FONTS). Slides are saved by offline.js in the background,
-// and any slide opened is kept. After that:
+// Google Fonts (FONTS). Then it downloads every slide deck (SLIDES) itself,
+// so leaving the page or hopping between pages doesn't cut the download.
+// offline.js nudges it on every visit; a half-finished run resumes. After that:
 //   pages      network first (3 s), saved copy when offline or slow
 //   slides     saved copy first, they never change once posted
 //   assets     saved copy at once, refreshed from the network behind it
@@ -15,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "cb36ab71cfb9";
+const VERSION = "eae9aa14d923";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -229,10 +230,37 @@ self.addEventListener("activate", (event) => {
   })());
 });
 
-// offline.js asks which slides exist, to save the missing ones.
+// offline.js asks which slides exist, and says "save" on every visit.
+// waitUntil keeps the worker alive while it downloads.
 self.addEventListener("message", (event) => {
   if (event.data === "slides?") event.source.postMessage({ type: "slides", slides: SLIDES, version: VERSION });
+  if (event.data === "save") event.waitUntil(saveSlides());
 });
+
+let saving = null;
+function saveSlides() {
+  if (saving) return saving;
+  saving = (async () => {
+    const cache = await caches.open(SLIDE_CACHE);
+    const have = new Set((await cache.keys()).map((r) => new URL(r.url).pathname));
+    const todo = SLIDES.filter((s) => !have.has(s));
+    let saved = SLIDES.length - todo.length;
+    const tell = async (busy) => {
+      for (const c of await self.clients.matchAll({ includeUncontrolled: true })) c.postMessage({ type: "progress", total: SLIDES.length, saved, saving: busy });
+    };
+    await tell(todo.length > 0);
+    const worker = async () => {
+      while (todo.length) {
+        const s = todo.shift();
+        try { await cache.add(s); saved++; } catch (e) { /* lost connection: next visit resumes */ }
+        await tell(true);
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    await tell(false);
+  })().finally(() => { saving = null; });
+  return saving;
+}
 
 function cleanPath(url) {
   let p = url.pathname;
@@ -267,9 +295,20 @@ async function slide(url) {
   const hit = await cache.match(key);
   if (hit) return hit;
   // Fetch the whole file (no Range header) so it can be stored.
-  const res = await fetch(key);
-  if (res.ok && res.status === 200) cache.put(key, res.clone());
-  return res;
+  try {
+    const res = await fetch(key);
+    if (res.ok && res.status === 200) cache.put(key, res.clone());
+    return res;
+  } catch (e) {
+    // Offline and this deck never finished saving: say so, not ERR_FAILED.
+    return new Response(
+      `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not saved yet</title>` +
+      `<body style="font:16px/1.5 system-ui,sans-serif;max-width:32rem;margin:15vh auto;padding:0 20px;color:#222;background:#f6f1e7">` +
+      `<h2 style="margin:0 0 8px">This deck isn't saved yet</h2>` +
+      `<p>You're offline and <b>${url.pathname.split("/").pop()}</b> hadn't finished downloading. ` +
+      `Open linkeen once on wifi and leave it a minute; every deck saves itself.</p><p><a href="/exams">Back to exams</a></p>`,
+      { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } });
+  }
 }
 
 async function page(req, url) {

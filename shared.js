@@ -44,6 +44,28 @@ function renderGeneralLinks(selector, data) {
 // (e.g. "schedule  Week · Exams · …") instead of a single link.
 function appendGeneralLinks(container, data) {
   for (const [name, value] of Object.entries(data)) {
+    // `more` inside a row: the less-used links, folded behind a +N chip.
+    if (name === "more" && container.classList.contains("gen-links")) {
+      const extra = document.createElement("span");
+      extra.className = "gen-extra";
+      appendGeneralLinks(extra, value);
+      const n = extra.children.length;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "gen-more";
+      btn.textContent = `+${n}`;
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", `${n} more links`);
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") !== "true";
+        btn.setAttribute("aria-expanded", String(open));
+        btn.textContent = open ? "−" : `+${n}`;
+        btn.setAttribute("aria-label", open ? "Fewer links" : `${n} more links`);
+        container.classList.toggle("open", open);
+      });
+      container.append(extra, btn);
+      continue;
+    }
     if (typeof value === "object" && !value.url) {
       const row = document.createElement("div");
       row.className = "gen-row";

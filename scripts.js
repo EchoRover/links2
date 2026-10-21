@@ -16,33 +16,40 @@ const COURSE_TITLES = {
 
 const linksData = {
   // Grouped into labelled rows: eighteen loose pills read as noise.
+  // Each row shows the everyday few; `more` folds the rest behind a +N chip.
   general: {
     uni: {
       ERP: "https://iitdadierp.iitd.ac.in/student/login",
-      CGPA: "cgpa",
-      Teams: "https://teams.microsoft.com/",
-      Outlook: "https://outlook.office.com/",
       Blackboard: "https://iida.blackboard.com/ultra/course",
-      Kortext: "https://read.kortext.com/library/books"
+      Teams: "https://teams.microsoft.com/",
+      more: {
+        Outlook: "https://outlook.office.com/",
+        CGPA: "cgpa",
+        Kortext: "https://read.kortext.com/library/books"
+      }
     },
     schedule: {
       Week: "week",
       Exams: "exams",
       TimeTable: "timetable.pdf",
-      Timetables: "timetables",
-      Common: "common",
-      "Free Time": "free"
+      more: {
+        Timetables: "timetables",
+        Common: "common",
+        "Free Time": "free"
+      }
     },
     campus: {
       Mess: "mess",
       Bus: "bus",
-      Rooms: "rooms",
-      "3D Map": "both",
-      Campus: "campus",
-      "Campus Tools": "campustools",
       Games: {
         url: "javascript:void(0)",
         id: "open-games-modal"
+      },
+      more: {
+        Rooms: "rooms",
+        "3D Map": "both",
+        Campus: "campus",
+        "Campus Tools": "campustools"
       }
     }
   },

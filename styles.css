@@ -3563,6 +3563,22 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
 }
 .general .gen-links #open-games-modal { margin-left: 4px; }
 
+/* +N chip: the rest of the row stays one tap away, not on screen. */
+.gen-extra { display: none; }
+.gen-links.open .gen-extra { display: contents; }
+.gen-links.open .gen-extra a { animation: gen-in .18s ease both; }
+@keyframes gen-in { from { opacity: 0; transform: translateY(-2px); } }
+.gen-more {
+  font: inherit; font-size: 0.74rem; font-weight: 600; line-height: 1;
+  padding: 5px 9px; border-radius: 999px; cursor: pointer;
+  color: var(--text-subtle); background: transparent;
+  border: 1px dashed var(--border-soft);
+  transition: color .15s, border-color .15s;
+}
+.gen-more:hover, .gen-more[aria-expanded="true"] { color: var(--accent-strong); border-color: var(--accent); }
+:root[data-theme="dark"] .gen-more:hover, :root[data-theme="dark"] .gen-more[aria-expanded="true"] { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .gen-links.open .gen-extra a { animation: none; } }
+
 @media (max-width: 768px) {
   .general.general { width: 100%; gap: 6px; }
   .gen-row { gap: 8px; align-items: flex-start; }
