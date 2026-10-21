@@ -49,6 +49,9 @@
         .then((data) => {
           data.lower = data.pages.map((p) => p[2].toLowerCase());
           data.names = buildNames();
+          // Every word on every slide with its count: the dictionary for "Did you mean".
+          data.vocab = new Map();
+          for (const l of data.lower) for (const w of l.match(/[a-z]{3,}/g) || []) data.vocab.set(w, (data.vocab.get(w) || 0) + 1);
           index = data;
           if (input.value.trim()) run();
         })
@@ -76,16 +79,7 @@
     return n;
   }
 
-  function run() {
-    const q = input.value.trim().toLowerCase();
-    const searching = q.length >= 2;
-    list.hidden = searching;
-    if (!searching) { out.innerHTML = ""; return; }
-    if (!index) { out.innerHTML = `<div class="ss-empty">Loading slides…</div>`; load(); return; }
-
-    const tokens = q.split(/\s+/).filter((t) => t.length >= 2);
-    if (!tokens.length) { out.innerHTML = ""; return; }
-
+  function findHits(q, tokens) {
     const hits = [];
     index.lower.forEach((lower, i) => {
       if (!tokens.every((t) => lower.includes(t))) return;
@@ -93,15 +87,75 @@
       const score = count(lower, q) * 5 + tokens.reduce((s, t) => s + count(lower, t), 0);
       hits.push({ i, score });
     });
-    hits.sort((a, b) => b.score - a.score);
+    return hits.sort((a, b) => b.score - a.score);
+  }
+
+  // Edit distance where a swapped pair of letters counts as one edit (protien -> protein).
+  // Gives up early and returns max + 1 once every path is already past max.
+  function editDist(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    let pp = null, p = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const c = [i];
+      let rowMin = i;
+      for (let j = 1; j <= b.length; j++) {
+        let v = Math.min(p[j] + 1, c[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, pp[j - 2] + 1);
+        c[j] = v;
+        if (v < rowMin) rowMin = v;
+      }
+      if (rowMin > max) return max + 1;
+      pp = p; p = c;
+    }
+    return p[b.length];
+  }
+
+  // Closest slide word to a token that appears nowhere; ties go to the more common word.
+  function correctWord(t) {
+    if (!/^[a-z]{3,}$/.test(t) || index.lower.some((l) => l.includes(t))) return t;
+    let best = t, bestD = t.length <= 4 ? 1 : t.length <= 8 ? 2 : 3, bestF = 0, found = false;
+    for (const [w, f] of index.vocab) {
+      const d = editDist(t, w, bestD);
+      if (d < bestD || (d === bestD && f > bestF)) { best = w; bestD = d; bestF = f; found = true; }
+    }
+    return found ? best : t;
+  }
+
+  let literal = "";  // a query the user chose to search as typed, skipping correction
+
+  function run() {
+    const raw = input.value.trim();
+    let q = raw.toLowerCase();
+    const searching = q.length >= 2;
+    list.hidden = searching;
+    if (!searching) { out.innerHTML = ""; return; }
+    if (!index) { out.innerHTML = `<div class="ss-empty">Loading slides…</div>`; load(); return; }
+
+    let tokens = q.split(/\s+/).filter((t) => t.length >= 2);
+    if (!tokens.length) { out.innerHTML = ""; return; }
+
+    let hits = findHits(q, tokens), note = "";
+    // Nothing found: fix misspelled words against the slide vocabulary, like Google does.
+    if (!hits.length && raw !== literal) {
+      const fixed = tokens.map(correctWord);
+      if (fixed.some((t, i) => t !== tokens[i])) {
+        const fq = fixed.join(" "), fhits = findHits(fq, fixed);
+        if (fhits.length) {
+          const shownQ = fixed.map((t, i) => (t !== tokens[i] ? `<b><i>${esc(t)}</i></b>` : esc(t))).join(" ");
+          note = `<div class="ss-dym">Did you mean <span class="ss-fix">${shownQ}</span>? Showing results for that.
+            <button type="button" class="ss-link" data-literal>Search for “${esc(raw)}” instead</button></div>`;
+          hits = fhits; q = fq; tokens = fixed;
+        }
+      }
+    }
 
     if (!hits.length) {
-      out.innerHTML = `<div class="ss-empty">No slide mentions “${esc(input.value.trim())}”.</div>`;
+      out.innerHTML = `<div class="ss-empty">No slide mentions “${esc(raw)}”.</div>`;
       return;
     }
 
     const shown = hits.slice(0, MAX_HITS);
-    const head = `<div class="ss-count">${hits.length} slide${hits.length === 1 ? "" : "s"}${hits.length > MAX_HITS ? `, top ${MAX_HITS} shown` : ""}</div>`;
+    const head = note + `<div class="ss-count">${hits.length} slide${hits.length === 1 ? "" : "s"}${hits.length > MAX_HITS ? `, top ${MAX_HITS} shown` : ""}</div>`;
     out.innerHTML = head + shown.map(({ i }) => {
       const [fi, page, text] = index.pages[i];
       const file = index.files[fi];
@@ -120,6 +174,10 @@
         </a>`;
     }).join("");
   }
+
+  out.addEventListener("click", (e) => {
+    if (e.target.closest("[data-literal]")) { literal = input.value.trim(); run(); }
+  });
 
   let timer = 0;
   input.addEventListener("focus", load, { once: true });

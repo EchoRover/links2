@@ -57,7 +57,8 @@ const EXAMS = [
       { t: "L18 Cells", link: N("ASBL100", "L18-cells") },
       { t: "L19 (AKP)", link: N("ASBL100", "L19-akp") },
       { t: "L20 Cell cycle", link: N("ASBL100", "L20-cell-cycle") },
-      { t: "L21 Cell division", link: N("ASBL100", "L21-cell-division") }
+      { t: "L21 Cell division", link: N("ASBL100", "L21-cell-division") },
+      { t: "Sample paper (prof's suggested format)", link: N("ASBL100", "sample-paper") }
     ] },
   { code: "AHUL261", name: "Introduction to Psychology",
     date: "2026-10-27", report: "14:00", start: "14:30",
