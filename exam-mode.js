@@ -17,15 +17,16 @@
   const EXAM_END = new Date(2026, 9, 30, 0, 0);   // exclusive: through 29 Oct
 
   // Same papers as exams.js; duplicated so the home page needn't load it.
+  // `report` is when students must be in the hall, 30 min before the start.
   const PAPERS = [
-    { code: "AHUL256", at: new Date(2026, 9, 24, 10, 30) },
-    { code: "ASBL100", at: new Date(2026, 9, 26, 11, 30) },
-    { code: "AHUL261", at: new Date(2026, 9, 27, 14, 30) },
-    { code: "AENL226", at: new Date(2026, 9, 28, 14, 30) },
-    { code: "AENL228", at: new Date(2026, 9, 29, 8, 30) }
+    { code: "AHUL256", name: "Critical Thinking", at: new Date(2026, 9, 24, 10, 30), report: new Date(2026, 9, 24, 10, 0) },
+    { code: "ASBL100", name: "Introductory Biology for Engineers", at: new Date(2026, 9, 26, 11, 30), report: new Date(2026, 9, 26, 11, 0) },
+    { code: "AHUL261", name: "Introduction to Psychology", at: new Date(2026, 9, 27, 14, 30), report: new Date(2026, 9, 27, 14, 0) },
+    { code: "AENL226", name: "Power Electronics and Power Systems", at: new Date(2026, 9, 28, 14, 30), report: new Date(2026, 9, 28, 14, 0), calc: true },
+    { code: "AENL228", name: "Measurement & Instrumentation", at: new Date(2026, 9, 29, 8, 30), report: new Date(2026, 9, 29, 8, 0), calc: true }
   ];
 
-  // Sparky reads this for his "next paper" line, exam mode or not.
+  // Sparky and the exam-day card read this, exam mode or not.
   window.MIDSEM_PAPERS = PAPERS;
 
   const flag = new URLSearchParams(location.search).get("scary");

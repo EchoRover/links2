@@ -1,0 +1,25 @@
+/* exam-day.css — the paper card exam-day.js puts at the top of the home page. */
+.exam-day {
+  margin: 0 0 14px; padding: 14px 16px; border-radius: 14px;
+  background: var(--surface-elevated); border: 1px solid var(--border-soft);
+  border-left: 5px solid var(--c);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 18%, transparent);
+}
+.ed-top { display: flex; align-items: baseline; gap: 10px; }
+.ed-when {
+  font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; background: var(--c); color: var(--surface);
+}
+.ed-code { font-weight: 600; font-size: .8rem; color: var(--c); }
+.ed-name { font-family: var(--font-serif); font-size: 1.15rem; color: var(--text); margin-top: 4px; }
+.ed-big { font-family: var(--font-serif); font-size: 1.9rem; line-height: 1.15; color: var(--text); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.ed-times { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 6px; font-size: .92rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.ed-times small { color: var(--text-subtle); font-size: .74rem; margin-right: 3px; }
+.ed-tip { margin: 8px 0 0; font-size: .86rem; color: var(--text-muted); }
+.ed-kit { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px 12px; }
+.ed-kit label { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--text); cursor: pointer; }
+.ed-kit input { accent-color: var(--c); width: 16px; height: 16px; }
+.ed-kit input:checked + * , .ed-kit label:has(input:checked) { color: var(--text-subtle); text-decoration: line-through; }
+.ed-link { display: inline-block; margin-top: 10px; font-size: .86rem; font-weight: 600; color: var(--c); text-decoration: none; }
+.ed-link:hover { text-decoration: underline; }
+@media (max-width: 560px) { .ed-big { font-size: 1.6rem; } }

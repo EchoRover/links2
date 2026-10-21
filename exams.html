@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=19">
   <link rel="stylesheet" href="exam-mode.css?v=2">
-  <script src="exam-mode.js?v=2"></script>
+  <script src="exam-mode.js?v=3"></script>
   <style>
     /* One row per paper, date on the left like the agenda cards on the home
        page. Kept to the site's cream/sage paper: this is a reading page, not
@@ -90,6 +90,7 @@
     .ex-note { margin-top: 6px; font-size: .84rem; color: var(--text-muted); }
 
     /* Slide search: one box, results replace the paper list while typing. */
+    .ex-offline { font-size: .84rem !important; color: var(--text-subtle) !important; }
     .ss-box { margin: 0 0 12px; }
     .ss-box input {
       width: 100%; box-sizing: border-box; padding: 11px 14px; border-radius: 12px;
@@ -164,6 +165,7 @@
         <section class="ex-intro">
           <h1>Mid-sem portions <em>24–29 Oct</em></h1>
           <p>Year 3 EEN papers, in order. Tap a paper to open its checklist. Ticks stay on this device only.</p>
+          <p class="ex-offline" id="ex-offline" hidden></p>
         </section>
 
         <div class="ss-box">
@@ -186,5 +188,24 @@
   <script src="exams.js?v=9"></script>
   <script src="slide-search.js?v=3"></script>
 
+  <script src="offline.js?v=1" defer></script>
+  <script>
+    // Slides-offline status under the intro; offline.js (deferred) has run by DOMContentLoaded.
+    window.addEventListener("DOMContentLoaded", () => {
+      const el = document.getElementById("ex-offline"), off = window.linkeenOffline;
+      if (!el || !off) return;
+      const show = (s) => {
+        el.hidden = false;
+        if (s.saved >= s.total) { el.innerHTML = `✓ All ${s.total} slide decks saved. This page works with no wifi.`; return; }
+        el.innerHTML = s.saving
+          ? `Saving slides for offline… ${s.saved}/${s.total}`
+          : `${s.saved}/${s.total} slide decks saved for offline. <button type="button" class="ss-link" id="ex-offline-go">Save the rest now</button>`;
+        const go = document.getElementById("ex-offline-go");
+        if (go) go.onclick = () => off.saveSlides();
+      };
+      off.onChange(show);
+      off.status().then(show).catch(() => {});
+    });
+  </script>
 </body>
 </html>
