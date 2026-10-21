@@ -13,13 +13,16 @@
 // ============================================================
 
 const BusLocate = (function () {
-  // Bus pickup points. null = not pinned yet, which switches the feature off.
+  // Rough centre of each pickup area (pinned 21 Oct 2026; buses stop around
+  // here, not on the exact spot). `r` is how far the area spreads: campus is
+  // bigger than a dorm block, so its catchment reaches further. Stops are
+  // 0.9–1.7 km apart, campus ⇄ KCA 1&2 the closest at 882 m.
   const STOPS = {
-    kca1: null,    // { lat: 24.xxxxx, lng: 54.xxxxx }
-    kca3: null,
-    campus: null
+    kca1:   { lat: 24.403001, lng: 54.587579, r: 150 },
+    kca3:   { lat: 24.405056, lng: 54.599222, r: 150 },
+    campus: { lat: 24.395083, lng: 54.587083, r: 350 }
   };
-  const NEAR_M = 700;        // further than this from every stop = "not at a stop"
+  const NEAR_M = 500;        // further than this past an area's edge = "not at a stop"
   const FIX_MAX_AGE = 120000;
 
   const enabled = !!(navigator.geolocation && Object.values(STOPS).every(Boolean));
@@ -34,11 +37,13 @@ const BusLocate = (function () {
     return 2 * R * Math.asin(Math.sqrt(h));
   }
 
+  // Closest area by distance to its edge (centre distance minus r), so a big
+  // area wins ties near its border. `distance` is to the centre, for display.
   function nearest(pos) {
     let best = null;
     for (const [id, s] of Object.entries(STOPS)) {
-      const d = metres(pos, s);
-      if (!best || d < best.distance) best = { stop: id, distance: Math.round(d) };
+      const d = metres(pos, s), edge = Math.max(0, d - s.r);
+      if (!best || edge < best.edge) best = { stop: id, edge: Math.round(edge), distance: Math.round(d) };
     }
     return best;
   }
@@ -61,7 +66,7 @@ const BusLocate = (function () {
         (p) => {
           set("bus-locate-on", "1");
           const n = nearest({ lat: p.coords.latitude, lng: p.coords.longitude });
-          n.near = n.distance <= NEAR_M;
+          n.near = n.edge <= NEAR_M;
           if (n.near && n.stop !== "campus") set("bus-home-dorm", n.stop);
           resolve(n);
         },
