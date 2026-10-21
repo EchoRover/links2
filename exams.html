@@ -26,6 +26,7 @@
     .ex-intro a { color: var(--accent-strong); }
 
     .ex-list { display: flex; flex-direction: column; gap: 8px; }
+    .ex-list[hidden] { display: none; }  /* search hides the papers; display:flex would win over [hidden] */
     /* Each paper is a <details>: closed it is one line with a progress bar,
        so all five fit on a phone screen; only the next paper opens itself. */
     .ex-row {
@@ -110,7 +111,16 @@
       background: var(--surface-elevated); border: 1px solid var(--border-soft);
       border-left: 4px solid var(--c);
     }
-    .ss-hit:hover { border-color: var(--c); }
+    .ss-hit:hover, .ss-hit.ss-active { border-color: var(--c); }
+    .ss-hit.ss-active { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 30%, transparent); }
+    .ss-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ss-chip {
+      font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer;
+      padding: 4px 10px; border-radius: 999px; color: var(--c, var(--text-muted));
+      background: var(--surface-elevated); border: 1px solid var(--border-soft);
+    }
+    .ss-chip:hover { border-color: var(--c, var(--accent)); }
+    .ss-chip[aria-pressed="true"] { background: var(--c, var(--accent)); border-color: var(--c, var(--accent)); color: var(--surface); }
     .ss-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
     .ss-code { font-weight: 600; font-size: .78rem; color: var(--c); }
     .ss-title { font-family: var(--font-serif); font-size: 1rem; color: var(--text); }
@@ -157,7 +167,7 @@
         </section>
 
         <div class="ss-box">
-          <input id="ss-input" type="search" placeholder="Search every slide: ybus, abductive, DFIG, operant…" autocomplete="off" spellcheck="false" aria-label="Search slides">
+          <input id="ss-input" type="search" placeholder="Search every slide: meiosis, ybus, abductive, operant… (typos are fine)" autocomplete="off" spellcheck="false" aria-label="Search slides">
         </div>
         <div class="ss-results" id="ss-results" aria-live="polite"></div>
 
@@ -174,7 +184,7 @@
 
   <script src="shared.js?v=17"></script>
   <script src="exams.js?v=9"></script>
-  <script src="slide-search.js?v=2"></script>
+  <script src="slide-search.js?v=3"></script>
 
 </body>
 </html>
