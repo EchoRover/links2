@@ -36,7 +36,7 @@ const EXAMS = [
     ] },
   { code: "ASBL100", name: "Introductory Biology for Engineers",
     date: "2026-10-26", report: "11:00", start: "11:30",
-    note: "Everything taught till 27 Oct. Lecture 4 was never put on Blackboard.",
+    note: "Everything taught till 16 Oct. Lecture 4 was never put on Blackboard.",
     topics: [
       { t: "L1 Introduction", link: N("ASBL100", "L01-introduction") },
       { t: "L2 Darwinian evolution, origin of life", link: N("ASBL100", "L02-evolution-origin-of-life") },
