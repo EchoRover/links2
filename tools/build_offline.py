@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SW = ROOT / "sw.js"
 SKIP_DIRS = {".git", ".vercel", "api", "tools", "docs", "notes", "node_modules"}
-EXTS = {".html", ".js", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".pdf", ".json", ".ico"}
+EXTS = {".html", ".js", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".pdf", ".json", ".ico", ".webmanifest"}
 FONT_CSS = re.compile(r"https://fonts\.googleapis\.com/css2\?[^\"'`\s)]+")
 
 

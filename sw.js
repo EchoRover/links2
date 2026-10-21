@@ -15,7 +15,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "1d84936459b2";
+const VERSION = "b99fb29b7b79";
 const SHELL = [
 "/archive",
 "/archive.js",
@@ -69,6 +69,10 @@ const SHELL = [
 "/games.js",
 "/gamesscript.js",
 "/gridgambit",
+"/icons/apple-touch-icon.png",
+"/icons/icon-192.png",
+"/icons/icon-512.png",
+"/icons/maskable-512.png",
 "/image.png",
 "/",
 "/m2-data.js",
@@ -77,6 +81,7 @@ const SHELL = [
 "/m3",
 "/m4-data.js",
 "/m4",
+"/manifest.webmanifest",
 "/mascot.css",
 "/mascot.js",
 "/mess-data-gen.js",

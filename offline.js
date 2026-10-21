@@ -97,6 +97,37 @@
     if (navigator.onLine && !onMeteredConnection()) setTimeout(() => saveSlides().catch(() => {}), 4000);
   });
 
+  // ---------- "Install" button (home top bar) ----------
+  // Only appears when the browser says the site can be installed (Chrome /
+  // Edge / Android fire beforeinstallprompt), and goes away once it is. iOS
+  // has no such event: there it's Share → Add to Home Screen, no button.
+  let installEvent = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    installEvent = e;
+    const bar = document.querySelector(".topbar-actions");
+    if (!bar || location.pathname !== "/" || document.getElementById("install-btn")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "install-btn";
+    btn.className = "button";
+    btn.textContent = "Install";
+    btn.title = "Install linkeen as an app (works offline)";
+    btn.addEventListener("click", async () => {
+      if (!installEvent) return;
+      installEvent.prompt();
+      await installEvent.userChoice.catch(() => {});
+      installEvent = null;
+      btn.remove();
+    });
+    bar.prepend(btn);
+  });
+  window.addEventListener("appinstalled", () => {
+    installEvent = null;
+    const btn = document.getElementById("install-btn");
+    if (btn) btn.remove();
+  });
+
   window.linkeenOffline = {
     status, saveSlides,
     onChange(fn) { listeners.add(fn); }
