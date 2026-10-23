@@ -263,6 +263,65 @@ const SCHEDULES = {
     },
 };
 
+// ---------- one-off dated timetables ----------
+// A notice that replaces the service for ONE date. dayKey() checks `date`
+// before the weekday rules, so the page and the home card switch on that day
+// and fall back the day after. Ported from linkcs (EchoRover/links e963ea4).
+
+// Transport office sheet headed "24-10-26", sent 2026-10-23: "As exams are
+// scheduled for tomorrow, please follow the above transport schedule
+// accordingly." It ends at 6:40 PM both ways and lists no night runs.
+const EXAM_1024_FOUR = ["Bus 1", "Bus 3", "Coaster 1", "Coaster 4"];
+const EXAM_1024_FIVE = ["VAN 1", "Bus 1", "Bus 3", "Coaster 1", "Coaster 4"];
+
+SCHEDULES["exam-2026-10-24"] = {
+    key: "exam-2026-10-24",
+    date: "2026-10-24",
+    label: "Sat 24 Oct · exams",
+    short: "Sat 24 Oct",
+    numbering: "continuous",
+    caveat: "<strong>Exam day, Sat 24 Oct.</strong> The transport office's one-day sheet: "
+        + "“As exams are scheduled for tomorrow, please follow the above transport schedule "
+        + "accordingly.” Last run 6:40 PM both ways; the sheet lists nothing after that.",
+    dirs: {
+        toCampus: {
+            ...DIRS.toCampus,
+            blocks: [{
+                title: "Exam day — 24 Oct sheet", tag: "exam day", tagTone: "day",
+                rota: [
+                    ...EXAM_1024_FOUR, ...EXAM_1024_FOUR, ...EXAM_1024_FOUR,
+                    ...Array(6).fill(EXAM_1024_FIVE).flat().slice(0, 26),
+                ],
+                times: [
+                    "07:00", "07:20", "07:40",
+                    ...everyN("08:00", "10:00", 15),
+                    ...everyN("10:20", "18:40", 20),
+                ],
+            }],
+        },
+        toDorms: {
+            ...DIRS.toDorms,
+            blocks: [{
+                title: "Exam day — 24 Oct sheet", tag: "exam day", tagTone: "day",
+                rota: [
+                    ...EXAM_1024_FOUR, ...EXAM_1024_FOUR, ...EXAM_1024_FOUR,
+                    ...Array(6).fill(EXAM_1024_FIVE).flat().slice(0, 24),
+                ],
+                times: [
+                    "07:40",
+                    ...everyN("08:00", "10:00", 15),
+                    ...everyN("10:20", "18:40", 20),
+                ],
+            }],
+        },
+    },
+};
+
+// "2026-10-24" in the device's own timezone, matching getDay().
+function isoDate(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 // ---------- helpers ----------
 
 function toMinutes(hhmm) {
@@ -295,6 +354,9 @@ function addMins(hhmm, offset) {
 }
 
 function dayKey(d) {
+    const iso = isoDate(d);
+    const dated = Object.values(SCHEDULES).find((s) => s.date === iso);
+    if (dated) return dated.key;
     const n = d.getDay();
     return (n === 0 || n === 6) ? "weekend" : "weekday";
 }

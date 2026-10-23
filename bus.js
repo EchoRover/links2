@@ -272,6 +272,11 @@ function getServiceStatus(now) {
         };
     }
     
+    if (SCHEDULES[today].date) {
+        if (now < 420 || now > 1140) return { text: "Off Duty", class: "off-duty" };
+        return { text: "Exam-Day Service", class: "active-day" };
+    }
+
     if (today === "weekend") {
         if (now < 450 || now > 1410) {
             return {
@@ -370,6 +375,18 @@ function populateDestinations() {
 }
 
 function bindDayToggle() {
+    // One-off dated sheets get their own button while they are today or ahead.
+    const seg = document.querySelector(".seg-day");
+    const todayIso = isoDate(new Date());
+    if (seg) Object.values(SCHEDULES)
+        .filter((s) => s.date && s.date >= todayIso)
+        .forEach((s) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.dataset.day = s.key;
+            b.textContent = s.short;
+            seg.appendChild(b);
+        });
     const btns = Array.from(document.querySelectorAll("[data-day]"));
     const paint = () => {
         btns.forEach((b) => b.classList.toggle("on", b.dataset.day === viewKey));
