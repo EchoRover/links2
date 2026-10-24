@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "8f04c6db271d";
+const VERSION = "c26fd06e5ad6";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -149,6 +149,9 @@ const SLIDES = [
 "/notes/AENL226/T2-ybus.pdf",
 "/notes/AENL226/T3-newton-raphson-data.pdf",
 "/notes/AENL226/T3-power-flow.pdf",
+"/notes/AENL226/T4-complex-power.pdf",
+"/notes/AENL226/T5-switch-losses-thermal.pdf",
+"/notes/AENL226/T6-buck-boost.pdf",
 "/notes/AENL228/assignment-1.pdf",
 "/notes/AENL228/module-1-slides.pdf",
 "/notes/AENL228/module-2-slides-part-1.pdf",

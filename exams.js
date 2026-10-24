@@ -95,6 +95,9 @@ const EXAMS = [
       { t: "Tutorial 2 branch data (4-bus, 30-bus)", link: N("AENL226", "T2-ybus-branch-data") },
       { t: "Tutorial 3 Power flow", link: N("AENL226", "T3-power-flow") },
       { t: "Tutorial 3 Newton-Raphson data", link: N("AENL226", "T3-newton-raphson-data") },
+      { t: "Tutorial 4 Complex power", link: N("AENL226", "T4-complex-power") },
+      { t: "Tutorial 5 Switch losses and thermal", link: N("AENL226", "T5-switch-losses-thermal") },
+      { t: "Tutorial 6 Buck and boost", link: N("AENL226", "T6-buck-boost") },
       { t: "PE Problem set 1", link: N("AENL226", "PE-problem-set-1") },
       { t: "PE Problem sheet 2", link: N("AENL226", "PE-problem-sheet-2") }
     ] },
