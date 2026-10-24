@@ -58,6 +58,7 @@ const EXAMS = [
       { t: "L19 Biology for engineers (Prof. Ashok Kumar Patel)", link: N("ASBL100", "L19-akp") },
       { t: "L20 Cell cycle", link: N("ASBL100", "L20-cell-cycle") },
       { t: "L21 Cell division", link: N("ASBL100", "L21-cell-division") },
+      { t: "L22 Stem cells", link: N("ASBL100", "L22-stem-cells") },
       { t: "Sample paper (prof's suggested format)", link: N("ASBL100", "sample-paper") }
     ] },
   { code: "AHUL261", name: "Introduction to Psychology",

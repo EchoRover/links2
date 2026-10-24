@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "f8e00a3db3c3";
+const VERSION = "8f04c6db271d";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -181,6 +181,7 @@ const SLIDES = [
 "/notes/ASBL100/L19-akp.pdf",
 "/notes/ASBL100/L20-cell-cycle.pdf",
 "/notes/ASBL100/L21-cell-division.pdf",
+"/notes/ASBL100/L22-stem-cells.pdf",
 "/notes/ASBL100/sample-paper.pdf"
 ];
 // </offline-manifest>
