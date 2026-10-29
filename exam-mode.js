@@ -2,7 +2,7 @@
 // exam-mode.js — the site turns on you during mid-sems.
 //
 // Active from the first paper to the end of the last one (Year 3 mid-term
-// PDF: 24–29 Oct 2026), then as Halloween through 31 Oct (html.halloween:
+// PDF: 24–29 Oct 2026), then as Halloween through Diwali, 8 Nov (html.halloween:
 // pumpkin, spider, bats, new lines; jumpscare.js rides along the whole
 // time). Only the look and the fluff change: palette, fonts,
 // background, mascot lines, greeting, footer quote, tab title. Links,
@@ -32,8 +32,9 @@
   // Sparky and the exam-day card read this, exam mode or not.
   window.MIDSEM_PAPERS = PAPERS;
 
-  // Halloween keeps the same skin running after the last paper, through 31 Oct.
-  const HALLOWEEN_END = new Date(2026, 10, 1, 0, 0);   // exclusive
+  // Halloween keeps the same skin running after the last paper, through
+  // Diwali (Sun 8 Nov 2026).
+  const HALLOWEEN_END = new Date(2026, 10, 9, 0, 0);   // exclusive
 
   const flag = new URLSearchParams(location.search).get("scary");
   const now = new Date();
@@ -103,6 +104,11 @@
     const t = new Date();
     const end = new Date(2026, 9, 31, 23, 59, 59);
     if (t.getDate() === 31 && t.getMonth() === 9) return "it's Halloween · don't look behind you · don't look behind you";
+    if (t > end) {
+      const d = Math.ceil((new Date(2026, 10, 8) - t) / 864e5);
+      if (d <= 0) return "happy Diwali · the lights are on · it's still standing in the corner";
+      return `Halloween is over · it didn't leave · ${d} day${d === 1 ? "" : "s"} till Diwali lights it up`;
+    }
     const h = Math.max(0, Math.round((end - t) / 3600000));
     return `${h} hours until Halloween · the exams are over · it isn't`;
   }
@@ -249,7 +255,9 @@
   function rewriteFluff() {
     const eyebrow = document.querySelector(".hero-eyebrow");
     if (eyebrow) eyebrow.textContent = halloween
-      ? "Year 3 · Halloween · 31 Oct · it followed you home"
+      ? (new Date() > new Date(2026, 9, 31, 23, 59, 59)
+        ? "Year 3 · after Halloween · it stayed · till Diwali"
+        : "Year 3 · Halloween · 31 Oct · it followed you home")
       : "Year 3 · Mid-sems · 24–29 Oct · it has begun";
     const sub = document.getElementById("hero-sub");
     if (sub) {
