@@ -11,6 +11,10 @@
 //   ?scary=1  preview it any day      ?scary=0  switch it off
 //   ?halloween=1  with ?scary=1, preview the Halloween half
 //
+// A faint knob in the bottom-right corner opens switches for each part
+// (skin, jumpscares, creatures, text). Saved per device under "spooky-off";
+// jumpscares reuse jumpscare.js's own "boo-off" key. Changes reload the page.
+//
 // Loaded in <head> (sync) so the class lands before first paint; the
 // fluff overrides run after every other DOMContentLoaded handler.
 // ============================================================
@@ -38,8 +42,49 @@
 
   const flag = new URLSearchParams(location.search).get("scary");
   const now = new Date();
-  const on = flag === "1" || (flag !== "0" && now >= EXAM_START && now < HALLOWEEN_END);
-  if (!on) return;
+  const inWindow = flag === "1" || (flag !== "0" && now >= EXAM_START && now < HALLOWEEN_END);
+  if (!inWindow) return;
+
+  // ---------- the off switches ----------
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  let off = {};
+  try { off = JSON.parse(load("spooky-off") || "{}"); } catch (e) {}
+  const KNOBS = [
+    { k: "skin", label: "Horror theme" },
+    { k: "boo", label: "Jumpscares" },
+    { k: "creatures", label: "Creatures (bats, eyes, drips…)" },
+    { k: "text", label: "Creepy text" }
+  ];
+  const isOff = (k) => (k === "boo" ? load("boo-off") === "1" : !!off[k]);
+  function setOff(k, v) {
+    if (k === "boo") save("boo-off", v ? "1" : "");
+    else { off[k] = v; save("spooky-off", JSON.stringify(off)); }
+  }
+  function buildKnobs() {
+    const knob = document.createElement("button");
+    knob.type = "button";
+    knob.className = "xm-knob";
+    knob.setAttribute("aria-label", "Halloween settings");
+    knob.textContent = "⚙";
+    const panel = document.createElement("div");
+    panel.className = "xm-panel";
+    panel.hidden = true;
+    panel.innerHTML = KNOBS.map((o) =>
+      `<label><input type="checkbox" data-k="${o.k}"${isOff(o.k) ? "" : " checked"}> ${o.label}</label>`).join("");
+    const sync = () => panel.querySelectorAll("input:not([data-k=skin])").forEach((i) => { i.disabled = isOff("skin"); });
+    sync();
+    panel.addEventListener("change", (e) => {
+      setOff(e.target.dataset.k, !e.target.checked);
+      sync();
+      setTimeout(() => location.reload(), 250);
+    });
+    knob.addEventListener("click", () => { panel.hidden = !panel.hidden; });
+    document.body.append(knob, panel);
+  }
+  window.addEventListener("DOMContentLoaded", buildKnobs);
+
+  if (off.skin) return;
   // ?scary=1 previews the Halloween half after the exams, the exam half before.
   const halloween = now >= EXAM_END || new URLSearchParams(location.search).get("halloween") === "1";
 
@@ -124,7 +169,7 @@
   // ---------- background: drips, eyes, a figure ----------
   function buildBackground() {
     const bg = document.getElementById("bg");
-    if (!bg) return;
+    if (!bg || off.creatures) return;
     bg.querySelectorAll(".leaf").forEach((l) => l.remove());
 
     const drips = document.createElement("div");
@@ -253,6 +298,21 @@
 
   // ---------- fluff text ----------
   function rewriteFluff() {
+    if (!off.text) rewriteText();
+    // The theme button no longer turns the lights on.
+    const toggle = document.getElementById("theme-toggle");
+    if (toggle && !isOff("boo")) {
+      toggle.title = "the lights don't work";
+      toggle.addEventListener("click", () => {
+        root.classList.remove("xm-blackout");
+        void root.offsetWidth;
+        root.classList.add("xm-blackout");
+        if (window.Jumpscare) setTimeout(() => window.Jumpscare.fire("dark"), 500);
+      });
+    }
+  }
+
+  function rewriteText() {
     const eyebrow = document.querySelector(".hero-eyebrow");
     if (eyebrow) eyebrow.textContent = halloween
       ? (new Date() > new Date(2026, 9, 31, 23, 59, 59)
@@ -268,18 +328,6 @@
     if (quote) quote.innerHTML = `<span class="q-body">${pick(halloween ? HW_QUOTES : QUOTES)}</span>`;
     const updTitle = document.querySelector(".updates-title");
     if (updTitle) updTitle.textContent = "What awaits you";
-
-    // The theme button no longer turns the lights on.
-    const toggle = document.getElementById("theme-toggle");
-    if (toggle) {
-      toggle.title = "the lights don't work";
-      toggle.addEventListener("click", () => {
-        root.classList.remove("xm-blackout");
-        void root.offsetWidth;
-        root.classList.add("xm-blackout");
-        if (window.Jumpscare) setTimeout(() => window.Jumpscare.fire("dark"), 500);
-      });
-    }
 
     const realTitle = document.title;
     document.addEventListener("visibilitychange", () => {
