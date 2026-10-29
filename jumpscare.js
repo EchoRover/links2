@@ -2,15 +2,14 @@
 // jumpscare.js — the thing in the horror skin that actually comes for you.
 //
 // Runs only while exam-mode.js has the horror skin on (html.exam-mode).
-// One of three horror photos lunges at the screen with a synthesized
-// scream. Ways it finds you:
+// One of the horror photos lunges at the screen, silently: people open the
+// site in class. Ways it finds you:
 //   stare   sit still on the page long enough and the room goes dark;
 //           move during the dark and it notices you sooner
 //   return  leave the tab 5 s+; usually it's waiting when you come back
 //   dark    the theme button's blackout (exam-mode.js), every time
 //   summon  click the avatar or the hero title
-//   load    every page load or refresh: 1.5-3 s in if sound is allowed,
-//           otherwise on the first tap/key so the scream plays
+//   load    every page load or refresh, 1.5-3 s in
 //
 // Budget: at most 15 a day, at least 1 minute apart, never in the first 6 s.
 // The avatar (or the hero title) summons one on demand, no budget.
@@ -45,121 +44,6 @@
     if (Date.now() - loadedAt < 6000) return false;
     if (l.length >= MAX_PER_DAY) return false;
     return !l.length || Date.now() - l[l.length - 1] > GAP_MS;
-  }
-
-  // ---------- sound: needs one tap or key first, browsers insist ----------
-  let ctx = null;
-  function unlock() {
-    if (!ctx) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (AC) ctx = new AC();
-    }
-    if (ctx && ctx.state === "suspended") ctx.resume();
-  }
-  ["pointerdown", "keydown", "touchstart"].forEach((e) => window.addEventListener(e, unlock, { passive: true }));
-
-  function noise(seconds) {
-    const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    return src;
-  }
-
-  function crush() {
-    const ws = ctx.createWaveShaper();
-    const c = new Float32Array(1024);
-    for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; c[i] = Math.tanh(x * 6); }
-    ws.curve = c;
-    return ws;
-  }
-
-  // A low hum that swells while the room darkens.
-  let drone = null;
-  function droneOn() {
-    if (!ctx || ctx.state !== "running" || drone) return;
-    const t = ctx.currentTime;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.18, t + 4);
-    g.connect(ctx.destination);
-    const oscs = [41, 43.5, 82].map((f) => {
-      const o = ctx.createOscillator();
-      o.type = "sawtooth";
-      o.frequency.value = f;
-      const lp = ctx.createBiquadFilter();
-      lp.type = "lowpass";
-      lp.frequency.value = 220;
-      o.connect(lp).connect(g);
-      o.start();
-      return o;
-    });
-    drone = { g, oscs };
-  }
-  function droneOff() {
-    if (!drone) return;
-    const t = ctx.currentTime;
-    drone.g.gain.cancelScheduledValues(t);
-    drone.g.gain.setValueAtTime(0, t);
-    drone.oscs.forEach((o) => o.stop(t + 0.05));
-    drone = null;
-  }
-
-  // The scream: detuned saws sliding up through a distortion, a shriek band of
-  // noise on top, and a low slam underneath.
-  function scream() {
-    if (!ctx) return;
-    // resume() from the tap may still be settling; scream as soon as it lands.
-    if (ctx.state !== "running") { ctx.resume().then(() => { if (ctx.state === "running") scream(); }); return; }
-    const t = ctx.currentTime;
-    const master = ctx.createGain();
-    master.gain.setValueAtTime(0.0001, t);
-    master.gain.exponentialRampToValueAtTime(0.75, t + 0.02);
-    master.gain.setValueAtTime(0.75, t + 0.9);
-    master.gain.exponentialRampToValueAtTime(0.0001, t + 1.7);
-    const comp = ctx.createDynamicsCompressor();
-    master.connect(comp).connect(ctx.destination);
-
-    const dist = crush();
-    const voice = ctx.createGain();
-    voice.gain.value = 0.35;
-    dist.connect(voice).connect(master);
-    [520, 547, 780, 1103].forEach((f) => {
-      const o = ctx.createOscillator();
-      o.type = "sawtooth";
-      o.frequency.setValueAtTime(f * 0.6, t);
-      o.frequency.exponentialRampToValueAtTime(f * 1.25, t + 0.25);
-      o.frequency.exponentialRampToValueAtTime(f * 0.9, t + 1.6);
-      const lfo = ctx.createOscillator();
-      const lg = ctx.createGain();
-      lfo.frequency.value = rand(11, 17);
-      lg.gain.value = f * 0.04;
-      lfo.connect(lg).connect(o.frequency);
-      o.connect(dist);
-      o.start(t); lfo.start(t);
-      o.stop(t + 1.8); lfo.stop(t + 1.8);
-    });
-
-    const n = noise(1.8);
-    const bp = ctx.createBiquadFilter();
-    bp.type = "bandpass";
-    bp.Q.value = 3;
-    bp.frequency.setValueAtTime(1600, t);
-    bp.frequency.exponentialRampToValueAtTime(3400, t + 0.3);
-    const ng = ctx.createGain();
-    ng.gain.value = 0.9;
-    n.connect(bp).connect(ng).connect(master);
-    n.start(t);
-
-    const slam = ctx.createOscillator();
-    const sg = ctx.createGain();
-    slam.frequency.setValueAtTime(110, t);
-    slam.frequency.exponentialRampToValueAtTime(30, t + 0.4);
-    sg.gain.setValueAtTime(1, t);
-    sg.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-    slam.connect(sg).connect(master);
-    slam.start(t); slam.stop(t + 0.5);
   }
 
   // ---------- the face ----------
@@ -239,14 +123,10 @@
     record();
     const s = stage();
     s.className = "js-stage on js-" + kind;
-    droneOff();
     if (navigator.vibrate) navigator.vibrate([60, 40, 400]);
     // "return": it's already there, still, for a breath before it moves.
     const lungeAt = kind === "return" ? 380 : 0;
-    setTimeout(() => {
-      s.classList.add("lunge");
-      scream();
-    }, lungeAt);
+    setTimeout(() => s.classList.add("lunge"), lungeAt);
     setTimeout(() => s.classList.add("gone"), lungeAt + 1500);
     setTimeout(() => {
       s.className = "js-stage";
@@ -266,7 +146,6 @@
     if (document.hidden || busy || !allowed()) return armStare();
     building = true;
     root.classList.add("js-dim");
-    droneOn();
     buildTimer = setTimeout(() => { building = false; fire("stare"); }, rand(3500, 5500));
   }
   function stirred() {
@@ -297,44 +176,17 @@
   // Poke the avatar or the title and it answers. Always, no budget.
   document.querySelectorAll(".avatar, .hero h1").forEach((t) => {
     t.style.cursor = "pointer";
-    t.addEventListener("click", () => { unlock(); setTimeout(() => fire("dark", true), 250); });
+    t.addEventListener("click", () => setTimeout(() => fire("dark", true), 250));
   });
 
   // ---------- trigger: load ----------
   // Every page load (refresh included) gets one, a beat after the page looks
-  // normal. Skips the budget. Sound only if the browser lets audio start
-  // without a tap (Chrome does for sites you use a lot); otherwise silent.
-  // If the browser holds audio back until a tap (most do on a fresh load),
-  // the scare waits for that first tap or key instead, so it comes with the
-  // scream. A tapped link still opens, once the scare is over.
-  if (params.get("boo") !== "1") {
-    unlock();
-    let done = false;
-    const onFirst = (e) => {
-      if (done) return;
-      done = true;
-      unlock();
-      fire("load", true);
-      const a = e.target.closest && e.target.closest("a[href]");
-      if (a && a.target !== "_blank") {
-        const href = a.href;
-        const stop = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
-        a.addEventListener("click", stop, { capture: true, once: true });
-        setTimeout(() => { location.href = href; }, 2700);
-      }
-    };
-    setTimeout(() => {
-      if (done) return;
-      if (ctx && ctx.state === "running") { done = true; fire("load", true); return; }
-      ["pointerdown", "touchend", "keydown"].forEach((ev) =>
-        window.addEventListener(ev, onFirst, { capture: true }));
-    }, rand(1500, 3000));
-  }
+  // normal. Skips the budget.
+  if (params.get("boo") !== "1") setTimeout(() => fire("load", true), rand(1500, 3000));
 
   if (params.get("boo") === "1") {
     setTimeout(() => {
       root.classList.add("js-dim");
-      droneOn();
       setTimeout(() => fire("test", true), 2500);
     }, 3000);
   }
