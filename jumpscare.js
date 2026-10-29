@@ -98,7 +98,11 @@
   function pickVictim() {
     const pool = ready.length > 1 ? ready.filter((p) => p !== lastPick) : ready.length ? ready : ["svg"];
     lastPick = pool[Math.floor(Math.random() * pool.length)];
-    return lastPick === "svg" ? FACE : `<img src="${lastPick}" alt="">`;
+    if (lastPick === "svg") return FACE;
+    // The form has to be read to land: it gets the whole page, title first.
+    if (lastPick.includes("job-application"))
+      return `<div class="js-paper"><img src="${lastPick}" alt=""><span class="js-due">DUE TOMORROW</span></div>`;
+    return `<img src="${lastPick}" alt="">`;
   }
 
   let el = null;
@@ -122,7 +126,7 @@
     busy = true;
     record();
     const s = stage();
-    s.className = "js-stage on js-" + kind;
+    s.className = "js-stage on js-" + kind + (lastPick.includes("job-application") ? " js-job" : "");
     if (navigator.vibrate) navigator.vibrate([60, 40, 400]);
     // "return": it's already there, still, for a breath before it moves.
     const lungeAt = kind === "return" ? 380 : 0;
