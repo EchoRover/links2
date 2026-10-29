@@ -53,10 +53,10 @@
       main = `Done for today · first tomorrow ${to12h(first.departTime)}`;
       sub = "";
     } else {
-      const mins = first.departMins - now;
-      main = `${to12h(first.departTime)} <span class="bn-in">${mins === 0 ? "leaving now" : `in ${untilLabel(first.departMins, now)}`}</span>`;
+      main = `${to12h(first.departTime)} <span class="bn-in">⏱ <span data-at="${first.departMins}">${untilLabelSec(first.departMins)}</span></span>`;
       sub = trips.slice(1).filter((t) => !t.tomorrow).map((t) => to12hSimple(t.departTime)).join(" · ");
       if (sub) sub = `then ${sub}`;
+      sub += (sub ? " · " : "") + `best: at the stop by ${bestTime(first.departTime)} (seconds are approx)`;
       if (first.assumed) sub += (sub ? " · " : "") + "late runs are assumed, check the board";
     }
 
@@ -93,6 +93,7 @@
   window.addEventListener("DOMContentLoaded", () => {
     render();
     setInterval(render, 30000);
+    setInterval(() => { if (card) tickCountdowns(card); }, 1000);
     const auto = () => { if (LOC) LOC.allowed().then((ok) => { if (ok) locate(); }); };
     auto();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) { render(); auto(); } });

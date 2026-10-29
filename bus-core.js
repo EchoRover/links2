@@ -386,6 +386,33 @@ function untilLabel(mins, now) {
     return m ? `${h}h ${m}m` : `${h}h`;
 }
 
+// Seconds countdown to a departure at `departMins` (sheet minute, :00 sec).
+// Only as exact as the printed sheet: real buses drift a minute or two.
+function untilLabelSec(departMins) {
+    const d = new Date();
+    let delta = departMins * 60 - (d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds());
+    if (delta <= 0 && delta > -60) return "now";
+    if (delta < 0) delta += 24 * 3600;
+    const h = Math.floor(delta / 3600), m = Math.floor(delta / 60) % 60, s = delta % 60;
+    const ss = String(s).padStart(2, "0");
+    if (h) return `${h}h ${String(m).padStart(2, "0")}m ${ss}s`;
+    return m ? `${m}m ${ss}s` : `${s}s`;
+}
+
+// Best time to be at the stop: a few minutes before the sheet time,
+// since buses sometimes leave early.
+const BEST_EARLY = 3;
+function bestTime(departHHMM) {
+    return to12h(addMins(departHHMM, -BEST_EARLY));
+}
+
+// Refresh every [data-at] countdown in place, once a second.
+function tickCountdowns(root) {
+    (root || document).querySelectorAll("[data-at]").forEach((el) => {
+        el.textContent = untilLabelSec(Number(el.dataset.at));
+    });
+}
+
 // Get structured vehicle attributes (name, type, icon)
 function getVehicleDetail(vehicle) {
     if (!vehicle) return null;

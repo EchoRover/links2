@@ -154,7 +154,9 @@ function renderLiveBoard(now) {
         html = `<div class="board-empty">No departures scheduled for this route.</div>`;
     } else {
         html = upcoming.map((t) => {
-            const until = t.tomorrow ? "tomorrow" : untilLabel(t.departMins, now);
+            const until = t.tomorrow
+                ? "tomorrow"
+                : `<span data-at="${t.departMins}">${untilLabelSec(t.departMins)}</span>`;
             let vehTag = "";
             const vDetail = getVehicleDetail(t.vehicle);
             if (vDetail) {
@@ -171,6 +173,7 @@ function renderLiveBoard(now) {
                 <div class="item-time-eta">
                     <span class="item-eta">${until}</span>
                     <span class="item-time">${to12h(t.departTime)}</span>
+                    <span class="item-best">best: at stop by ${bestTime(t.departTime)}</span>
                 </div>
                 <div class="item-details">
                     <div class="item-route-line">
@@ -185,6 +188,9 @@ function renderLiveBoard(now) {
         }).join("");
     }
 
+    if (upcoming.some((t) => !t.tomorrow)) {
+        html += `<div class="board-note">Seconds count to the printed time, so they're not exact: buses can run a minute or two either way. Best bet is to be at the stop ${BEST_EARLY} min early.</div>`;
+    }
     elNext.innerHTML = html;
 }
 
@@ -330,6 +336,7 @@ let lastMinute = null;
 
 function tick(force) {
     const now = nowMinutes();
+    tickCountdowns(elNext);
     if (!force && now === lastMinute) return;
     lastMinute = now;
 
