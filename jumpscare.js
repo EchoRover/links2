@@ -9,6 +9,8 @@
 //   return  leave the tab 5 s+; usually it's waiting when you come back
 //   dark    the theme button's blackout (exam-mode.js), every time
 //   summon  click the avatar or the hero title
+//   load    every page load or refresh: 1.5-3 s in if sound is allowed,
+//           otherwise on the first tap/key so the scream plays
 //
 // Budget: at most 15 a day, at least 1 minute apart, never in the first 6 s.
 // The avatar (or the hero title) summons one on demand, no budget.
@@ -107,7 +109,9 @@
   // The scream: detuned saws sliding up through a distortion, a shriek band of
   // noise on top, and a low slam underneath.
   function scream() {
-    if (!ctx || ctx.state !== "running") return;
+    if (!ctx) return;
+    // resume() from the tap may still be settling; scream as soon as it lands.
+    if (ctx.state !== "running") { ctx.resume().then(() => { if (ctx.state === "running") scream(); }); return; }
     const t = ctx.currentTime;
     const master = ctx.createGain();
     master.gain.setValueAtTime(0.0001, t);
@@ -294,6 +298,37 @@
     t.style.cursor = "pointer";
     t.addEventListener("click", () => { unlock(); setTimeout(() => fire("dark", true), 250); });
   });
+
+  // ---------- trigger: load ----------
+  // Every page load (refresh included) gets one, a beat after the page looks
+  // normal. Skips the budget. Sound only if the browser lets audio start
+  // without a tap (Chrome does for sites you use a lot); otherwise silent.
+  // If the browser holds audio back until a tap (most do on a fresh load),
+  // the scare waits for that first tap or key instead, so it comes with the
+  // scream. A tapped link still opens, once the scare is over.
+  if (params.get("boo") !== "1") {
+    unlock();
+    let done = false;
+    const onFirst = (e) => {
+      if (done) return;
+      done = true;
+      unlock();
+      fire("load", true);
+      const a = e.target.closest && e.target.closest("a[href]");
+      if (a && a.target !== "_blank") {
+        const href = a.href;
+        const stop = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+        a.addEventListener("click", stop, { capture: true, once: true });
+        setTimeout(() => { location.href = href; }, 2700);
+      }
+    };
+    setTimeout(() => {
+      if (done) return;
+      if (ctx && ctx.state === "running") { done = true; fire("load", true); return; }
+      ["pointerdown", "touchend", "keydown"].forEach((ev) =>
+        window.addEventListener(ev, onFirst, { capture: true }));
+    }, rand(1500, 3000));
+  }
 
   if (params.get("boo") === "1") {
     setTimeout(() => {
