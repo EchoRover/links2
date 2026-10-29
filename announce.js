@@ -13,19 +13,7 @@
 // so it works offline (rerun tools/build_offline.py after editing).
 // ============================================================
 
-const ANNOUNCEMENTS = [
-  {
-    id: "midsem-2026-portions",
-    text: "Mid-sems run 24–29 Oct. Portions and searchable slides for every paper are on the Exams page.",
-    link: "/exams", linkText: "Portions & slides",
-    until: "2026-10-29", level: "info", skip: ["/exams"]
-  },
-  {
-    id: "offline-app-2026-10",
-    text: "linkeen now works with no wifi and installs as an app (Android: Install button · iPhone: Share → Add to Home Screen).",
-    until: "2026-10-31", level: "new"
-  }
-];
+const ANNOUNCEMENTS = [];
 
 (function () {
   const MAX_SHOWN = 2;
