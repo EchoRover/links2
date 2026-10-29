@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "b3132b1ba2b8";
+const VERSION = "c49066920d18";
 const SHELL = [
 "/404",
 "/announce.js",

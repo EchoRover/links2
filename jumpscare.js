@@ -2,14 +2,16 @@
 // jumpscare.js — the thing in the horror skin that actually comes for you.
 //
 // Runs only while exam-mode.js has the horror skin on (html.exam-mode).
-// A pale face with pinprick pupils lunges at the screen with a synthesized
-// scream. Three ways it finds you:
+// One of three horror photos lunges at the screen with a synthesized
+// scream. Ways it finds you:
 //   stare   sit still on the page long enough and the room goes dark;
 //           move during the dark and it notices you sooner
-//   return  leave the tab for a while; sometimes it's waiting when you come back
-//   dark    the theme button's blackout (exam-mode.js), half the time
+//   return  leave the tab 5 s+; usually it's waiting when you come back
+//   dark    the theme button's blackout (exam-mode.js), every time
+//   summon  click the avatar or the hero title
 //
-// Budget: at most 4 a day, at least 4 minutes apart, never in the first 20 s.
+// Budget: at most 15 a day, at least 1 minute apart, never in the first 6 s.
+// The avatar (or the hero title) summons one on demand, no budget.
 // Skipped entirely for prefers-reduced-motion. No strobing: one cut to the
 // face, then motion, then black.
 //
@@ -28,8 +30,8 @@
   if (params.get("boo") === "1") save("boo-off", "");
   if (load("boo-off") === "1") return;
 
-  const MAX_PER_DAY = 4;
-  const GAP_MS = 4 * 60 * 1000;
+  const MAX_PER_DAY = 15;
+  const GAP_MS = 60 * 1000;
   const loadedAt = Date.now();
   const rand = (a, b) => a + Math.random() * (b - a);
 
@@ -38,7 +40,7 @@
   }
   function allowed() {
     const l = log();
-    if (Date.now() - loadedAt < 20000) return false;
+    if (Date.now() - loadedAt < 6000) return false;
     if (l.length >= MAX_PER_DAY) return false;
     return !l.length || Date.now() - l[l.length - 1] > GAP_MS;
   }
@@ -253,14 +255,14 @@
   let idleTimer = null, building = false, buildTimer = null;
   function armStare() {
     clearTimeout(idleTimer);
-    idleTimer = setTimeout(beginDark, rand(45000, 95000));
+    idleTimer = setTimeout(beginDark, rand(15000, 30000));
   }
   function beginDark() {
     if (document.hidden || busy || !allowed()) return armStare();
     building = true;
     root.classList.add("js-dim");
     droneOn();
-    buildTimer = setTimeout(() => { building = false; fire("stare"); }, rand(5000, 8000));
+    buildTimer = setTimeout(() => { building = false; fire("stare"); }, rand(3500, 5500));
   }
   function stirred() {
     if (building) {
@@ -280,11 +282,18 @@
   let leftAt = 0;
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) { leftAt = Date.now(); return; }
-    if (leftAt && Date.now() - leftAt > 15000 && Math.random() < 0.4) fire("return");
+    if (leftAt && Date.now() - leftAt > 5000 && Math.random() < 0.75) fire("return");
     leftAt = 0;
   });
 
   window.Jumpscare = { fire: (kind) => fire(kind || "dark") };
+
+  // ---------- trigger: summon ----------
+  // Poke the avatar or the title and it answers. Always, no budget.
+  document.querySelectorAll(".avatar, .hero h1").forEach((t) => {
+    t.style.cursor = "pointer";
+    t.addEventListener("click", () => { unlock(); setTimeout(() => fire("dark", true), 250); });
+  });
 
   if (params.get("boo") === "1") {
     setTimeout(() => {

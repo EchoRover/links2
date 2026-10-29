@@ -269,7 +269,7 @@
         root.classList.remove("xm-blackout");
         void root.offsetWidth;
         root.classList.add("xm-blackout");
-        if (window.Jumpscare && Math.random() < 0.5) setTimeout(() => window.Jumpscare.fire("dark"), 500);
+        if (window.Jumpscare) setTimeout(() => window.Jumpscare.fire("dark"), 500);
       });
     }
 
