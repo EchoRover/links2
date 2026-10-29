@@ -1,6 +1,7 @@
 /* ============================================================
    exam-mode.css: mid-sem horror skin. Every rule is scoped to
-   html.exam-mode, which exam-mode.js sets only 24–29 Oct (or ?scary=1).
+   html.exam-mode, which exam-mode.js sets only 24–31 Oct (or ?scary=1);
+   30–31 Oct it adds html.halloween for the pumpkin, spider and bats.
    It recolours and decorates; it never hides or moves a feature.
    Flicker stays slow and shallow (no flashing above 3 Hz), and
    reduced-motion users get the palette without any of the animation.
@@ -228,7 +229,130 @@ html.exam-mode .xm-hand {
 html.exam-mode .xm-hand path { fill: #6e0008; }
 html.exam-mode .xm-hand path.smear { fill: none; stroke: #6e0008; stroke-width: 9; stroke-linecap: round; opacity: .7; }
 
+/* ---------- Halloween (html.halloween, 30–31 Oct) ---------- */
+html.exam-mode.halloween:root[data-theme="dark"] {
+  --accent-warm:      #e8641b;
+  --accent-warm-soft: #2e1406;
+}
+html.exam-mode.halloween .hero-eyebrow { color: #ff7a1a; }
+html.exam-mode.halloween .hero h1 {
+  text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 22px rgba(255, 110, 20, .45), 0 2px 0 #3a0003;
+}
+html.exam-mode.halloween body {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.55'/%3E%3C/svg%3E"),
+    radial-gradient(900px 600px at 85% -10%, rgba(150, 10, 18, 0.28), transparent 60%),
+    radial-gradient(600px 420px at 8% 108%, rgba(230, 100, 20, 0.22), transparent 60%);
+}
+
+html.exam-mode .hw-jack {
+  position: fixed; left: 1.5vw; bottom: 1.5vh; width: 120px; z-index: 0; pointer-events: none;
+  filter: drop-shadow(0 0 26px rgba(255, 120, 20, .35));
+}
+html.exam-mode .hw-jack .body { fill: #c4520f; }
+html.exam-mode .hw-jack .rib { fill: none; stroke: #7d2f05; stroke-width: 3; opacity: .7; }
+html.exam-mode .hw-jack .stem { fill: #3b3a12; }
+html.exam-mode .hw-jack .glow { fill: #ffd25a; animation: hw-candle 3.2s infinite; }
+@keyframes hw-candle {
+  0%, 100% { fill: #ffd25a; opacity: 1; }
+  30% { fill: #ffb43c; opacity: .85; }
+  55% { fill: #ffe07a; opacity: 1; }
+  70% { fill: #ff9a2a; opacity: .75; }
+}
+
+html.exam-mode .hw-spider {
+  position: fixed; top: 0; right: 14vw; width: 34px; z-index: 0; pointer-events: none;
+  animation: hw-drop 14s ease-in-out infinite;
+}
+html.exam-mode .hw-spider::before {
+  content: ""; position: absolute; bottom: 100%; left: 50%; width: 1px; height: 100vh;
+  background: rgba(220, 210, 200, .35);
+}
+@keyframes hw-drop {
+  0%, 100% { transform: translateY(-40px); }
+  12%      { transform: translateY(32vh); }
+  16%      { transform: translateY(28vh) rotate(6deg); }
+  20%      { transform: translateY(31vh) rotate(-4deg); }
+  45%      { transform: translateY(31vh); }
+  60%      { transform: translateY(-40px); }
+}
+
+html.exam-mode .hw-bat {
+  position: absolute; left: -70px; width: 56px; transform: scale(var(--s));
+  animation: hw-fly 8s linear forwards;
+}
+html.exam-mode .hw-bat.rtl { left: auto; right: -70px; animation-name: hw-fly-rtl; }
+html.exam-mode .hw-bat svg { animation: hw-flap .22s ease-in-out infinite alternate; }
+html.exam-mode .hw-bat path { fill: #000; }
+@keyframes hw-flap { from { transform: scaleY(1); } to { transform: scaleY(.35); } }
+@keyframes hw-fly {
+  0%   { translate: 0 0; }
+  25%  { translate: 30vw -6vh; }
+  50%  { translate: 60vw 4vh; }
+  75%  { translate: 90vw -3vh; }
+  100% { translate: calc(100vw + 140px) 2vh; }
+}
+@keyframes hw-fly-rtl {
+  0%   { translate: 0 0; }
+  25%  { translate: -30vw -6vh; }
+  50%  { translate: -60vw 4vh; }
+  75%  { translate: -90vw -3vh; }
+  100% { translate: calc(-100vw - 140px) 2vh; }
+}
+
+/* ---------- jumpscare (jumpscare.js) ---------- */
+html.exam-mode .layout { transition: filter 5s ease-in, opacity 5s ease-in; }
+html.exam-mode.js-dim .layout { filter: brightness(.18) saturate(.4); }
+html.exam-mode.js-dim .xm-veil { background: radial-gradient(80% 70% at 50% 45%, transparent 10%, rgba(0,0,0,.95) 100%); }
+
+.js-stage { position: fixed; inset: 0; z-index: 99999; pointer-events: none; display: none; }
+.js-stage.on { display: block; pointer-events: auto; }
+.js-stage .js-dark { position: absolute; inset: 0; background: #000; opacity: 0; }
+.js-stage .js-face {
+  position: absolute; inset: 0; display: grid; place-items: center; opacity: 0;
+  transform: scale(.08); filter: blur(6px) brightness(.5);
+  transform-origin: 50% 32%;   /* eyes and mouth sit high in every image */
+}
+.js-stage .js-face svg { width: min(92vw, 70vh); height: auto; }
+.js-stage .js-face img {
+  height: 100vh; width: auto; max-width: none; display: block;
+  filter: contrast(1.15) brightness(1.1);
+  -webkit-mask-image: radial-gradient(closest-side, #000 70%, transparent);
+          mask-image: radial-gradient(closest-side, #000 70%, transparent);
+}
+
+/* "return": it is already there when you come back, standing still */
+.js-stage.js-return .js-dark { opacity: 1; }
+.js-stage.js-return .js-face { opacity: .9; transform: scale(.55); filter: blur(.5px) brightness(.7); }
+
+/* the lunge: a hard cut, a rush at the glass, then it shakes against it */
+.js-stage.lunge .js-dark { opacity: 1; }
+.js-stage.lunge .js-face {
+  opacity: 1; filter: none;
+  animation: js-lunge .16s cubic-bezier(.2, 0, .1, 1) forwards, js-shake .07s linear .16s 15;
+}
+@keyframes js-lunge {
+  from { transform: scale(.4); }
+  to   { transform: scale(1.6); }
+}
+@keyframes js-shake {
+  0%   { transform: scale(1.6) translate(0, 0) rotate(0); }
+  25%  { transform: scale(1.65) translate(-1.4%, .8%) rotate(-1.2deg); }
+  50%  { transform: scale(1.58) translate(1.2%, -1%) rotate(1deg); }
+  75%  { transform: scale(1.66) translate(-.8%, -.6%) rotate(.6deg); }
+  100% { transform: scale(1.6) translate(0, 0) rotate(0); }
+}
+.js-stage.lunge::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(closest-side, transparent 55%, rgba(120, 0, 8, .55));
+  mix-blend-mode: multiply;
+}
+.js-stage.gone .js-face { animation: none; opacity: 0; transition: opacity .9s; transform: scale(1.6); }
+.js-stage.gone .js-dark { opacity: 0; transition: opacity 1s .3s; }
+
 @media (max-width: 768px) {
+  html.exam-mode .hw-jack { width: 74px; }
+  html.exam-mode .hw-spider { right: 6vw; width: 26px; }
   html.exam-mode .xm-claws { width: 90px; }
   html.exam-mode .xm-hand { width: 56px; opacity: .22; }
 }
@@ -238,7 +362,9 @@ html.exam-mode .xm-hand path.smear { fill: none; stroke: #6e0008; stroke-width: 
   html.exam-mode .hero h1,
   html.exam-mode .avatar,
   html.exam-mode .xm-drip,
-  html.exam-mode .xm-drip::after { animation: none; }
+  html.exam-mode .xm-drip::after,
+  html.exam-mode .hw-spider,
+  html.exam-mode .hw-jack .glow { animation: none; }
   html.exam-mode .xm-drip { transform: scaleY(1); }
   html.exam-mode .xm-drip::after { display: none; }
   html.exam-mode #bg { display: block; }

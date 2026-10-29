@@ -2,11 +2,14 @@
 // exam-mode.js — the site turns on you during mid-sems.
 //
 // Active from the first paper to the end of the last one (Year 3 mid-term
-// PDF: 24–29 Oct 2026). Only the look and the fluff change: palette, fonts,
+// PDF: 24–29 Oct 2026), then as Halloween through 31 Oct (html.halloween:
+// pumpkin, spider, bats, new lines; jumpscare.js rides along the whole
+// time). Only the look and the fluff change: palette, fonts,
 // background, mascot lines, greeting, footer quote, tab title. Links,
 // timetable, agenda and course cards keep working exactly as before.
 //
 //   ?scary=1  preview it any day      ?scary=0  switch it off
+//   ?halloween=1  with ?scary=1, preview the Halloween half
 //
 // Loaded in <head> (sync) so the class lands before first paint; the
 // fluff overrides run after every other DOMContentLoaded handler.
@@ -29,13 +32,19 @@
   // Sparky and the exam-day card read this, exam mode or not.
   window.MIDSEM_PAPERS = PAPERS;
 
+  // Halloween keeps the same skin running after the last paper, through 31 Oct.
+  const HALLOWEEN_END = new Date(2026, 10, 1, 0, 0);   // exclusive
+
   const flag = new URLSearchParams(location.search).get("scary");
   const now = new Date();
-  const on = flag === "1" || (flag !== "0" && now >= EXAM_START && now < EXAM_END);
+  const on = flag === "1" || (flag !== "0" && now >= EXAM_START && now < HALLOWEEN_END);
   if (!on) return;
+  // ?scary=1 previews the Halloween half after the exams, the exam half before.
+  const halloween = now >= EXAM_END || new URLSearchParams(location.search).get("halloween") === "1";
 
   const root = document.documentElement;
   root.classList.add("exam-mode");
+  if (halloween) root.classList.add("halloween");
   // The dark palette is the one the horror tokens are built on; hold it there.
   root.setAttribute("data-theme", "dark");
   new MutationObserver(() => {
@@ -79,7 +88,27 @@
   ];
 
 
+  const HW_QUOTES = [
+    "The exams are over. Whatever was in the hall followed you home.",
+    "Count the pumpkins on your street. Now count them again.",
+    "Don't answer the door after midnight. Nobody is trick-or-treating.",
+    "Your reflection blinked first.",
+    "The candle went out because something leaned over it.",
+    "It wore your face to the last exam. You weren't there.",
+    "Leave a light on. It doesn't help, but leave it on.",
+    "There were five of you in the photo. You came as four."
+  ];
+
+  function hwGreeting() {
+    const t = new Date();
+    const end = new Date(2026, 9, 31, 23, 59, 59);
+    if (t.getDate() === 31 && t.getMonth() === 9) return "it's Halloween · don't look behind you · don't look behind you";
+    const h = Math.max(0, Math.round((end - t) / 3600000));
+    return `${h} hours until Halloween · the exams are over · it isn't`;
+  }
+
   function greeting() {
+    if (halloween) return hwGreeting();
     const p = nextPaper();
     const left = PAPERS.filter((x) => x.at > new Date()).length;
     if (!p) return "it's over. or is it.";
@@ -169,19 +198,66 @@
       setTimeout(word, rand(12000, 26000));
     }
     setTimeout(word, rand(4000, 8000));
+
+    if (halloween) buildHalloween(bg);
+  }
+
+  // ---------- Halloween props: jack-o'-lantern, spider, bats ----------
+  function buildHalloween(bg) {
+    const jack = document.createElement("div");
+    jack.className = "hw-jack";
+    jack.innerHTML =
+      '<svg viewBox="0 0 160 140" aria-hidden="true">' +
+      '<path class="stem" d="M76 26c-2-10 2-20 12-24l4 6c-7 3-8 10-6 18z"/>' +
+      '<ellipse class="body" cx="80" cy="82" rx="74" ry="56"/>' +
+      '<path class="rib" d="M80 28c-18 18-18 92 0 110M80 28c18 18 18 92 0 110M42 36c-26 24-24 76 2 98M118 36c26 24 24 76-2 98"/>' +
+      '<g class="glow"><path d="M38 66l22-6 6 20zM122 66l-22-6-6 20zM74 86l6-14 6 14z"/>' +
+      '<path d="M32 98c16 18 80 18 96 0-4 22-20 30-48 30s-44-8-48-30zm22 4v10h10v-8zm42 2v10h10v-12z"/></g></svg>';
+    document.body.appendChild(jack);
+
+    const spider = document.createElement("div");
+    spider.className = "hw-spider";
+    spider.innerHTML =
+      '<svg viewBox="0 0 60 60" aria-hidden="true"><g stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round">' +
+      '<path d="M24 30C14 22 8 24 3 14M24 34C12 32 6 36 2 30M24 37C12 40 8 46 4 50M26 40C18 48 16 54 14 59"/>' +
+      '<path d="M36 30c10-8 16-6 21-16M36 34c12-2 18 2 22-4M36 37c12 3 16 9 20 13M34 40c8 8 10 14 12 19"/></g>' +
+      '<ellipse cx="30" cy="36" rx="9" ry="11" fill="#000"/><circle cx="30" cy="23" r="6" fill="#000"/>' +
+      '<circle cx="28" cy="22" r="1.3" fill="#ff1a26"/><circle cx="32" cy="22" r="1.3" fill="#ff1a26"/></svg>';
+    document.body.appendChild(spider);
+
+    if (reduce) return;
+    function bats() {
+      const n = 3 + Math.floor(Math.random() * 4);
+      const y = rand(8, 45);
+      const rtl = Math.random() < 0.5;
+      for (let i = 0; i < n; i++) {
+        const b = document.createElement("span");
+        b.className = "hw-bat" + (rtl ? " rtl" : "");
+        b.style.top = (y + rand(-6, 6)).toFixed(1) + "vh";
+        b.style.setProperty("--s", rand(0.5, 1.2).toFixed(2));
+        b.style.animationDelay = (i * rand(0.15, 0.5)).toFixed(2) + "s";
+        b.innerHTML = '<svg viewBox="0 0 64 28" aria-hidden="true"><path d="M32 10c2-4 4-4 5 0 4-6 14-10 27-8-6 4-8 10-7 16-4-3-9-3-12 1-2-4-6-5-9-2-1 3-3 5-4 5s-3-2-4-5c-3-3-7-2-9 2-3-4-8-4-12-1 1-6-1-12-7-16 13-2 23 2 27 8 1-4 3-4 5 0z"/></svg>';
+        bg.appendChild(b);
+        setTimeout(() => b.remove(), 9000);
+      }
+      setTimeout(bats, rand(14000, 30000));
+    }
+    setTimeout(bats, rand(2000, 5000));
   }
 
   // ---------- fluff text ----------
   function rewriteFluff() {
     const eyebrow = document.querySelector(".hero-eyebrow");
-    if (eyebrow) eyebrow.textContent = "Year 3 · Mid-sems · 24–29 Oct · it has begun";
+    if (eyebrow) eyebrow.textContent = halloween
+      ? "Year 3 · Halloween · 31 Oct · it followed you home"
+      : "Year 3 · Mid-sems · 24–29 Oct · it has begun";
     const sub = document.getElementById("hero-sub");
     if (sub) {
       sub.textContent = greeting();
       setInterval(() => { sub.textContent = greeting(); }, 60000);
     }
     const quote = document.getElementById("footer-quote");
-    if (quote) quote.innerHTML = `<span class="q-body">${pick(QUOTES)}</span>`;
+    if (quote) quote.innerHTML = `<span class="q-body">${pick(halloween ? HW_QUOTES : QUOTES)}</span>`;
     const updTitle = document.querySelector(".updates-title");
     if (updTitle) updTitle.textContent = "What awaits you";
 
@@ -193,6 +269,7 @@
         root.classList.remove("xm-blackout");
         void root.offsetWidth;
         root.classList.add("xm-blackout");
+        if (window.Jumpscare && Math.random() < 0.5) setTimeout(() => window.Jumpscare.fire("dark"), 500);
       });
     }
 

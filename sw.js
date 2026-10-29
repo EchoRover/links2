@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "e8179063ed3d";
+const VERSION = "d8d2daf56c51";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -31,6 +31,9 @@ const SHELL = [
 "/assets/boards/M4_G_gem.jpg",
 "/assets/boards/M4_L1.jpg",
 "/assets/boards/M4_L1_gem.jpg",
+"/assets/boo/crawler.jpg",
+"/assets/boo/face.jpg",
+"/assets/boo/hag.jpg",
 "/assets/box.webp",
 "/assets/circle.webp",
 "/assets/hacker.webp",
@@ -77,6 +80,7 @@ const SHELL = [
 "/icons/maskable-512.png",
 "/image.png",
 "/",
+"/jumpscare.js",
 "/m2-data.js",
 "/m2",
 "/m3-data.js",
