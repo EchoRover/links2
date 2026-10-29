@@ -1,7 +1,7 @@
 /* ============================================================
    exam-mode.css: mid-sem horror skin. Every rule is scoped to
-   html.exam-mode, which exam-mode.js sets only 24 Oct–8 Nov (or ?scary=1);
-   30 Oct–8 Nov (till Diwali) it adds html.halloween for the pumpkin, spider and bats.
+   html.exam-mode, which exam-mode.js sets only 24 Oct–6 Nov (or ?scary=1);
+   30 Oct–6 Nov (till Diwali) it adds html.halloween for the pumpkin, spider and bats.
    It recolours and decorates; it never hides or moves a feature.
    Flicker stays slow and shallow (no flashing above 3 Hz), and
    reduced-motion users get the palette without any of the animation.
@@ -229,7 +229,7 @@ html.exam-mode .xm-hand {
 html.exam-mode .xm-hand path { fill: #6e0008; }
 html.exam-mode .xm-hand path.smear { fill: none; stroke: #6e0008; stroke-width: 9; stroke-linecap: round; opacity: .7; }
 
-/* ---------- Halloween (html.halloween, 30 Oct–8 Nov) ---------- */
+/* ---------- Halloween (html.halloween, 30 Oct–6 Nov) ---------- */
 html.exam-mode.halloween:root[data-theme="dark"] {
   --accent-warm:      #e8641b;
   --accent-warm-soft: #2e1406;
