@@ -342,6 +342,9 @@ html.exam-mode.js-dim .xm-veil { background: radial-gradient(80% 70% at 50% 45%,
   75%  { transform: scale(1.66) translate(-.8%, -.6%) rotate(.6deg); }
   100% { transform: scale(1.6) translate(0, 0) rotate(0); }
 }
+.js-stage .js-face img[src*="job-application"] {
+  -webkit-mask-image: none; mask-image: none; filter: none;
+}
 .js-stage.lunge::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(closest-side, transparent 55%, rgba(120, 0, 8, .55));

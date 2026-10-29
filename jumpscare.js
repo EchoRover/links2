@@ -202,7 +202,8 @@
 
   // Photos (assets/boo, generated in Canva for this site) are preloaded so the
   // cut is instant; the drawn face above is only the fallback if none load.
-  const PHOTOS = ["assets/boo/face.jpg", "assets/boo/crawler.jpg", "assets/boo/hag.jpg"];
+  const PHOTOS = ["assets/boo/face.jpg", "assets/boo/crawler.jpg", "assets/boo/hag.jpg",
+    "assets/boo/job-application.png"];   // the scariest one
   const ready = [];
   PHOTOS.forEach((src) => {
     const img = new Image();

@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "88e89c0d6705";
+const VERSION = "06fea055a515";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -34,6 +34,7 @@ const SHELL = [
 "/assets/boo/crawler.jpg",
 "/assets/boo/face.jpg",
 "/assets/boo/hag.jpg",
+"/assets/boo/job-application.png",
 "/assets/box.webp",
 "/assets/circle.webp",
 "/assets/hacker.webp",
