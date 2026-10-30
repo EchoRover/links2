@@ -423,3 +423,8 @@ html.exam-mode.js-dim .xm-veil { background: radial-gradient(80% 70% at 50% 45%,
 .xm-panel[hidden] { display: none; }
 .xm-panel label { display: flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap; }
 .xm-panel label:has(input:disabled) { opacity: .45; cursor: default; }
+
+/* the browser scrollbar stayed light-theme white down the right edge */
+html.exam-mode { color-scheme: dark; scrollbar-color: #5a0a10 #0b0505; }
+html.exam-mode::-webkit-scrollbar { width: 10px; background: #0b0505; }
+html.exam-mode::-webkit-scrollbar-thumb { background: #5a0a10; border-radius: 99px; border: 2px solid #0b0505; }
