@@ -362,8 +362,17 @@ const DAYS_OFF = {
   "2026-10-21": "Mid-sem break",
   "2026-10-24": "Mid-sem exams",
   "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
-  "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams"
+  "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
+  "2026-11-09": "Deepawali"
 };
+
+// Make-up days: this date runs that weekday's timetable (Thu 5 Nov = Monday,
+// Sun 22 Nov = Friday, online). Keep in step with FOLLOWS in timetable.js (other name: free.html loads both).
+const MAKEUP_DAYS = { "2026-11-05": 1, "2026-11-22": 5 };
+function dayOf(d) {
+  const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return MAKEUP_DAYS[key] ?? d.getDay();
+}
 
 // One-off timing changes for a single date. Each entry replaces the time of
 // that course's classes on that day; the weekly table above stays as is.
@@ -375,7 +384,7 @@ const CLASS_CHANGES = {
 function classesOn(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const changes = CLASS_CHANGES[key] || [];
-  return (WEEKLY_CLASSES[d.getDay()] || []).map(c => {
+  return (WEEKLY_CLASSES[dayOf(d)] || []).map(c => {
     const change = changes.find(ch => ch.code === c.code);
     return change ? { ...c, time: change.time, special: true } : c;
   });
@@ -393,7 +402,7 @@ function updateLiveClassStatus() {
   
   const savedBatch = Number(localStorage.getItem("student-batch") || "1");
   const now = new Date();
-  const dayKey = now.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+  const dayKey = dayOf(now); // 0: Sun, 1: Mon, ..., 6: Sat
   const currentMins = now.getHours() * 60 + now.getMinutes();
 
   const offReason = dayOffReason(now);

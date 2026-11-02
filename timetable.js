@@ -86,7 +86,13 @@ const NO_CLASS = {
     "2026-10-24": "Mid-sem exams",
     "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
     "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
+    "2026-11-09": "Deepawali",
 };
+
+// Make-up days (Vice-Provost email, 29 Oct 2026): this date runs that
+// weekday's timetable. Keep in step with MAKEUP_DAYS in scripts.js.
+const FOLLOWS = { "2026-11-05": 1, "2026-11-22": 5 };
+const dowOf = (d) => FOLLOWS[ymd(d)] ?? d.getDay();
 
 const DAY_NAME = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -181,7 +187,7 @@ function nextDayWithClass(after) {
         d.setDate(d.getDate() + i);
         if (ymd(d) > TERM.end) return null;
         if (NO_CLASS[ymd(d)]) continue;
-        const list = dayEntries(d.getDay(), ymd(d)).filter((x) => x.kind !== "free");
+        const list = dayEntries(dowOf(d), ymd(d)).filter((x) => x.kind !== "free");
         if (list.length) return { date: d, list };
     }
     return null;
@@ -245,7 +251,7 @@ function renderTimetable() {
     }
 
     const off = NO_CLASS[today];
-    const list = off ? [] : dayEntries(now.getDay(), ymd(now)).filter((x) => x.kind !== "free");
+    const list = off ? [] : dayEntries(dowOf(now), ymd(now)).filter((x) => x.kind !== "free");
 
     // Both groups are on screen, so more than one thing can be running
     // or starting next — G1 and G2 diverge on three tutorials a week.
@@ -268,7 +274,7 @@ function renderTimetable() {
         const nd = nextDayWithClass(now);
         const why = off ? off
             : list.length ? "Done for today"
-                : (now.getDay() === 0 || now.getDay() === 6) ? "Weekend" : "Nothing scheduled";
+                : (dowOf(now) === 0 || dowOf(now) === 6) ? "Weekend" : "Nothing scheduled";
         if (nd) {
             const first = nd.list[0].from;
             const dn = ymd(nd.date) === ymd(new Date(now.getTime() + 864e5))

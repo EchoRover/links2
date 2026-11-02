@@ -160,13 +160,8 @@ const SCHEDULES = {
                     {
                         title: "Night shift", tag: "night shift", tagTone: "night", dashed: true,
                         rota: ["VAN 1", "VAN 2"],
-                        times: [
-                            "19:00", "19:20", "19:40",
-                            "20:00", "20:20", "20:40",
-                            "21:00", "21:20", "21:40",
-                            "22:00", "22:20", "22:40",
-                            "23:00", "23:20",
-                        ],
+                        // Night-shift sheet (2 Nov 2026): every 30 min, 7 PM to midnight.
+                        times: everyN("19:00", "24:00", 30),
                     },
                 ],
             },
@@ -193,14 +188,8 @@ const SCHEDULES = {
                     {
                         title: "Night shift", tag: "night shift", tagTone: "night", dashed: true,
                         rota: ["VAN 2", "VAN 1"],
-                        times: [
-                            "19:00", "19:20", "19:40",
-                            "20:00", "20:20", "20:40",
-                            "21:00", "21:20", "21:40",
-                            "22:00", "22:20", "22:40",
-                            "23:00", "23:20", "23:40",
-                            "24:00",
-                        ],
+                        // Night-shift sheet (2 Nov 2026): every 30 min, 7 PM to midnight.
+                        times: everyN("19:00", "24:00", 30),
                     },
                 ],
             },

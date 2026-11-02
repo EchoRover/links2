@@ -248,7 +248,7 @@ function renderWeek() {
             <span class="wk-hd-num">${date.getDate()}</span>
         </div>`;
 
-        const rawEntries = dayEntries(d, key).filter((x) => x.kind !== "free");
+        const rawEntries = dayEntries(FOLLOWS[key] ?? d, key).filter((x) => x.kind !== "free");
         const filtered = GROUP === 0 ? rawEntries : rawEntries.filter((x) => x.grp === 0 || x.grp === GROUP);
         const items = (off || !inTerm) ? [] : lay(filtered);
 

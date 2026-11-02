@@ -38,7 +38,8 @@
 
   // Halloween keeps the same skin running after the last paper, through
   // Diwali (Fri 6 Nov 2026).
-  const HALLOWEEN_END = new Date(2026, 10, 7, 0, 0);   // exclusive
+  // Ended early on 2 Nov for Flag Day; /archive keeps it via ?scary=1&halloween=1.
+  const HALLOWEEN_END = new Date(2026, 10, 2, 0, 0);   // exclusive
 
   const flag = new URLSearchParams(location.search).get("scary");
   const now = new Date();
