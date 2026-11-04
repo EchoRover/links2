@@ -134,7 +134,9 @@ const updatesData = [
   ["quizzes", "AHUL261: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-27"],
   ["quizzes", "AENL226: Mid-sem exam · report 14:00 · <a href=\"exams\">portions →</a>", "2026-10-28"],
   ["assignments", "AENL226: Problem Set 1 on Blackboard · do it before the mid-sem", "2026-10-28"],
-  ["quizzes", "AENL228: Mid-sem exam · report 08:00 (early) · <a href=\"exams\">portions →</a>", "2026-10-29"]
+  ["quizzes", "AENL228: Mid-sem exam · report 08:00 (early) · <a href=\"exams\">portions →</a>", "2026-10-29"],
+  ["quizzes", "AENL228: Lab exam, G2 · instruments lab M2-2-031 (Ravi sir)", "2026-11-04"],
+  ["quizzes", "AENL228: Lab exam, G1 · regular lab slot Thu 16:00-17:50, M2-2-031 · clash? contact Ravi sir", "2026-11-12"]
 ];
 
 function renderUpdates() {

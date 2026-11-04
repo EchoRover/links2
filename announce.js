@@ -17,7 +17,9 @@ const ANNOUNCEMENTS = [
   { id: "flagday-2026", text: "UAE Flag Day: celebration Tue 3 Nov, 11:00 AM, near the main reception.",
     from: "2026-11-02", until: "2026-11-03", level: "new" },
   { id: "deepawali-2026", text: "Mon 9 Nov is a holiday (Deepawali). Thu 5 Nov runs the Monday timetable; Sun 22 Nov runs Friday's, online.",
-    from: "2026-11-02", until: "2026-11-22", level: "info" }
+    from: "2026-11-02", until: "2026-11-22", level: "info" },
+  { id: "aenl228-labexam-2026", text: "AENL228 lab exam: G2 today (Wed 4 Nov), G1 Thu 12 Nov in the regular lab slot, 16:00-17:50, M2-2-031. Can't make it? Contact Ravi sir.",
+    from: "2026-11-04", until: "2026-11-12", level: "urgent" }
 ];
 
 (function () {
