@@ -12,9 +12,11 @@
 (function () {
   const START = new Date(2026, 10, 6, 0, 0);
   const END = new Date(2026, 10, 11, 0, 0);   // exclusive: through 10 Nov
-  const q = new URLSearchParams(location.search).get("diwali");
+  const params = new URLSearchParams(location.search);
+  const q = params.get("diwali");
   const now = new Date();
   if (q === "0" || (q !== "1" && (now < START || now >= END))) return;
+  if (params.get("scary") === "1" && q !== "1") return;   // archived Halloween link stays pure Halloween
 
   const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("diwali");

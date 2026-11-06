@@ -148,7 +148,12 @@
     "There were five of you in the photo. You came as four."
   ];
 
+  // Opened from /archive after the season: freeze on Halloween night instead
+  // of counting toward Diwali from today's date.
+  const archived = new Date() >= HALLOWEEN_END;
+
   function hwGreeting() {
+    if (archived) return "it's Halloween · don't look behind you · don't look behind you";
     const t = new Date();
     const end = new Date(2026, 9, 31, 23, 59, 59);
     if (t.getDate() === 31 && t.getMonth() === 9) return "it's Halloween · don't look behind you · don't look behind you";
@@ -318,7 +323,7 @@
   function rewriteText() {
     const eyebrow = document.querySelector(".hero-eyebrow");
     if (eyebrow) eyebrow.textContent = halloween
-      ? (new Date() > new Date(2026, 9, 31, 23, 59, 59)
+      ? (!archived && new Date() > new Date(2026, 9, 31, 23, 59, 59)
         ? "Year 3 · after Halloween · it stayed · till Diwali"
         : "Year 3 · Halloween · 31 Oct · it followed you home")
       : "Year 3 · Mid-sems · 24–29 Oct · it has begun";

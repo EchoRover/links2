@@ -428,3 +428,8 @@ html.exam-mode.js-dim .xm-veil { background: radial-gradient(80% 70% at 50% 45%,
 html.exam-mode { color-scheme: dark; scrollbar-color: #5a0a10 #0b0505; }
 html.exam-mode::-webkit-scrollbar { width: 10px; background: #0b0505; }
 html.exam-mode::-webkit-scrollbar-thumb { background: #5a0a10; border-radius: 99px; border: 2px solid #0b0505; }
+
+/* announce card inside the archived horror skin: match it, not linkeen green */
+html.exam-mode[data-theme] body .an-card { background: #1a0d0e; color: #ead9d4; border-color: #3a1a1c; }
+html.exam-mode[data-theme] body .an-card .an-btn { color: #c9a9a3; }
+html.exam-mode[data-theme] body .an-card .an-link { color: #ff8a6b; }
