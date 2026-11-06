@@ -31,7 +31,7 @@ const linksData = {
     schedule: {
       Week: "week",
       Exams: "exams",
-      TimeTable: "timetable.pdf",
+      Timetable: "timetable.pdf",
       more: {
         Timetables: "timetables",
         Common: "common",

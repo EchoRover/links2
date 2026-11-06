@@ -5,14 +5,14 @@
 // ============================================================
 
 const COURSE_COLORS = {
-  AENL226: "#f59e0b",
-  AENL228: "#0d9488",
-  AENP200: "#38bdf8",
-  AENP225: "#6366f1",
-  AHUL256: "#ec4899",
-  AHUL261: "#8b5cf6",
-  ASBL100: "#10b981",
-  AGRL130: "#84cc16"
+  AENL226: "#b5832a",
+  AENL228: "#3e8571",
+  AENP200: "#5a82a6",
+  AENP225: "#8a6a9c",
+  AHUL256: "#b25b6e",
+  AHUL261: "#7d6aa3",
+  ASBL100: "#5f8f3e",
+  AGRL130: "#9a8a2f"
 };
 
 // ================= THEME (apply early to avoid flash) =================
@@ -417,10 +417,100 @@ function spawnBotanicals(count = 6) {
 }
 
 
+// ================= BACKGROUND: topographic contours =================
+// A faint contour map behind everything, drawn once per load from value
+// noise seeded by the date (a new landscape each day, stable within it).
+// It drifts very slowly; on a mouse, lines near the cursor brighten a
+// little, like a torch over a map. Paper grain on top.
+function drawTerrain() {
+  const bg = document.getElementById("bg");
+  if (!bg || bg.querySelector(".terrain")) return;
+  const W = 1600, H = 1000, GX = 56, GY = 35, LEVELS = 9;
+
+  // seeded PRNG: same map all day
+  const d = new Date();
+  let seed = d.getFullYear() * 1000 + d.getMonth() * 40 + d.getDate();
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+
+  // value noise, two octaves, smoothstep blend
+  const lattice = (n) => Array.from({ length: n + 2 }, () => Array.from({ length: n + 2 }, rnd));
+  const oct = [[lattice(6), 6, 1], [lattice(13), 13, 0.42]];
+  const sm = (t) => t * t * (3 - 2 * t);
+  function noise(x, y) {
+    let v = 0, tot = 0;
+    for (const [g, n, amp] of oct) {
+      const fx = x * n, fy = y * n, ix = fx | 0, iy = fy | 0, tx = sm(fx - ix), ty = sm(fy - iy);
+      const a = g[iy][ix] + (g[iy][ix + 1] - g[iy][ix]) * tx;
+      const b = g[iy + 1][ix] + (g[iy + 1][ix + 1] - g[iy + 1][ix]) * tx;
+      v += (a + (b - a) * ty) * amp; tot += amp;
+    }
+    return v / tot;
+  }
+  const f = [];
+  for (let j = 0; j <= GY; j++) { f.push([]); for (let i = 0; i <= GX; i++) f[j].push(noise(i / GX, j / GY)); }
+
+  // marching squares, one path of short segments per level band
+  const cx = W / GX, cy = H / GY;
+  let minor = "", major = "";
+  for (let l = 1; l <= LEVELS; l++) {
+    const t = 0.2 + (l / (LEVELS + 1)) * 0.62;
+    let seg = "";
+    const lerp = (a, b) => (t - a) / (b - a);
+    for (let j = 0; j < GY; j++) for (let i = 0; i < GX; i++) {
+      const a = f[j][i], b = f[j][i + 1], c = f[j + 1][i + 1], e = f[j + 1][i];
+      const k = (a > t) | ((b > t) << 1) | ((c > t) << 2) | ((e > t) << 3);
+      if (k === 0 || k === 15) continue;
+      const x = i * cx, y = j * cy;
+      const T = [x + lerp(a, b) * cx, y], R = [x + cx, y + lerp(b, c) * cy];
+      const B = [x + lerp(e, c) * cx, y + cy], L = [x, y + lerp(a, e) * cy];
+      const pairs = { 1: [L, T], 2: [T, R], 3: [L, R], 4: [R, B], 5: [L, T, R, B], 6: [T, B], 7: [L, B],
+        8: [B, L], 9: [T, B], 10: [T, R, B, L], 11: [R, B], 12: [R, L], 13: [T, R], 14: [L, T] }[k];
+      for (let p = 0; p < pairs.length; p += 2)
+        seg += `M${pairs[p][0].toFixed(1)} ${pairs[p][1].toFixed(1)}L${pairs[p + 1][0].toFixed(1)} ${pairs[p + 1][1].toFixed(1)}`;
+    }
+    if (l % 3 === 0) major += seg; else minor += seg;
+  }
+
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  bg.insertAdjacentHTML("afterbegin", `
+    <svg class="terrain" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <g id="tr-lines" fill="none" stroke="currentColor" stroke-linecap="round" vector-effect="non-scaling-stroke">
+          <path d="${minor}" stroke-width=".8" vector-effect="non-scaling-stroke"/>
+          <path d="${major}" stroke-width="1.3" vector-effect="non-scaling-stroke"/></g>
+        <radialGradient id="tr-glow"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <mask id="tr-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
+          <circle id="tr-torch" cx="-999" cy="-999" r="230" fill="url(#tr-glow)"/></mask>
+        <filter id="tr-grain"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/>
+          <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0"/></filter>
+      </defs>
+      <g class="tr-drift"><use href="#tr-lines" class="tr-base"/>${fine ? `<use href="#tr-lines" class="tr-lit" mask="url(#tr-mask)"/>` : ""}</g>
+      <rect width="${W}" height="${H}" filter="url(#tr-grain)" class="tr-grain"/>
+    </svg>`);
+
+  if (!fine) return;
+  // lazy torch: eases toward the cursor, sleeps when it gets there
+  const svg = bg.querySelector(".terrain"), torch = svg.querySelector("#tr-torch");
+  let tx = -999, ty = -999, px = -999, py = -999, raf = 0;
+  const step = () => {
+    px += (tx - px) * 0.08; py += (ty - py) * 0.08;
+    torch.setAttribute("cx", px.toFixed(1)); torch.setAttribute("cy", py.toFixed(1));
+    raf = Math.abs(tx - px) + Math.abs(ty - py) > 0.5 ? requestAnimationFrame(step) : 0;
+  };
+  window.addEventListener("pointermove", (e) => {
+    const r = svg.getBoundingClientRect(), s = Math.max(r.width / W, r.height / H);
+    const ox = (r.width - W * s) / 2, oy = (r.height - H * s) / 2;
+    tx = (e.clientX - r.left - ox) / s; ty = (e.clientY - r.top - oy) / s;
+    if (px < -900) { px = tx; py = ty; }
+    if (!raf) raf = requestAnimationFrame(step);
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => { tx = ty = -999; if (!raf) raf = requestAnimationFrame(step); });
+}
+
 // ================= COMMON INIT =================
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("--- SHARED.JS FORCE LOAD V11 ---");
   wireThemeToggle();
   buildFooterQuote();
+  drawTerrain();
   spawnBotanicals(6);
 });

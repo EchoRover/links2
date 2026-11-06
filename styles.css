@@ -4,9 +4,9 @@
    ===================================================== */
 
 :root[data-theme="light"] {
-  --surface:           #dde5c1;
-  --surface-elevated:  #e8eece;
-  --surface-sunken:    #cfd8b0;
+  --surface:           #d4dcb3;
+  --surface-elevated:  #eef0d8;
+  --surface-sunken:    #e0e5c6;
   --border:            #b1bd8d;
   --border-soft:       #c4cd9f;
   --text:              #1c2e1f;
@@ -2576,8 +2576,21 @@ body #archive-btn:hover { color: var(--accent-strong); }
   88%  { opacity: var(--leaf-op, 0.16); }
   100% { transform: translateY(-14vh) translateX(var(--drift, 40px)) rotate(var(--spin, 320deg)); opacity: 0; }
 }
+/* ---------- Topographic contours (drawTerrain in shared.js) ---------- */
+:root[data-theme="light"] { --tr-ink: #3d6a35; --tr-base: .085; --tr-lit: .32; --tr-grain: .07; }
+:root[data-theme="dark"]  { --tr-ink: #8fd889; --tr-base: .06;  --tr-lit: .26; --tr-grain: .05; }
+#bg .terrain { position: absolute; inset: -4%; width: 108%; height: 108%; color: var(--tr-ink, #3d6a35); }
+/* stroke styles live as attributes in the SVG: <use> copies ignore page CSS */
+#bg .terrain .tr-base { opacity: var(--tr-base, .085); }
+#bg .terrain .tr-lit  { opacity: var(--tr-lit, .32); }
+#bg .terrain .tr-grain { opacity: var(--tr-grain, .07); mix-blend-mode: multiply; }
+:root[data-theme="dark"] #bg .terrain .tr-grain { mix-blend-mode: screen; }
+#bg .terrain .tr-drift { animation: tr-drift 140s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+@keyframes tr-drift { from { transform: translate(-18px, -10px) rotate(-.4deg); } to { transform: translate(18px, 12px) rotate(.4deg); } }
+
 @media (prefers-reduced-motion: reduce) {
-  #bg { display: none; }
+  #bg .leaf { display: none; }
+  #bg .terrain .tr-drift { animation: none; }
 }
 
 html:has(body.archive-page) { height: auto; }
@@ -3586,3 +3599,82 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   .gen-links { flex: 1; min-width: 0; gap: 5px; }
   .general .gen-links a:not(#open-games-modal) { font-size: 0.76rem; padding: 3px 8px; }
 }
+
+
+/* ============================================================
+   Colour tune (7 Nov 2026): calmer accents, plain headings.
+   Kept at the end so it wins over the older per-section rules.
+   ============================================================ */
+body .tracker-title, body .updates-title, body #assignments-box h2, body #quizzes-box h2 {
+  text-transform: none; letter-spacing: 0;
+}
+body .tracker-title, body .updates-title {
+  font-family: var(--font-serif); font-weight: 600; font-size: 15.5px;
+}
+body #assignments-box h2, body #quizzes-box h2 {
+  font-family: var(--font-sans); font-weight: 600; font-size: 13px;
+}
+body .course-links a { text-transform: none; letter-spacing: 0; }
+
+/* Games: one quiet accent chip, not a filled arcade button */
+body a#open-games-modal {
+  background: var(--accent-soft); color: var(--accent-strong); border-color: transparent;
+}
+body a#open-games-modal:hover { background: var(--accent); color: var(--surface-elevated); }
+:root[data-theme="dark"] body a#open-games-modal { background: #1f3a2a; color: #9fdc8f; }
+:root[data-theme="dark"] body a#open-games-modal:hover { background: #2a4d37; color: #c9f0bd; }
+
+/* "weekend / free" tag: sage, not cyan */
+body .live-tag-free {
+  color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+:root[data-theme="dark"] body .live-tag-free { color: #9fdc8f; }
+
+/* dark theme: lift the earthy course colours a step so codes and chips stay readable */
+:root[data-theme="dark"] body .course-code, :root[data-theme="dark"] body .course-links a { filter: brightness(1.35) saturate(1.1); }
+
+/* ---------- Quick-link chips (7 Nov 2026): hairline glass, not keycaps ----------
+   No hard bottom shadow, a thin border and a little blur so the contour
+   background shows through; "+N" is plain text; Games is a chip like the
+   rest, just in the accent colour. */
+body .general .gen-links { gap: 6px; }
+body .general .gen-links a,
+body .general a#open-games-modal {
+  padding: 4px 11px; border-radius: 999px; box-shadow: none;
+  background: color-mix(in srgb, var(--surface-elevated) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--text); font-weight: 500; letter-spacing: 0;
+  transition: border-color .18s ease, background-color .18s ease, transform .18s ease, color .18s ease;
+}
+body .general .gen-links a:hover,
+body .general .gen-links a:focus-visible,
+body .general a#open-games-modal:hover {
+  transform: translateY(-1px); box-shadow: none; outline: none;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
+  color: var(--accent-strong);
+}
+body .general a#open-games-modal { color: var(--accent-strong); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+body .general .gen-more {
+  border: 0; background: none; box-shadow: none; padding: 4px 6px;
+  color: var(--text-subtle); font-weight: 500; letter-spacing: 0;
+}
+body .general .gen-more:hover, body .general .gen-more:focus-visible {
+  color: var(--accent-strong); text-decoration: underline; text-underline-offset: 3px; outline: none; background: none;
+}
+:root[data-theme="dark"] body .general .gen-links a,
+:root[data-theme="dark"] body .general a#open-games-modal {
+  background: color-mix(in srgb, #16261e 55%, transparent);
+  border-color: rgba(225, 236, 217, .11); color: #e1ecd9;
+}
+:root[data-theme="dark"] body .general .gen-links a:hover,
+:root[data-theme="dark"] body .general a#open-games-modal:hover {
+  border-color: rgba(131, 224, 125, .45); background: rgba(22, 38, 30, .85); color: #b7eeab;
+}
+:root[data-theme="dark"] body .general a#open-games-modal { color: #9fdc8f; border-color: rgba(131, 224, 125, .28); }
+:root[data-theme="dark"] body .general .gen-more { color: #7f927a; }
+:root[data-theme="dark"] body .general .gen-more:hover { color: #b7eeab; }
+@media (prefers-reduced-motion: reduce) { body .general .gen-links a:hover { transform: none; } }
