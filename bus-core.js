@@ -130,11 +130,11 @@ function everyN(startHHMM, lastHHMM, stepMin) {
 }
 
 const SCHEDULES = {
-    // ---------- Mon–Fri: the printed poster ----------
+    // ---------- Mon–Thu: the printed poster ----------
     weekday: {
         key: "weekday",
-        label: "Mon – Fri",
-        short: "Mon – Fri",
+        label: "Mon – Thu",
+        short: "Mon – Thu",
         numbering: "perBlock",
         dirs: {
             toCampus: {
@@ -252,6 +252,44 @@ const SCHEDULES = {
     },
 };
 
+// ---------- Friday: the transport office's own sheet ----------
+// "Friday schedule.xlsx" (3 Nov 2026), ported from linkcs (EchoRover/links
+// a8fcc05). 10-min runs to 10:00, 15-min to 12:15, prayer break 12:30-1:15
+// (service resumes WITH 1:15), then 20-min runs, last day run 6:30 PM; after
+// 3:10 PM only Coaster 2/3/4 and Bus 3. Night shift same as Mon-Thu
+// (transport, 5 Nov). The two prayer rows are dropped here.
+SCHEDULES.friday = {
+    key: "friday",
+    label: "Friday",
+    short: "Fri",
+    numbering: "perBlock",
+    dirs: {
+        toCampus: {
+            ...DIRS.toCampus,
+            blocks: [
+                {
+                    title: "Day shift — Friday sheet", tag: "day shift", tagTone: "day",
+                    rota: ["Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 3", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 3", "Coaster 2", "Coaster 3"],
+                    times: ["07:00", "07:10", "07:20", "07:30", "07:40", "07:50", "08:00", "08:10", "08:20", "08:30", "08:40", "08:50", "09:00", "09:10", "09:20", "09:30", "09:40", "09:50", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30", "11:45", "12:00", "12:15", "13:15", "13:30", "13:50", "14:10", "14:30", "14:50", "15:10", "15:30", "15:50", "16:10", "16:30", "16:50", "17:10", "17:30", "17:50", "18:10", "18:30"],
+                },
+                SCHEDULES.weekday.dirs.toCampus.blocks[1],
+            ],
+        },
+        toDorms: {
+            ...DIRS.toDorms,
+            blocks: [
+                {
+                    title: "Day shift — Friday sheet", tag: "day shift", tagTone: "day",
+                    rota: ["Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 1", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 1", "Bus 2", "Bus 3", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 3", "Coaster 2", "Coaster 3", "Coaster 4", "Bus 3"],
+                    times: ["07:30", "07:40", "07:50", "08:00", "08:10", "08:20", "08:30", "08:40", "08:50", "09:00", "09:10", "09:20", "09:30", "09:40", "09:50", "10:00", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30", "11:45", "12:00", "12:15", "13:15", "13:30", "13:50", "14:10", "14:30", "14:50", "15:10", "15:30", "15:50", "16:10", "16:30", "16:50", "17:10", "17:30", "17:50", "18:10", "18:30"],
+                },
+                SCHEDULES.weekday.dirs.toDorms.blocks[1],
+            ],
+        },
+        kca3Loop: SCHEDULES.weekday.dirs.kca3Loop,
+    },
+};
+
 // ---------- one-off dated timetables ----------
 // A notice that replaces the service for ONE date. dayKey() checks `date`
 // before the weekday rules, so the page and the home card switch on that day
@@ -347,7 +385,7 @@ function dayKey(d) {
     const dated = Object.values(SCHEDULES).find((s) => s.date === iso);
     if (dated) return dated.key;
     const n = d.getDay();
-    return (n === 0 || n === 6) ? "weekend" : "weekday";
+    return (n === 0 || n === 6) ? "weekend" : n === 5 ? "friday" : "weekday";
 }
 
 function todayKey() {

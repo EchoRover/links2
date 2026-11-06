@@ -40,7 +40,7 @@ function getActiveTransitTrip(now) {
         
         for (const b of dir.blocks) {
             let times = b.times;
-            if (isFriday) {
+            if (isFriday && sched.key === "weekday") {
                 times = times.filter(t => {
                     const mins = toMinutes(t);
                     return mins < 750 || mins > 795;

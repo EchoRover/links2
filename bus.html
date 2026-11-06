@@ -818,7 +818,7 @@
             <div>
                 <h1 class="bus-title">Shuttle <em>Schedule</em></h1>
                 <p class="bus-sub">KCA 1&amp;2 · KCA 3 · Campus — one clockwise loop, both directions.<br>
-                    Mon&ndash;Fri runs the poster timetable; Sat &amp; Sun runs every 30 minutes from 7:30 AM.</p>
+                    Mon&ndash;Thu runs the poster timetable, Friday its own sheet; Sat &amp; Sun runs every 30 minutes from 7:30 AM.</p>
             </div>
             <div class="bus-now">
                 <span class="status-chip" id="status-chip">...</span>
@@ -863,7 +863,8 @@
                 <div class="search-field">
                     <span class="search-label">Timetable</span>
                     <div class="seg seg-day">
-                        <button type="button" data-day="weekday">Mon &ndash; Fri</button>
+                        <button type="button" data-day="weekday">Mon &ndash; Thu</button>
+                        <button type="button" data-day="friday">Fri</button>
                         <button type="button" data-day="weekend">Sat &amp; Sun</button>
                     </div>
                 </div>
@@ -890,9 +891,9 @@
         <div class="sched-wrap" id="sched-wrap"></div>
 
         <p class="bus-note">
-            <strong>Friday Prayer.</strong> No shuttle service operates between 12:30 PM and 1:15 PM on Fridays.
+            <strong>Friday Prayer.</strong> Fridays run their own sheet (3 Nov): no trips 12:30 to 1:15 PM, service resumes with the 1:15 run, last day run 6:30 PM, then the usual night shift.
             <br><br>
-            <strong>Sources.</strong> Mon&ndash;Fri comes from the printed shift poster, transcribed 19 Aug 2026.
+            <strong>Sources.</strong> Mon&ndash;Thu comes from the printed shift poster, transcribed 19 Aug 2026; Friday from the transport office's Friday sheet, 3 Nov 2026.
             Sat &amp; Sun comes from the campus notice of 22 Aug 2026: <em>&ldquo;Saturdays and Sundays, vehicles
             will operate between the campus and KCA 1,2 &amp; 3 every 30 minutes in both directions, starting
             from 7:30 AM.&rdquo;</em> Countdowns use your device clock, so they only line up if your phone is on
@@ -906,11 +907,11 @@
     </main>
 
     <script src="shared.js?v=12"></script>
-    <script src="bus-core.js?v=4" defer></script>
+    <script src="bus-core.js?v=5" defer></script>
     <script src="bus-locate.js?v=1" defer></script>
-    <script src="bus.js?v=9" defer></script>
+    <script src="bus.js?v=10" defer></script>
   <script src="offline.js?v=3" defer></script>
-  <script src="announce.js?v=4" defer></script>
+  <script src="announce.js?v=5" defer></script>
 </body>
 
 </html>
