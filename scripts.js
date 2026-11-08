@@ -383,13 +383,26 @@ const CLASS_CHANGES = {
   "2026-10-13": [{ code: "ASBL100", time: "09:30-11:00" }]
 };
 
+if (window.LINKEEN) {
+  LINKEEN.layer(DAYS_OFF, d => d.noClass);
+  LINKEEN.layer(MAKEUP_DAYS, d => d.follows);
+  LINKEEN.layer(updatesData, d => d.updates);
+}
+
 function classesOn(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const changes = CLASS_CHANGES[key] || [];
-  return (WEEKLY_CLASSES[dayOf(d)] || []).map(c => {
+  const tw = (window.LINKEEN && LINKEEN.tweaks(key)) || { cancel: [], add: [] };
+  const list = (WEEKLY_CLASSES[dayOf(d)] || []).map(c => {
     const change = changes.find(ch => ch.code === c.code);
     return change ? { ...c, time: change.time, special: true } : c;
+  }).filter(c => !tw.cancel.some(x => x.course === c.code && (!x.time || c.time.startsWith(x.time))));
+  tw.add.forEach(a => {
+    const ref = Object.values(WEEKLY_CLASSES).flat().find(c => c.code === a.course);
+    list.push({ code: a.course, name: ref ? ref.name : a.course, time: `${a.s}-${a.e}`,
+                room: a.room || (ref ? ref.room : ""), type: "Lecture", special: true });
   });
+  return list.sort((a, b) => timeToMinutes(a.time.split("-")[0]) - timeToMinutes(b.time.split("-")[0]));
 }
 
 function dayOffReason(d) {
@@ -663,6 +676,11 @@ window.addEventListener("DOMContentLoaded", () => {
   buildHeroSub();
   updateLiveClassStatus();
   setInterval(updateLiveClassStatus, 15000);
+  window.addEventListener("linkeen:overrides", () => {
+    renderUpdates();
+    updateLiveClassStatus();
+    renderModalTimetable(activeTimetableTab ?? undefined);
+  });
   if (typeof initMascot === "function") initMascot();
 
   // Batch toggle buttons (main bar and modal)

@@ -78,7 +78,10 @@ function messStatus(date) {
 }
 
 // The courses for one meal on one day, as [{course, rule, items[]}].
-function messMenu(week, meal, dayName) {
+// `date` (optional Date) lets a live override replace the whole meal.
+function messMenu(week, meal, dayName, date) {
+    const sp = window.LINKEEN && LINKEEN.messSpecial(date, meal);
+    if (sp) return [{ course: "SPECIAL DISH", rule: "", items: sp, special: true }];
     const sheet = (MESS.menu[String(week)] || {})[meal];
     if (!sheet) return [];
     return sheet.map(c => ({ course: c.course, rule: c.rule,

@@ -398,6 +398,7 @@ document.getElementById("wk-bar")?.addEventListener("click", onClick);
 document.getElementById("wk-grid")?.addEventListener("click", onClick);
 
 renderWeek();
+window.addEventListener("linkeen:overrides", () => renderWeek());
 
 // Only the now-line and the live highlight move, both minute-resolution.
 let wkLast = null;

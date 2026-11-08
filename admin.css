@@ -1,0 +1,62 @@
+/* linkeen admin: small, quiet, warm cream + muted green. */
+body.adm { margin: 0; background: var(--surface); color: var(--text);
+  font: 400 14px/1.5 var(--font-serif, Georgia, serif); }
+.adm-wrap { max-width: 640px; margin: 0 auto; padding: 16px; }
+.adm-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.adm-head h1 { margin: 0; font: italic 400 18px var(--font-serif, Georgia, serif); color: var(--text-muted); }
+.adm-link { background: none; border: 0; padding: 0; color: var(--text-subtle); font: inherit; font-size: 13px;
+  text-decoration: underline; cursor: pointer; }
+
+.adm-card { background: var(--surface-elevated); border: 1px solid var(--border-soft); border-radius: 10px;
+  box-shadow: inset 3px 0 0 var(--accent); padding: 12px 14px 12px 18px; margin: 0 0 14px; }
+.adm-label { margin: 0 0 6px; font: italic 400 12px var(--font-serif, Georgia, serif); color: var(--text-subtle); display: block; }
+.adm-card .adm-label { margin-bottom: 4px; }
+.adm-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+.adm-tools { gap: 12px; }
+
+textarea, input[type="text"], input[type="password"], select {
+  font: 400 14px var(--font-serif, Georgia, serif); color: var(--text); background: var(--surface-sunken);
+  border: 1px solid var(--border-soft); border-radius: 6px; padding: 6px 8px; box-sizing: border-box; }
+textarea { width: 100%; resize: vertical; }
+#pw { flex: 1; min-width: 0; }
+textarea:focus, input:focus, select:focus { outline: 1px solid var(--accent-strong); outline-offset: 0; }
+
+.adm-btn { background: var(--surface-elevated); color: var(--text); border: 1px solid var(--border); border-radius: 6px;
+  padding: 6px 12px; font: 500 13px var(--font-serif, Georgia, serif); cursor: pointer; }
+.adm-btn:hover { background: var(--surface-sunken); }
+.adm-btn:disabled { opacity: .5; cursor: default; }
+.adm-primary { background: var(--accent-strong); color: #fff; border-color: var(--accent-strong); }
+.adm-primary:hover { background: var(--accent-strong); opacity: .9; }
+
+.adm-mini { font: 400 11px var(--font-mono, monospace); color: var(--text-subtle); display: flex; gap: 6px; align-items: center; }
+.adm-mini select, .adm-mini input { font: 400 12px var(--font-mono, monospace); padding: 3px 6px; }
+.adm-mini input { width: 110px; }
+.adm-wrap [hidden] { display: none !important; }
+
+.adm-thread { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.adm-thread:empty { display: none; }
+.adm-me { align-self: flex-end; max-width: 85%; background: var(--surface-sunken); border: 1px solid var(--border-soft);
+  border-radius: 10px; padding: 6px 10px; white-space: pre-wrap; }
+.adm-ai { border-left: 3px solid var(--accent-warm); padding: 2px 0 2px 10px; font-style: italic; }
+.adm-ai p { margin: 0 0 6px; }
+.adm-ai .adm-row { margin: 4px 0 0; font-style: normal; }
+.adm-ai input { flex: 1; min-width: 0; }
+.adm-brain { display: block; font: 400 10px var(--font-mono, monospace); font-style: normal; color: var(--text-subtle); margin-top: 2px; }
+
+.adm-summary { margin: 0 0 8px; }
+.adm-ops { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.adm-ops li { display: flex; gap: 8px; align-items: baseline; background: var(--surface-elevated);
+  border: 1px solid var(--border-soft); border-radius: 10px; box-shadow: inset 3px 0 0 var(--border);
+  padding: 7px 10px 7px 14px; }
+.adm-card .adm-ops li { background: var(--surface-sunken); }
+.adm-type { font: 500 10px var(--font-mono, monospace); color: var(--text-subtle); flex: none; min-width: 74px; }
+.adm-sent { flex: 1; min-width: 0; }
+.adm-sent small { display: block; color: var(--text-subtle); font-size: 12px; font-style: italic; }
+.adm-mark { font: 600 13px var(--font-mono, monospace); flex: none; }
+.adm-add { color: var(--accent-strong); }
+.adm-rm { color: var(--red); }
+.adm-ops li.rm { box-shadow: inset 3px 0 0 var(--red); }
+.adm-ops li.add { box-shadow: inset 3px 0 0 var(--accent); }
+.adm-err { color: var(--red); margin: 6px 0; font-size: 13px; }
+.adm-quiet { color: var(--text-subtle); font-style: italic; }
+@media (max-width: 420px) { .adm-type { min-width: 0; } .adm-ops li { flex-wrap: wrap; } }

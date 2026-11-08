@@ -19,6 +19,8 @@
 // ============================================================
 
 const ANNOUNCEMENTS = [
+  { id: "diwali-dinner-2026", text: "Diwali dinner tonight in your mess: Chicken Biryani, Chicken Lasagne, Shahi Paneer, Malai Kofta, Samosa Chaat, Jalebi, Ras Malai and Mango Lassi.",
+    from: "2026-11-08", until: "2026-11-08", level: "new" },
   { id: "deepawali-2026", text: "Mon 9 Nov is a holiday (Deepawali). Sun 22 Nov runs Friday's timetable, online.",
     from: "2026-11-02", until: "2026-11-22", level: "info" },
   { id: "aenl228-labexam-2026", text: "AENL228 lab exam: G1 Thu 12 Nov in the regular lab slot, 16:00-17:50, M2-2-031. Can't make it? Contact Ravi sir.",
@@ -45,7 +47,7 @@ const ANNOUNCEMENTS = [
   }
 
   function live(now) {
-    return ANNOUNCEMENTS.filter((a) => {
+    return ANNOUNCEMENTS.concat(window.LINKEEN ? LINKEEN.announcements() : []).filter((a) => {
       if (a.from && now < day(a.from)) return false;
       if (!a.until || now > day(a.until, true)) return false;
       return !(a.skip && a.skip.includes(path()));
@@ -208,4 +210,8 @@ const ANNOUNCEMENTS = [
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+  window.addEventListener("linkeen:overrides", () => {
+    document.querySelectorAll("#announce, .an-pill, .an-pop").forEach((el) => el.remove());
+    init();
+  });
 })();

@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "dee91059a72d";
+const VERSION = "5144d540133f";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -102,6 +102,7 @@ const SHELL = [
 "/mess.js",
 "/night-mode.png",
 "/offline.js",
+"/overrides.js",
 "/planedit",
 "/planedit.js",
 "/rooms-data.js",
@@ -292,6 +293,7 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin === location.origin) {
     if (url.pathname.startsWith("/api/")) return;
+    if (url.pathname === "/admin" || url.pathname.startsWith("/admin.")) return;
     if (url.pathname.startsWith("/notes/") && url.pathname.endsWith(".pdf")) return event.respondWith(slide(url));
     if (req.mode === "navigate") return event.respondWith(page(req, url));
     return event.respondWith(asset(req, url));

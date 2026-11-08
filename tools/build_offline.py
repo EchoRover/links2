@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SW = ROOT / "sw.js"
 SKIP_DIRS = {".git", ".vercel", "api", "tools", "docs", "notes", "node_modules"}
+SKIP_FILES = {"admin.html", "admin.js", "admin.css", "admin-prompt.js"}
 EXTS = {".html", ".js", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".pdf", ".json", ".ico", ".webmanifest"}
 FONT_CSS = re.compile(r"https://fonts\.googleapis\.com/css2\?[^\"'`\s)]+")
 
@@ -34,6 +35,7 @@ def main():
     files = sorted(
         p for p in ROOT.rglob("*")
         if p.is_file() and p.suffix.lower() in EXTS and p.name != "sw.js"
+        and p.name not in SKIP_FILES
         and not SKIP_DIRS.intersection(p.relative_to(ROOT).parts)
     )
     shell = [url_for(p) for p in files] + ["/notes/index.json"]

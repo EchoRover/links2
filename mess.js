@@ -167,7 +167,7 @@ function renderControls(now) {
 // block, which is why it is a wall of text - the pickle gets the same weight as
 // the main. Two tiers instead: what you decide on, then what arrives anyway.
 const MAINS = {
-    breakfast: ["MAIN BREAKFAST DISH", "EGG PREPARATION"],
+    breakfast: ["SPECIAL DISH", "MAIN BREAKFAST DISH", "EGG PREPARATION"],
     lunch: ["SPECIAL DISH", "NON VEG PROTEIN", "VEG DISH"],
     dinner: ["SPECIAL DISH", "NON VEG PROTEIN", "VEG DISH"]
 };
@@ -180,13 +180,14 @@ let drawnKey = null;
 
 function renderMenu() {
     const body = document.getElementById("mess-body");
-    const courses = messMenu(view.week, view.meal, view.day);
+    const courses = messMenu(view.week, view.meal, view.day, view.date);
     const win = messWindow(view.meal, view.day);
 
     document.getElementById("mess-window").textContent =
         win ? `${win.label} · ${t12(win.start)} – ${t12(win.end)}` : "";
 
-    const key = [view.week, view.meal, view.day, trialOpen()].join("|");
+    const key = [view.week, view.meal, view.day, trialOpen(), view.date.toDateString(),
+                 window.LINKEEN ? LINKEEN.rev : ""].join("|");
     if (key === drawnKey) return;
     drawnKey = key;
 
@@ -204,7 +205,8 @@ function renderMenu() {
         const many = c.items.length > 1;
         return `<article class="main">
             <h2 class="main-name">${esc(c.course)}${
-                many ? `<span class="main-pick">pick one</span>` : ""}</h2>
+                c.special ? `<span class="main-pick">special today</span>`
+                : many ? `<span class="main-pick">pick one</span>` : ""}</h2>
             <ul class="main-items">${c.items.map(i =>
                 `<li>${dishHTML(c.course, i)}</li>`).join("")}</ul>
         </article>`;
@@ -374,6 +376,7 @@ function start() {
 }
 
 document.addEventListener("DOMContentLoaded", start);
+window.addEventListener("linkeen:overrides", () => { if (view.date) { drawnKey = null; draw(); } });
 
 // The same eight lines sit in scripts.js, bus.js and building.js. Repeated
 // rather than shared because each page loads exactly one of those and there is

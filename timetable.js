@@ -92,6 +92,10 @@ const NO_CLASS = {
 // Make-up days (Vice-Provost email, 29 Oct 2026): this date runs that
 // weekday's timetable. Keep in step with MAKEUP_DAYS in scripts.js.
 const FOLLOWS = { "2026-11-05": 1, "2026-11-22": 5 };
+if (window.LINKEEN) {
+    LINKEEN.layer(NO_CLASS, (d) => d.noClass);
+    LINKEEN.layer(FOLLOWS, (d) => d.follows);
+}
 const dowOf = (d) => FOLLOWS[ymd(d)] ?? d.getDay();
 
 const DAY_NAME = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -171,12 +175,16 @@ const CLASS_CHANGES = {
 // Pass a date key to get that day's actual classes, changes included.
 function dayEntries(dow, key) {
     const changes = (key && CLASS_CHANGES[key]) || [];
+    const tw = (key && window.LINKEEN && LINKEEN.tweaks(key)) || { cancel: [], add: [] };
     return (WEEK[dow] || [])
         .map(([s, e, code, room, kind, grp]) => {
             const ch = changes.find((c) => c.code === code);
             if (ch) { s = ch.s; e = ch.e; }
             return { s, e, code, room, kind, grp, from: tmin(s), to: tmin(e), special: !!ch };
         })
+        .filter((x) => !tw.cancel.some((c) => c.course === x.code && (!c.time || c.time === x.s)))
+        .concat(tw.add.map((a) => ({ s: a.s, e: a.e, code: a.course, room: a.room || "", kind: "", grp: 0,
+            from: tmin(a.s), to: tmin(a.e), special: true })))
         .sort((a, b) => a.from - b.from || a.grp - b.grp);
 }
 
@@ -302,6 +310,7 @@ function renderTimetable() {
 // whenever the page comes back in front of a human, because phones
 // freeze timers on a backgrounded tab.
 renderTimetable();
+window.addEventListener("linkeen:overrides", () => renderTimetable());
 
 let ttLastMin = null;
 setInterval(() => {

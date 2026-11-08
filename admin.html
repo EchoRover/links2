@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>linkeen admin</title>
+  <script src="theme-init.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=23">
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body class="adm">
+  <main class="adm-wrap">
+    <header class="adm-head">
+      <h1>linkeen admin</h1>
+      <button type="button" id="logout" class="adm-link" hidden>log out</button>
+    </header>
+
+    <section id="login" hidden>
+      <form id="login-form" class="adm-card">
+        <label class="adm-label" for="pw">password</label>
+        <div class="adm-row">
+          <input id="pw" type="password" autocomplete="current-password" required>
+          <button type="submit" class="adm-btn">enter</button>
+        </div>
+        <p id="login-err" class="adm-err" hidden></p>
+      </form>
+    </section>
+
+    <section id="panel" hidden>
+      <div class="adm-card">
+        <label class="adm-label" for="note">what changed?</label>
+        <textarea id="note" rows="3" placeholder="e.g. AENL226 on Thursday is cancelled"></textarea>
+        <div class="adm-row adm-tools">
+          <button type="button" id="send" class="adm-btn">Send</button>
+          <label class="adm-mini">brain
+            <select id="brain">
+              <option value="auto">auto</option>
+              <option value="local">local</option>
+              <option value="gemini">gemini</option>
+            </select>
+          </label>
+          <label class="adm-mini" id="model-wrap" hidden>model
+            <input id="model" type="text" value="qwen2.5:3b" spellcheck="false">
+          </label>
+        </div>
+      </div>
+
+      <div id="thread" class="adm-thread"></div>
+
+      <div id="preview" class="adm-card" hidden>
+        <p class="adm-label">preview</p>
+        <p id="summary" class="adm-summary"></p>
+        <ul id="preview-list" class="adm-ops"></ul>
+        <div class="adm-row">
+          <button type="button" id="apply" class="adm-btn adm-primary">Apply all</button>
+          <button type="button" id="discard" class="adm-btn">Discard</button>
+        </div>
+      </div>
+
+      <p class="adm-label">live now</p>
+      <ul id="live" class="adm-ops"></ul>
+      <p id="status" class="adm-err" hidden></p>
+    </section>
+  </main>
+
+  <script src="timetable.js?v=6"></script>
+  <script src="admin-prompt.js?v=1"></script>
+  <script src="admin.js?v=1"></script>
+</body>
+</html>

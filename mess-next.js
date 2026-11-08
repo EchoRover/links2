@@ -36,7 +36,7 @@ const DAY_SHORT = { Monday: "Mon", Tuesday: "Tue", Wednesday: "Wed",
                     Thursday: "Thu", Friday: "Fri", Saturday: "Sat",
                     Sunday: "Sun" };
 const MAINS = {
-    breakfast: ["MAIN BREAKFAST DISH", "EGG PREPARATION"],
+    breakfast: ["SPECIAL DISH", "MAIN BREAKFAST DISH", "EGG PREPARATION"],
     lunch: ["SPECIAL DISH", "NON VEG PROTEIN", "VEG DISH"],
     dinner: ["SPECIAL DISH", "NON VEG PROTEIN", "VEG DISH"]
 };
@@ -151,9 +151,20 @@ function renderDays(live) {
 
 // ---------- the menu ----------
 
+// The calendar date of a chip: the next 14 days from today whose weekday name
+// and mess week match. Lets a dated override find the chip it belongs to.
+function chipDate(week, day) {
+    const t = new Date();
+    for (let i = 0; i < 14; i++) {
+        const d = new Date(t.getFullYear(), t.getMonth(), t.getDate() + i);
+        if (MESS_DAYS[d.getDay()] === day && messWeekOf(d) === week) return d;
+    }
+    return null;
+}
+
 function renderMenu() {
     const body = document.getElementById("body");
-    const courses = messMenu(view.week, view.meal, view.day);
+    const courses = messMenu(view.week, view.meal, view.day, chipDate(view.week, view.day));
     if (!courses.length) {
         body.innerHTML = `<p class="empty">No menu recorded for week ` +
             `${view.week}, ${esc(view.meal)}, ${esc(view.day)}.</p>`;
@@ -165,7 +176,8 @@ function renderMenu() {
     const rest = courses.filter(c => !mains.includes(c));
 
     const cols = mains.map(c => `<div class="main">
-        <h2 class="main-name">${esc(c.course)}</h2>
+        <h2 class="main-name">${esc(c.course)}${c.special ?
+            ` <small style="font-size:.6em;font-weight:400;opacity:.7">special today</small>` : ""}</h2>
         <ul class="main-items">${c.items.map(i =>
             `<li>${mark(c.course, i)}${esc(i)}</li>`).join("")}</ul>
     </div>`);
@@ -224,6 +236,7 @@ document.getElementById("day-strip").addEventListener("click", e => {
     };
     draw();
     setInterval(draw, 30000);
+    window.addEventListener("linkeen:overrides", draw);
 })();
 
 const toggleBtn = document.getElementById("theme-toggle");
