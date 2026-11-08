@@ -99,18 +99,43 @@
   }
   function addAI(parts, brain, asks) {
     const box = el("div", "adm-ai");
-    parts.forEach((p) => box.appendChild(el("p", null, p)));
+    // parts: strings, or {q, options[]} when the model offers choices
+    const picks = [];
+    parts.forEach((p, i) => {
+      const q = typeof p === "string" ? p : String(p.q || "");
+      box.appendChild(el("p", null, q));
+      const opts = Array.isArray(p.options) ? p.options.map(String).slice(0, 6) : [];
+      if (!opts.length) return;
+      const chips = el("div", "adm-chips");
+      opts.forEach((o) => {
+        const c = el("button", "adm-chip", o);
+        c.type = "button";
+        c.onclick = () => {
+          picks[i] = picks[i] === o ? undefined : o;
+          [...chips.children].forEach((x) => x.classList.toggle("on", x.textContent === picks[i]));
+          // one question with chips and nothing typed: send on tap
+          if (parts.length === 1 && picks[i] && !box.querySelector("input").value.trim()) go();
+        };
+        chips.appendChild(c);
+      });
+      box.appendChild(chips);
+    });
+    let go = () => {};
     if (asks) {
       const row = el("div", "adm-row");
       const inp = el("input");
       inp.type = "text";
-      inp.placeholder = "your answer";
+      inp.placeholder = "or type your answer";
       const btn = el("button", "adm-btn", "Answer");
       btn.type = "button";
-      const go = () => {
-        const v = inp.value.trim();
+      go = () => {
+        const lines = parts.map((p, i) => picks[i] ? `${typeof p === "string" ? p : p.q} -> ${picks[i]}` : "").filter(Boolean);
+        const typed = inp.value.trim();
+        if (typed) lines.push(typed);
+        const v = lines.join("\n");
         if (!v || busy) return;
         inp.disabled = true; btn.disabled = true;
+        box.querySelectorAll(".adm-chip").forEach((x) => (x.disabled = true));
         send(v);
       };
       btn.onclick = go;
@@ -228,7 +253,7 @@
   function handle(reply, brain) {
     thread.push({ role: "assistant", content: JSON.stringify(reply) });
     if (reply.status === "ask") {
-      addAI(reply.questions.map(String), brain, true);
+      addAI(reply.questions.map((q) => (q && typeof q === "object") ? q : String(q)), brain, true);
       return;
     }
     proposed = reply.ops;

@@ -21,13 +21,13 @@ WEEKLY TIMETABLE (start-end code room kind group; kind "-"=lecture, tut, lab; gr
 ${week}
 
 OUTPUT: reply with ONE JSON object and nothing else. Either
-{"status":"ask","questions":["..."]}
+{"status":"ask","questions":[{"q":"short question","options":["choice 1","choice 2","choice 3"]}]}
 or
 {"status":"ok","summary":"one plain sentence","ops":[ ... ]}
 
 Rules:
 1. Resolve every relative date yourself using TODAY. A bare weekday ("monday") means the next such day strictly after today. If today is that weekday, ask whether they mean today or next week. Write every date as YYYY-MM-DD and every time as 24h HH:MM.
-2. Ask (status "ask") instead of guessing when: the course is missing or could be several; a course has more than one class on that day and the note does not say which; it is unclear whether something is a quiz, lab exam or midsem; a date or time needed for an op is missing; the note could mean a one-off or every week. Keep questions short, at most 3, each answerable in a few words. Never ask something you can read from the timetable or from the note.
+2. Ask (status "ask") instead of guessing when: the course is missing or could be several; a course has more than one class on that day and the note does not say which; it is unclear whether something is a quiz, lab exam or midsem; a date or time needed for an op is missing; the note could mean a one-off or every week. Keep questions short, at most 3. EVERY question must carry 2 to 5 concrete options the admin can tap, built from the COURSES and WEEKLY TIMETABLE above (e.g. "AENL226 Power Electronics, Tue 10:00-11:20", "Tue 10 Nov", "16:00"). Put the most likely option first. Options are short labels, not sentences. Never ask something you can read from the timetable or from the note.
 3. Use the timetable to fill details. For "AENL226 class at 4pm moved to Monday 11am": find the AENL226 slot, check it is really at 16:00 (if no such slot exists, ask), set fromTime to that slot's start, and toEnd = toTime + the original slot's duration.
 4. A holiday or "no classes" note is a holiday op. A note that a date runs another weekday's timetable is a makeup op with followsWeekday 1 to 5.
 5. Food news is mess_special, with meal breakfast, lunch or dinner. Put each dish in items as a separate short string. "Tonight" means dinner; "today" with no meal means ask.

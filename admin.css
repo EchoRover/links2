@@ -60,3 +60,8 @@ textarea:focus, input:focus, select:focus { outline: 1px solid var(--accent-stro
 .adm-err { color: var(--red); margin: 6px 0; font-size: 13px; }
 .adm-quiet { color: var(--text-subtle); font-style: italic; }
 @media (max-width: 420px) { .adm-type { min-width: 0; } .adm-ops li { flex-wrap: wrap; } }
+.adm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; font-style: normal; }
+.adm-chip { font: 400 12px var(--font-mono, monospace); padding: 4px 9px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text); cursor: pointer; }
+.adm-chip:hover { border-color: var(--accent); }
+.adm-chip.on { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--surface-elevated); }
+.adm-chip:disabled { opacity: .5; cursor: default; }
