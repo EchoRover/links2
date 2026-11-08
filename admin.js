@@ -15,6 +15,16 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
   };
 
+  // The API runs on its own project (linkeen-api) so the secrets never sit on
+  // the site's project. Login hands back a signed token, sent as a Bearer.
+  const API = window.LINKEEN_API || "https://linkeen-api.vercel.app";
+  const TOKEN = "linkeen:admin:token";
+  function api(path, opts = {}) {
+    const t = store.get(TOKEN, "");
+    const headers = Object.assign({}, opts.headers, t ? { Authorization: "Bearer " + t } : {});
+    return fetch(API + path, Object.assign({}, opts, { headers }));
+  }
+
   function el(tag, cls, text) {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -141,10 +151,9 @@
   }
 
   async function askGemini(system, messages) {
-    const r = await fetch("/api/admin/parse", {
+    const r = await api("/api/admin/parse", {
       method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ system, messages }),
     });
     if (r.status === 401) { show("login"); throw new Error("logged out"); }
@@ -235,7 +244,7 @@
   async function loadLive() {
     const list = $("live");
     try {
-      const r = await fetch("/api/admin/ops", { credentials: "same-origin", cache: "no-store" });
+      const r = await api("/api/admin/ops", { cache: "no-store" });
       if (r.status === 401) { show("login"); return false; }
       const data = await r.json();
       if (!data.ok) { status(data.error || "could not load"); return true; }
@@ -266,9 +275,8 @@
     $("apply").disabled = true;
     try {
       const src = (thread.find((m) => m.role === "user") || {}).content || "";
-      const r = await fetch("/api/admin/ops", {
-        method: "POST", credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+      const r = await api("/api/admin/ops", {
+        method: "POST",         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ops: proposed, sourceText: src }),
       });
       if (r.status === 401) { show("login"); return; }
@@ -282,7 +290,7 @@
 
   async function undo(id) {
     try {
-      const r = await fetch("/api/admin/ops?id=" + encodeURIComponent(id), { method: "DELETE", credentials: "same-origin" });
+      const r = await api("/api/admin/ops?id=" + encodeURIComponent(id), { method: "DELETE" });
       if (r.status === 401) { show("login"); return; }
     } catch (e) { status("could not reach the server"); return; }
     loadLive();
@@ -300,13 +308,12 @@
     const err = $("login-err");
     err.hidden = true;
     try {
-      const r = await fetch("/api/admin/login", {
-        method: "POST", credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+      const r = await api("/api/admin/login", {
+        method: "POST",         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: pw }),
       });
       const data = await r.json().catch(() => ({}));
-      if (r.ok && data.ok) { $("pw").value = ""; await boot(); return; }
+      if (r.ok && data.ok) { store.set(TOKEN, data.token || ""); $("pw").value = ""; await boot(); return; }
       err.textContent = r.status === 429 ? "Too many tries. Wait a few minutes." : (data.error || "Wrong password.");
     } catch (e) { err.textContent = "Could not reach the server."; }
     err.hidden = false;
@@ -314,12 +321,12 @@
 
   async function logout() {
     try {
-      await fetch("/api/admin/login", {
-        method: "POST", credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+      await api("/api/admin/login", {
+        method: "POST",         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ logout: true }),
       });
     } catch (e) {}
+    try { localStorage.removeItem(TOKEN); } catch (e) {}
     reset();
     show("login");
   }

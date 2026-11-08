@@ -1,8 +1,10 @@
 // GET /api/overrides — public: the live override ops, patched over the static
 // data by overrides.js on every page. Short edge cache so it stays cheap.
 import { configured, listActive, rev } from "./_lib/store.js";
+import { cors } from "./_lib/cors.js";
 
 export default async function handler(req, res) {
+  if (cors(req, res)) return;
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ ok: false, error: "method not allowed" });

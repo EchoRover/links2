@@ -111,7 +111,7 @@
       try {
         const ctl = new AbortController();
         const timer = setTimeout(() => ctl.abort(), 4000);
-        const r = await fetch("/api/overrides", { cache: "no-cache", signal: ctl.signal });
+        const r = await fetch((window.LINKEEN_API || "https://linkeen-api.vercel.app") + "/api/overrides",{ cache: "no-cache", signal: ctl.signal });
         clearTimeout(timer);
         if (!r.ok) return;
         const data = await r.json();

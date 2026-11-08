@@ -1,15 +1,17 @@
 // POST /api/admin/parse {system, messages:[{role,content}]} -> Gemini JSON reply.
 // The client supplies the system prompt because it holds the timetable data.
 import { verify } from "../_lib/auth.js";
+import { cors } from "../_lib/cors.js";
 
 export default async function handler(req, res) {
+  if (cors(req, res)) return;
   res.setHeader("Cache-Control", "no-store");
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ ok: false, error: "method not allowed" });
   }
   if (!verify(req)) return res.status(401).json({ ok: false, error: "not logged in" });
-  const key = process.env.GEMINI_API_KEY;
+  const key = (process.env.GEMINI_API_KEY || "").trim();
   if (!key) return res.status(503).json({ ok: false, error: "GEMINI_API_KEY not set" });
 
   let body;
@@ -24,7 +26,7 @@ export default async function handler(req, res) {
   const messages = Array.isArray(body.messages) ? body.messages : [];
   if (!system || !messages.length) return res.status(400).json({ ok: false, error: "empty request" });
 
-  const model = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+  const model = (process.env.GEMINI_MODEL || "").trim() || "gemini-3.5-flash";
   try {
     const r = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,

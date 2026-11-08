@@ -2,8 +2,10 @@
 // POST /api/admin/login {logout:true} -> clears it
 import { redis, configured } from "../_lib/store.js";
 import { sign, cookie, clearCookie, passwordOk } from "../_lib/auth.js";
+import { cors } from "../_lib/cors.js";
 
 export default async function handler(req, res) {
+  if (cors(req, res)) return;
   res.setHeader("Cache-Control", "no-store");
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -33,8 +35,9 @@ export default async function handler(req, res) {
   }
 
   if (!passwordOk(body.password)) return res.status(401).json({ ok: false, error: "wrong password" });
-  res.setHeader("Set-Cookie", cookie(sign()));
-  return res.status(200).json({ ok: true });
+  const token = sign();
+  res.setHeader("Set-Cookie", cookie(token));
+  return res.status(200).json({ ok: true, token });
 }
 
 function safeParse(s) {

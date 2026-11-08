@@ -5,8 +5,10 @@ import { randomBytes } from "node:crypto";
 import { configured, listActive, putOp, delOp } from "../_lib/store.js";
 import { verify } from "../_lib/auth.js";
 import { validate, expiresOf } from "../_lib/schema.js";
+import { cors } from "../_lib/cors.js";
 
 export default async function handler(req, res) {
+  if (cors(req, res)) return;
   res.setHeader("Cache-Control", "no-store");
   if (!verify(req)) return res.status(401).json({ ok: false, error: "not logged in" });
   if (!configured()) return res.status(503).json({ ok: false, error: "no store configured" });

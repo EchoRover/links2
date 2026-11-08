@@ -4,7 +4,7 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 const NAME = "linkeen_admin";
 const MAX_AGE = 30 * 24 * 60 * 60;
 
-const secret = () => process.env.ADMIN_PASSWORD || "";
+const secret = () => (process.env.ADMIN_PASSWORD || "").trim();
 const mac = (exp) => createHmac("sha256", secret()).update(String(exp)).digest("base64url");
 
 function safeEq(a, b) {
@@ -20,7 +20,9 @@ export function sign() {
 
 export function verify(req) {
   if (!secret()) return false;
-  const m = String(req.headers.cookie || "").match(new RegExp(`(?:^|;\\s*)${NAME}=([^;]+)`));
+  // Bearer token (cross-origin admin page) or the cookie (same-origin).
+  const b = String(req.headers.authorization || "").match(/^Bearer\s+(\S+)$/);
+  const m = b || String(req.headers.cookie || "").match(new RegExp(`(?:^|;\\s*)${NAME}=([^;]+)`));
   if (!m) return false;
   const [exp, sig] = m[1].split(".");
   if (!exp || !sig || !(Number(exp) > Date.now() / 1000)) return false;
