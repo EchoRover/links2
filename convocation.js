@@ -2,7 +2,7 @@
 // convocation.js — IITD-AD's first Convocation (19 Nov 2026, first M.Tech batch).
 //
 // On 17–19 Nov 2026 (or any day with ?convo=1; ?convo=0 turns it off): a
-// thin gold and crimson hood ribbon along the top, a black mortarboard with a
+// black mortarboard with a
 // swinging tassel on Sparky, the eyebrow line, and once per day a
 // cap toss. Tap Sparky's cap to toss again. Links, timetable and cards are untouched.
 // ============================================================
@@ -18,10 +18,6 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const css = `
-    html.convo body::before {
-      content: ""; position: fixed; inset: 0 0 auto 0; height: 6px; z-index: 50; pointer-events: none;
-      background: linear-gradient(#c9a227 0 3px, #8c1d2f 3px 6px);
-    }
     .cv-cap { position: absolute; width: 64%; left: 17%; top: -13%; z-index: 2; overflow: visible;
       cursor: pointer; transform: rotate(-12deg); filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
     html.convo #sparky .sp-bolt { display: none; }
