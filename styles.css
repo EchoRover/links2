@@ -1,44 +1,44 @@
 /* =====================================================
-   linkeen — matcha-cream / deep-forest · whimsical fun
+   linkeen — neon-grid green / green-black · whimsical fun
    styles.css MUST load AFTER games.css (index.html order)
    ===================================================== */
 
 :root[data-theme="light"] {
-  --surface:           #efe8d8;
-  --surface-elevated:  #fbf8f0;
-  --surface-sunken:    #e7e0cd;
-  --border:            #cbc0a4;
-  --border-soft:       #ddd4bd;
-  --text:              #1c2e1f;
-  --text-muted:        #455642;
-  --text-subtle:       #5e6f5a;
-  --accent:            #4a9c3f;
-  --accent-strong:     #2c6a26;
-  --accent-soft:       #d9e2c6;
-  --accent-warm:       #d49b3c;  /* whimsy secondary */
-  --accent-warm-soft:  #ead7a8;
+  --surface:           #f1f6f0;
+  --surface-elevated:  #ffffff;
+  --surface-sunken:    #e3ece1;
+  --border:            #c2d6bf;
+  --border-soft:       #d5e3d3;
+  --text:              #0a1f0e;
+  --text-muted:        #43604a;
+  --text-subtle:       #6e8674;
+  --accent:            #00a83a;
+  --accent-strong:     #00742a;
+  --accent-soft:       #caead3;
+  --accent-warm:       #f2c200;  /* whimsy secondary */
+  --accent-warm-soft:  #f1e7ad;
 
-  --text-50:#eef3df;--text-100:#dde7c3;--text-200:#b9c790;--text-300:#94a560;
-  --text-400:#728341;--text-500:#576629;--text-600:#3f4b1c;--text-700:#2a3413;
-  --text-800:#19200a;--text-900:#1c2e1f;--text-950:#0a120a;
+  --text-50:#e6e9e7;--text-100:#ced2cf;--text-200:#9da59f;--text-300:#6c796e;
+  --text-400:#3b4c3e;--text-500:#0a1f0e;--text-600:#08190b;--text-700:#061309;
+  --text-800:#040e06;--text-900:#030904;--text-950:#020603;
 
-  --background-50:#edf2dd;--background-100:#dde5c1;--background-200:#c7d2a2;
-  --background-300:#aebb80;--background-400:#94a35d;--background-500:#778645;
-  --background-600:#5d6b34;--background-700:#465125;--background-800:#2f371a;
-  --background-900:#181d0d;--background-950:#0a0e06;
+  --background-50:#ecefed;--background-100:#d9dfdb;--background-200:#b4bfb7;
+  --background-300:#8ea092;--background-400:#69806e;--background-500:#43604a;
+  --background-600:#364d3b;--background-700:#2a3c2e;--background-800:#1e2b21;
+  --background-900:#141d16;--background-950:#0c110d;
 
-  --primary-50:#e9f3df;--primary-100:#d2e6bf;--primary-200:#a4cf86;--primary-300:#79b656;
-  --primary-400:#5aa23d;--primary-500:#4a9c3f;--primary-600:#3a7e30;--primary-700:#2c6a26;
-  --primary-800:#1e4719;--primary-900:#0f240d;--primary-950:#071205;
+  --primary-50:#e6f6eb;--primary-100:#cceed8;--primary-200:#99dcb0;--primary-300:#66cb89;
+  --primary-400:#33b961;--primary-500:#00a83a;--primary-600:#00862e;--primary-700:#006824;
+  --primary-800:#004c1a;--primary-900:#003211;--primary-950:#001e0a;
 
-  --secondary-50:#fbf2dd;--secondary-100:#f5e4bb;--secondary-200:#ecca7c;
-  --secondary-300:#dfae42;--secondary-400:#c5912e;--secondary-500:#a4761f;
-  --secondary-600:#7e5a16;--secondary-700:#5a410f;--secondary-800:#3a2a09;
-  --secondary-900:#1d1505;--secondary-950:#0b0a02;
+  --secondary-50:#fef9e6;--secondary-100:#fcf3cc;--secondary-200:#fae799;
+  --secondary-300:#f7da66;--secondary-400:#f5ce33;--secondary-500:#f2c200;
+  --secondary-600:#c29b00;--secondary-700:#967800;--secondary-800:#6d5700;
+  --secondary-900:#493a00;--secondary-950:#2c2300;
 
-  --accent-50:#e6f5d9;--accent-100:#cdeab2;--accent-200:#a5d572;--accent-300:#84c244;
-  --accent-400:#69a830;--accent-500:#528823;--accent-600:#406b1c;--accent-700:#314f16;
-  --accent-800:#1f320d;--accent-900:#101906;--accent-950:#070d03;
+  --accent-50:#e6f6eb;--accent-100:#cceed8;--accent-200:#99dcb0;--accent-300:#66cb89;
+  --accent-400:#33b961;--accent-500:#00a83a;--accent-600:#00862e;--accent-700:#006824;
+  --accent-800:#004c1a;--accent-900:#003211;--accent-950:#001e0a;
 
   /* Mappings for ported CS components */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -53,7 +53,7 @@
   --fg-faint: var(--text-subtle);
   --coral: var(--accent);
   --coral-bright: var(--accent-strong);
-  --coral-glow: rgba(74, 156, 63, 0.25);
+  --coral-glow: rgba(0, 168, 58, 0.25);
   --coral-soft: var(--accent-soft);
   --indigo: var(--accent-warm);
   --indigo-soft: var(--accent-warm-soft);
@@ -65,41 +65,41 @@
 }
 
 :root[data-theme="dark"] {
-  --surface:           #0b1210;
-  --surface-elevated:  #16261e;
-  --surface-sunken:    #060c0a;
-  --border:            #2c4737;
-  --border-soft:       #213a2b;
-  --text:              #e1ecd9;
-  --text-muted:        #a1b59a;
-  --text-subtle:       #758770;
-  --accent:            #83e07d;
-  --accent-strong:     #a8e895;
-  --accent-soft:       #1d3826;
-  --accent-warm:       #f0c061;
-  --accent-warm-soft:  #2d2615;
+  --surface:           #040b05;
+  --surface-elevated:  #0c1a0e;
+  --surface-sunken:    #020602;
+  --border:            #1b3d20;
+  --border-soft:       #122915;
+  --text:              #e6f8e8;
+  --text-muted:        #9ec8a4;
+  --text-subtle:       #78997c;
+  --accent:            #39ff7a;
+  --accent-strong:     #a3ffbf;
+  --accent-soft:       #10411f;
+  --accent-warm:       #ffe14d;
+  --accent-warm-soft:  #363613;
 
-  --text-50:#0a120a;--text-100:#19200a;--text-200:#2a3413;--text-300:#3f4b1c;
-  --text-400:#576629;--text-500:#728341;--text-600:#94a560;--text-700:#b9c790;
-  --text-800:#dde7c3;--text-900:#e1ecd9;--text-950:#f3f8ec;
+  --text-50:#171917;--text-100:#2e322e;--text-200:#5c635d;--text-300:#8a958b;
+  --text-400:#b8c6ba;--text-500:#e6f8e8;--text-600:#ebf9ed;--text-700:#f0fbf1;
+  --text-800:#f4fcf5;--text-900:#f8fdf8;--text-950:#fafefb;
 
-  --background-50:#070f08;--background-100:#10231a;--background-200:#173026;
-  --background-300:#214233;--background-400:#305a45;--background-500:#467a5e;
-  --background-600:#6ba382;--background-700:#93c4ab;--background-800:#bbdcc9;
-  --background-900:#dceee6;--background-950:#eff7f1;
+  --background-50:#101410;--background-100:#202821;--background-200:#3f5042;
+  --background-300:#5f7862;--background-400:#7ea083;--background-500:#9ec8a4;
+  --background-600:#b1d3b6;--background-700:#c3ddc7;--background-800:#d3e6d6;
+  --background-900:#e2eee4;--background-950:#eef5ef;
 
-  --primary-50:#071205;--primary-100:#0f240d;--primary-200:#1e4719;--primary-300:#2c6a26;
-  --primary-400:#3a7e30;--primary-500:#4a9c3f;--primary-600:#5aa23d;--primary-700:#79b656;
-  --primary-800:#a4cf86;--primary-900:#d2e6bf;--primary-950:#e9f3df;
+  --primary-50:#061a0c;--primary-100:#0b3318;--primary-200:#176631;--primary-300:#229949;
+  --primary-400:#2ecc62;--primary-500:#39ff7a;--primary-600:#61ff95;--primary-700:#84ffad;
+  --primary-800:#a6ffc3;--primary-900:#c4ffd7;--primary-950:#dbffe7;
 
-  --secondary-50:#0b0a02;--secondary-100:#1d1505;--secondary-200:#3a2a09;
-  --secondary-300:#5a410f;--secondary-400:#7e5a16;--secondary-500:#a4761f;
-  --secondary-600:#c5912e;--secondary-700:#dfae42;--secondary-800:#ecca7c;
-  --secondary-900:#f5e4bb;--secondary-950:#fbf2dd;
+  --secondary-50:#1a1608;--secondary-100:#332d0f;--secondary-200:#665a1f;
+  --secondary-300:#99872e;--secondary-400:#ccb43e;--secondary-500:#ffe14d;
+  --secondary-600:#ffe771;--secondary-700:#ffec91;--secondary-800:#fff2af;
+  --secondary-900:#fff6ca;--secondary-950:#fffadf;
 
-  --accent-50:#070d03;--accent-100:#101906;--accent-200:#1f320d;--accent-300:#314f16;
-  --accent-400:#406b1c;--accent-500:#528823;--accent-600:#69a830;--accent-700:#84c244;
-  --accent-800:#a5d572;--accent-900:#cdeab2;--accent-950:#e6f5d9;
+  --accent-50:#061a0c;--accent-100:#0b3318;--accent-200:#176631;--accent-300:#229949;
+  --accent-400:#2ecc62;--accent-500:#39ff7a;--accent-600:#61ff95;--accent-700:#84ffad;
+  --accent-800:#a6ffc3;--accent-900:#c4ffd7;--accent-950:#dbffe7;
 
   /* Mappings for ported CS components */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -114,7 +114,7 @@
   --fg-faint: var(--text-subtle);
   --coral: var(--accent);
   --coral-bright: var(--accent-strong);
-  --coral-glow: rgba(131, 224, 125, 0.25);
+  --coral-glow: rgba(57, 255, 122, 0.25);
   --coral-soft: var(--accent-soft);
   --indigo: var(--accent-warm);
   --indigo-soft: var(--accent-warm-soft);
@@ -2548,8 +2548,8 @@ body #archive-btn:hover { color: var(--accent-strong); }
 :root[data-theme="dark"] body #archive-btn:hover { color: var(--text); }
 
 /* ---------- Floating botanicals background ---------- */
-:root[data-theme="light"] { --leaf-fill: #4a9c3f; --leaf-op: 0.16; }
-:root[data-theme="dark"]  { --leaf-fill: #83e07d; --leaf-op: 0.14; }
+:root[data-theme="light"] { --leaf-fill: #00a83a; --leaf-op: 0.16; }
+:root[data-theme="dark"]  { --leaf-fill: #39ff7a; --leaf-op: 0.14; }
 
 #bg {
   position: fixed;
@@ -2569,7 +2569,7 @@ body #archive-btn:hover { color: var(--accent-strong); }
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
-.leaf svg { width: 100%; height: 100%; display: block; fill: var(--leaf-fill, #4a9c3f); }
+.leaf svg { width: 100%; height: 100%; display: block; fill: var(--leaf-fill, #00a83a); }
 @keyframes leaf-rise {
   0%   { transform: translateY(112vh) translateX(0) rotate(0deg); opacity: 0; }
   12%  { opacity: var(--leaf-op, 0.16); }
@@ -2670,11 +2670,11 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
               0 0 0 1px color-mix(in srgb, var(--accent) 9%, transparent);
 }
 
-/* LIGHT — clean warm cream (no wood, less green) */
+/* LIGHT — cool green-white with a faint charge glow */
 :root[data-theme="light"] body {
   background-image:
-    radial-gradient(900px 520px at 90% -10%, color-mix(in srgb, var(--accent-warm) 15%, transparent), transparent 55%),
-    radial-gradient(720px 500px at -8% 110%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 52%);
+    radial-gradient(900px 520px at 90% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+    radial-gradient(720px 500px at -8% 110%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 52%);
 }
 
 /* ===================================================== */
@@ -2779,7 +2779,7 @@ body.archive-page .course-links { grid-template-columns: 1fr 1fr; column-gap: 16
   transition: background-color 0.2s, color 0.2s;
   line-height: 1.3;
 }
-.timetable-table td.course-slot[data-code="AENL226"] { background: rgba(74, 156, 63, 0.08); }
+.timetable-table td.course-slot[data-code="AENL226"] { background: rgba(0, 168, 58, 0.08); }
 .timetable-table td.course-slot[data-code="AENL228"] { background: rgba(44, 62, 80, 0.08); }
 .timetable-table td.course-slot[data-code="AENP200"] { background: rgba(52, 152, 219, 0.08); }
 .timetable-table td.course-slot[data-code="AENP225"] { background: rgba(241, 196, 15, 0.08); }
@@ -3621,7 +3621,7 @@ body a#open-games-modal {
   background: var(--accent-soft); color: var(--accent-strong); border-color: transparent;
 }
 body a#open-games-modal:hover { background: var(--accent); color: var(--surface-elevated); }
-:root[data-theme="dark"] body a#open-games-modal { background: #1f3a2a; color: #9fdc8f; }
+:root[data-theme="dark"] body a#open-games-modal { background: #1f3a2a; color: #a3ffbf; }
 :root[data-theme="dark"] body a#open-games-modal:hover { background: #2a4d37; color: #c9f0bd; }
 
 /* "weekend / free" tag: sage, not cyan */
@@ -3630,7 +3630,7 @@ body .live-tag-free {
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   border-color: color-mix(in srgb, var(--accent) 35%, transparent);
 }
-:root[data-theme="dark"] body .live-tag-free { color: #9fdc8f; }
+:root[data-theme="dark"] body .live-tag-free { color: #a3ffbf; }
 
 /* dark theme: lift the earthy course colours a step so codes and chips stay readable */
 :root[data-theme="dark"] body .course-code, :root[data-theme="dark"] body .course-links a { filter: brightness(1.35) saturate(1.1); }
@@ -3668,13 +3668,101 @@ body .general .gen-more:hover, body .general .gen-more:focus-visible {
 :root[data-theme="dark"] body .general .gen-links a,
 :root[data-theme="dark"] body .general a#open-games-modal {
   background: color-mix(in srgb, #16261e 55%, transparent);
-  border-color: rgba(225, 236, 217, .11); color: #e1ecd9;
+  border-color: rgba(225, 236, 217, .11); color: #e6f8e8;
 }
 :root[data-theme="dark"] body .general .gen-links a:hover,
 :root[data-theme="dark"] body .general a#open-games-modal:hover {
-  border-color: rgba(131, 224, 125, .45); background: rgba(22, 38, 30, .85); color: #b7eeab;
+  border-color: rgba(57, 255, 122, .45); background: rgba(22, 38, 30, .85); color: #a3ffbf;
 }
-:root[data-theme="dark"] body .general a#open-games-modal { color: #9fdc8f; border-color: rgba(131, 224, 125, .28); }
+:root[data-theme="dark"] body .general a#open-games-modal { color: #a3ffbf; border-color: rgba(57, 255, 122, .28); }
 :root[data-theme="dark"] body .general .gen-more { color: #7f927a; }
-:root[data-theme="dark"] body .general .gen-more:hover { color: #b7eeab; }
+:root[data-theme="dark"] body .general .gen-more:hover { color: #a3ffbf; }
 @media (prefers-reduced-motion: reduce) { body .general .gen-links a:hover { transform: none; } }
+
+/* ---------- Quick links as a switchboard (17 Nov 2026) ----------
+   Each row is one circuit: a lit node and wire from its tag, then one
+   connected strip of terminals instead of loose pills. */
+.general .gen-row { gap: 0; align-items: flex-start !important; }
+.general .gen-label {
+  width: 108px; height: 33px; align-self: flex-start; display: flex; align-items: center; gap: 7px; padding: 0 8px 0 0; text-align: left;
+  font: 600 .62rem/1 var(--font-mono, monospace) !important; font-style: normal !important;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted);
+}
+.general .gen-label::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent), 0 0 8px var(--accent); }
+.general .gen-label::after { content: ""; flex: 1; height: 1px; min-width: 8px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 70%, transparent), color-mix(in srgb, var(--text) 18%, transparent)); }
+.general .gen-row:hover .gen-label::after { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+body .general .gen-links {
+  gap: 0; flex: 0 1 auto; flex-wrap: wrap; overflow: hidden; border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+  background: color-mix(in srgb, var(--surface-elevated) 78%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+body .general .gen-links a, body .general .gen-links a#open-games-modal, body .general .gen-more {
+  position: relative; margin: 0 !important; padding: 7px 13px !important; border: 0 !important; border-radius: 0 !important;
+  background: transparent !important; transform: none !important; backdrop-filter: none !important;
+  box-shadow: inset 1px 0 0 color-mix(in srgb, var(--text) 10%, transparent) !important;
+  font-size: .8rem !important; font-weight: 500; line-height: 1.2; color: var(--text) !important;
+}
+body .general .gen-links > a:first-child { box-shadow: none !important; }
+body .general .gen-links a::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 0; height: 2px;
+  border-radius: 2px; background: var(--accent); box-shadow: 0 0 8px var(--accent); transform: scaleX(0); transition: transform .18s ease; }
+body .general .gen-links a:hover, body .general .gen-links a:focus-visible {
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important; color: var(--accent-strong) !important; outline: none; }
+body .general .gen-links a:hover::after, body .general .gen-links a:focus-visible::after { transform: scaleX(1); }
+body .general .gen-links a#open-games-modal { color: var(--accent-strong) !important; font-weight: 600; }
+body .general .gen-more { font: 600 .7rem/1.2 var(--font-mono, monospace) !important; color: var(--text-subtle) !important; cursor: pointer; text-decoration: none !important; }
+body .general .gen-more:hover, body .general .gen-more[aria-expanded="true"] { color: var(--accent-strong) !important; background: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+:root[data-theme="dark"] body .general .gen-links a:hover, :root[data-theme="dark"] body .general .gen-links a:focus-visible,
+:root[data-theme="dark"] body .general .gen-links a#open-games-modal, :root[data-theme="dark"] body .general .gen-more:hover,
+:root[data-theme="dark"] body .general .gen-more[aria-expanded="true"] { color: var(--accent) !important; }
+@media (max-width: 768px) {
+  .general .gen-label { width: 100px; padding-top: 0; }
+  body .general .gen-links a, body .general .gen-links a#open-games-modal, body .general .gen-more { padding: 7px 10px !important; font-size: .78rem !important; }
+}
+@media (prefers-reduced-motion: reduce) { body .general .gen-links a::after { transition: none; } }
+
+/* ---------- Subjects, agenda, live status: tighter where it was waste (17 Nov 2026) ----------
+   Subjects (desktop): two columns of short cards. Code + name on top, the
+   links under it. Prof, room and L-T-P are one hover away on the code pill,
+   since the live box already shows the room that matters right now.
+   Phones use the tab dock (subject-dock.js). */
+@media (min-width: 1025px) {
+  body .links { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  body .links .course-card {
+    display: grid !important; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px 10px !important;
+    padding: 12px 15px !important; min-height: 0 !important; border-left-width: 4px !important;
+  }
+  body .links .course-card:hover { transform: translateY(-1px); }
+  body .links .course-head { display: contents; }
+  body .links .course-code { order: 1; }
+  body .links .course-title { order: 2; }
+  /* L-T-P and credits sit at the end of the title line */
+  body .links .course-head .course-spec { order: 3; display: inline-flex !important; gap: 6px; align-self: start; padding-top: 3px; }
+  body .links .cr-badge { background: var(--surface-sunken) !important; color: var(--text) !important;
+    border-color: var(--border-soft) !important; white-space: nowrap; }
+  body .links .course-links { order: 4; grid-column: 1 / -1; }
+  body .links .course-meta-row { display: none !important; }
+  body .links .course-title {
+    margin: 0 !important; font-size: 1rem !important; font-weight: 650; line-height: 1.3 !important;
+    white-space: normal !important; overflow: visible !important;
+  }
+  body .links .course-links { margin: 0 !important; padding: 0 !important; border: 0 !important; flex-wrap: wrap; gap: 6px !important; }
+  body .links .course-links a { padding: 4px 10px !important; font-size: .76rem !important; white-space: nowrap; }
+  body .links .course-code[data-prof]::after { left: 0; transform: scale(.96); transform-origin: bottom left; }
+  body .links .course-code[data-prof]:hover::after { transform: none; }
+}
+
+/* Agenda: one dated list, no nested boxes, no "all clear" filler */
+#quizzes-box[hidden] { display: none !important; }
+.updates .box.agenda-list { padding: 8px !important; display: grid; gap: 6px; }
+.updates .box.agenda-list::after { content: none !important; display: none !important; }
+.updates .box.agenda-list .update-card-item { margin: 0 !important; padding: 9px 11px !important; }
+.upd-kind { font: 600 .6rem/1 var(--font-mono, monospace); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-subtle); }
+.kind-test .upd-kind { color: var(--accent-warm); }
+
+/* Live status: the class line and its plates, no empty gutter */
+.live-tracker-bar .tracker-hero-body { padding: 0 !important; margin: 0 !important; }
+.live-tracker-bar .live-class-status { align-self: stretch; width: 100%; }

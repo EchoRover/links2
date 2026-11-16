@@ -137,6 +137,7 @@ function initMascot() {
   function deadlines() {
     if (typeof updatesData === "undefined") return [];
     return updatesData
+      .filter((u) => !u[3] || new Date() >= new Date(u[3] + "T00:00"))
       .map(([cat, text, expiry]) => {
         const [y, m, d] = String(expiry).split("-").map(Number);
         let t = plain(text);

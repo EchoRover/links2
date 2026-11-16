@@ -170,13 +170,15 @@ function renderCourseLinks(selector, data) {
       if (ltp) {
         const l = document.createElement("span");
         l.className = "ltp";
-        l.textContent = ltp;
+        const [L, T, P] = String(ltp).split("-");
+        l.textContent = P !== undefined ? `${L}L ${T}T ${P}P` : ltp;
+        l.title = "Lecture · Tutorial · Practical hours per week";
         spec.appendChild(l);
       }
       if (credits != null) {
         const c = document.createElement("span");
         c.className = "cr-badge";
-        c.textContent = credits;
+        c.textContent = `${credits} cr`;
         c.title = credits + " credits";
         spec.appendChild(c);
       }

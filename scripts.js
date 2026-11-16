@@ -118,7 +118,8 @@ const linksData = {
 };
 
 // Every deadline, one line each, in date order. The date is the last day it
-// shows (inclusive) and the only place the date is written.
+// shows (inclusive) and the only place the date is written. An optional 4th
+// date hides the line until that day (for repeating weekly work).
 const updatesData = [
   ["quizzes", "AHUL261: Psychology Quiz (during class 14:00)", "2026-09-08"],
   ["assignments", "AENP200: Complete Bomb Calorimeter Lab Report (Energy Transition Lab)", "2026-09-09"],
@@ -138,87 +139,67 @@ const updatesData = [
   ["quizzes", "AENL228: Lab exam, G2 · instruments lab M2-2-031 (Ravi sir)", "2026-11-04"],
   ["quizzes", "AENL228: Lab exam, G1 · regular lab slot Thu 16:00-17:50, M2-2-031 · clash? contact Ravi sir", "2026-11-12"],
   ["assignments", "AHUL261: Submission 2 · Portfolio Entry 2 on Blackboard by 23:59", "2026-11-16"],
-  ["quizzes", "AENL226: Power Electronics quiz · 1 hour (Anandarup sir)", "2026-11-24"]
+  ["quizzes", "AENL226: Power Electronics quiz · 1 hour (Anandarup sir)", "2026-11-24"],
+  // weekly psych portfolio, 5 entries in all; each shows only after the last one's deadline
+  ["assignments", "AHUL261: Submission 3 · Portfolio Entry 3 on Blackboard by 23:59 (3 of 5 left)", "2026-11-23", "2026-11-17"],
+  ["assignments", "AHUL261: Submission 4 · Portfolio Entry 4 on Blackboard by 23:59 (2 of 5 left)", "2026-11-30", "2026-11-24"],
+  ["assignments", "AHUL261: Submission 5 · Portfolio Entry 5 on Blackboard by 23:59 (last one)", "2026-12-07", "2026-12-01"],
+  ["quizzes", "ASBL100: Bio lab exam", "2026-12-11"]
 ];
 
 function renderUpdates() {
   const now = new Date();
   const grouped = {};
-  updatesData.forEach(([category, text, expiry]) => {
+  updatesData.forEach(([category, text, expiry, from]) => {
+    if (from && now < new Date(from + "T00:00")) return;
     if (!grouped[category]) grouped[category] = [];
     grouped[category].push([text, expiry]);
   });
   
-  const categories = [
-    { id: "assignments", title: "📋 Assignments", tag: "Tasks & Reports" },
-    { id: "quizzes", title: "📝 Quizzes & Tests", tag: "Evaluations" }
-  ];
-
+  // One list in date order, not two boxes: what's due next is what matters.
+  // Quizzes and assignments are told apart by a small tag on each row.
+  const KIND = { assignments: "task", quizzes: "test" };
+  const listEl = document.getElementById("assignments-box");
+  const spare = document.getElementById("quizzes-box");
+  if (spare) spare.hidden = true;
   let totalActive = 0;
 
-  categories.forEach(cat => {
-    const container = document.getElementById(cat.id + "-box");
-    if (!container) return;
-    
-    container.innerHTML = "";
-
-    const items = grouped[cat.id] || [];
-    const validItems = [];
-    
-    items.forEach(([text, expiry]) => {
-      const parts = String(expiry).split("-").map(Number);
-      if (parts.length !== 3) return;
-      const [y, m, d] = parts;
-      const expiryExclusive = new Date(y, m - 1, d + 1);
-      if (now < expiryExclusive) {
-        validItems.push({ text, expiry, y, m, d });
+  if (listEl) {
+    listEl.innerHTML = "";
+    listEl.classList.add("agenda-list");
+    const items = [];
+    for (const [cat, list] of Object.entries(grouped)) {
+      for (const [text, expiry] of list) {
+        const parts = String(expiry).split("-").map(Number);
+        if (parts.length !== 3) continue;
+        const [y, m, d] = parts;
+        if (now < new Date(y, m - 1, d + 1)) items.push({ cat, text, y, m, d, t: new Date(y, m - 1, d) });
       }
-    });
+    }
+    items.sort((a, b) => a.t - b.t);
 
-    // Box header with active count badge
-    const headerEl = document.createElement("div");
-    headerEl.className = "box-head-row";
-    headerEl.innerHTML = `
-      <div class="box-title-wrap">
-        <h2>${cat.title}</h2>
-        <span class="box-subtitle">${cat.tag}</span>
-      </div>
-      <span class="box-count-badge ${cat.id === 'quizzes' && validItems.length > 0 ? 'alert' : ''}">
-        ${validItems.length} ${validItems.length === 1 ? 'item' : 'items'}
-      </span>
-    `;
-    container.appendChild(headerEl);
-
-    if (validItems.length === 0) {
+    if (!items.length) {
       const p = document.createElement("div");
       p.className = "update-empty";
-      p.innerHTML = "✨ All caught up! No pending tasks.";
-      container.appendChild(p);
-      return;
+      p.textContent = "Nothing due. Enjoy it.";
+      listEl.appendChild(p);
     }
 
-    validItems.forEach(({ text, y, m, d }) => {
-      const dateObj = new Date(y, m - 1, d);
-      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][dateObj.getDay()];
-      const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dateObj.getMonth()];
-
-      // Whole calendar days, so the count doesn't tick over in the evening.
-      const msPerDay = 1000 * 60 * 60 * 24;
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const daysDiff = Math.round((dateObj - today) / msPerDay);
-      let countdownLabel = "";
-      if (daysDiff <= 0) countdownLabel = "Due today!";
-      else if (daysDiff === 1) countdownLabel = "Due tomorrow!";
-      else countdownLabel = `⏱ in ${daysDiff} days`;
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    items.forEach(({ cat, text, d, t }) => {
+      const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][t.getDay()];
+      const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][t.getMonth()];
+      // whole calendar days, so the count doesn't tick over in the evening
+      const daysDiff = Math.round((t - today) / 86400000);
+      const countdownLabel = daysDiff <= 0 ? "today" : daysDiff === 1 ? "tomorrow" : `in ${daysDiff} days`;
 
       const colon = text.indexOf(":");
       const code = colon >= 0 ? text.slice(0, colon).trim() : "";
-      let event = colon >= 0 ? text.slice(colon + 1).trim() : text;
-
+      const event = colon >= 0 ? text.slice(colon + 1).trim() : text;
       const clr = (typeof COURSE_COLORS !== "undefined" && COURSE_COLORS[code]) || "var(--accent)";
 
       const card = document.createElement("div");
-      card.className = "update-card-item";
+      card.className = `update-card-item kind-${KIND[cat] || "task"}`;
       card.innerHTML = `
         <div class="update-date-badge">
           <span class="upd-dow">${DOW}</span>
@@ -228,15 +209,16 @@ function renderUpdates() {
         <div class="update-info">
           <div class="update-tag-row">
             ${code ? `<span class="upd-code" style="color: ${clr}; border-color: ${clr}; background: color-mix(in srgb, ${clr} 12%, transparent);">${code}</span>` : ""}
-            <span class="upd-countdown ${daysDiff <= 3 ? 'urgent' : ''}">${countdownLabel}</span>
+            <span class="upd-kind">${KIND[cat] || "task"}</span>
+            <span class="upd-countdown ${daysDiff <= 3 ? "urgent" : ""}">${countdownLabel}</span>
           </div>
           <div class="upd-text">${event}</div>
         </div>
       `;
-      container.appendChild(card);
+      listEl.appendChild(card);
       totalActive++;
     });
-  });
+  }
 
   const mainHeader = document.querySelector(".updates-header");
   if (mainHeader) {
@@ -549,26 +531,27 @@ function updateLiveClassStatus() {
       const timeToStartStr = minsToStart < 60 ? `${minsToStart} min` : `${Math.floor(minsToStart / 60)}h ${minsToStart % 60}m`;
       const nextTitle = (COURSE_TITLES && COURSE_TITLES[nextClass.code]) || nextClass.code;
 
+      // free now: lead with what's next (one block, same shape as IN SESSION)
       statusEl.innerHTML = `
         <div class="tracker-hero-body">
           <div class="tracker-main-info">
             <div class="tracker-class-name">
-              <span class="live-tag live-tag-free">FREE PERIOD</span>
-              <strong>Open Study & Break Slot</strong>
+              <span class="live-tag live-tag-free">FREE · NEXT</span>
+              <strong>${nextClass.code}</strong>
+              <span class="tracker-type-badge">${nextClass.type}</span>
             </div>
-            <div class="tracker-prof-line">No lectures currently in progress</div>
+            <div class="tracker-prof-line">${nextTitle} · starts ${startStr.trim()}</div>
           </div>
           <div class="tracker-plates">
+            <div class="tracker-plate tracker-plate-room">
+              <span class="plate-label">ROOM</span>
+              <span class="plate-val">${roomShort(nextClass.room)}</span>
+            </div>
             <div class="tracker-plate tracker-plate-next">
               <span class="plate-label">STARTS IN</span>
               <span class="plate-val time-val">${timeToStartStr}</span>
             </div>
           </div>
-        </div>
-        <div class="tracker-next-banner">
-          <span class="next-label">⏱ UP NEXT AT ${nextClass.time.split("-")[0].trim()}:</span>
-          <strong>${nextClass.code} ${nextClass.type}</strong> (${nextTitle})
-          <span class="next-room">in ${roomShort(nextClass.room)}</span>
         </div>
       `;
       if (dotEl) dotEl.className = "live-class-dot dot-free";
