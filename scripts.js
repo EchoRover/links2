@@ -367,12 +367,14 @@ const DAYS_OFF = {
   "2026-10-24": "Mid-sem exams",
   "2026-10-26": "Mid-sem exams", "2026-10-27": "Mid-sem exams",
   "2026-10-28": "Mid-sem exams", "2026-10-29": "Mid-sem exams",
-  "2026-11-09": "Deepawali"
+  "2026-11-09": "Deepawali",
+  "2026-12-02": "UAE National Day", "2026-12-03": "UAE National Day",
+  "2026-12-04": "UAE National Day"
 };
 
 // Make-up days: this date runs that weekday's timetable (Thu 5 Nov = Monday,
 // Sun 22 Nov = Friday, online). Keep in step with FOLLOWS in timetable.js (other name: free.html loads both).
-const MAKEUP_DAYS = { "2026-11-05": 1, "2026-11-22": 5 };
+const MAKEUP_DAYS = { "2026-11-05": 1, "2026-11-22": 5, "2026-11-30": 4, "2026-12-01": 5 };
 function dayOf(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   return MAKEUP_DAYS[key] ?? d.getDay();

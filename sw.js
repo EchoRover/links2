@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "9aaf412d0099";
+const VERSION = "bc12ef14f7e8";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -60,6 +60,7 @@ const SHELL = [
 "/cgpa.js",
 "/common",
 "/common.js",
+"/convocation.js",
 "/diwali.js",
 "/energypong",
 "/exam-day.css",
