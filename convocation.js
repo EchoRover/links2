@@ -2,9 +2,9 @@
 // convocation.js — IITD-AD's first Convocation (19 Nov 2026, first M.Tech batch).
 //
 // On 17–19 Nov 2026 (or any day with ?convo=1; ?convo=0 turns it off): a
-// thin gold and crimson hood ribbon along the top, a mortarboard with a
-// swinging tassel beside the greeting, the eyebrow line, and once per day a
-// cap toss. Tap the cap to toss again. Links, timetable and cards are untouched.
+// thin gold and crimson hood ribbon along the top, a black mortarboard with a
+// swinging tassel on Sparky, the eyebrow line, and once per day a
+// cap toss. Tap Sparky's cap to toss again. Links, timetable and cards are untouched.
 // ============================================================
 
 (function () {
@@ -22,8 +22,9 @@
       content: ""; position: fixed; inset: 0 0 auto 0; height: 6px; z-index: 50; pointer-events: none;
       background: linear-gradient(#c9a227 0 3px, #8c1d2f 3px 6px);
     }
-    .cv-cap { display: inline-block; width: 34px; height: 30px; margin-left: 10px; vertical-align: -3px;
-      cursor: pointer; overflow: visible; }
+    .cv-cap { position: absolute; width: 64%; left: 17%; top: -13%; z-index: 2; overflow: visible;
+      cursor: pointer; transform: rotate(-12deg); filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+    html.convo #sparky .sp-bolt { display: none; }
     .cv-tassel { transform-origin: 27px 12px; animation: cv-swing 2.8s ease-in-out infinite; }
     @keyframes cv-swing { 0%,100% { transform: rotate(-6deg); } 50% { transform: rotate(9deg); } }
     .cv-fly { position: fixed; z-index: 60; width: 30px; height: 26px; pointer-events: none; left: 0; top: 0; }
@@ -35,8 +36,8 @@
 
   const capSvg = (cls, tassel) =>
     `<svg class="${cls}" viewBox="0 0 34 30" aria-hidden="true">` +
-    `<path d="M9 13v7c0 2.5 4 4.5 8 4.5s8-2 8-4.5v-7" fill="#1f2a24"/>` +
-    `<path d="M17 4 33 11 17 18 1 11z" fill="#2b3a31" stroke="#1f2a24" stroke-width=".8"/>` +
+    `<path d="M9 13v7c0 2.5 4 4.5 8 4.5s8-2 8-4.5v-7" fill="#111114"/>` +
+    `<path d="M17 4 33 11 17 18 1 11z" fill="#1d1d22" stroke="#3a3a42" stroke-width=".8"/>` +
     `<circle cx="17" cy="11" r="1.3" fill="#c9a227"/>` +
     `<g class="${tassel ? "cv-tassel" : ""}"><path d="M17 11 27 12v9" stroke="#c9a227" stroke-width="1.1" fill="none"/>` +
     `<path d="M25.6 21h2.8l-.4 5h-2z" fill="#c9a227"/></g></svg>`;
@@ -69,13 +70,11 @@
       if (eyebrow) eyebrow.textContent = (q === "1" || left <= 0)
         ? "Year 3 · Convocation today · 19 Nov"
         : `Year 3 · Convocation in ${left} day${left === 1 ? "" : "s"} · 19 Nov`;
-      const h = document.querySelector(".hero h1, .hero-text h1");
-      if (h && !h.querySelector(".cv-cap")) {
-        h.insertAdjacentHTML("beforeend", capSvg("cv-cap", true));
-        const cap = h.querySelector(".cv-cap");
-        cap.setAttribute("role", "button");
-        cap.setAttribute("aria-label", "Toss the caps");
-        cap.addEventListener("click", toss);
+      // Sparky wears the cap; tapping the cap tosses, tapping Sparky still talks.
+      const sp = document.getElementById("sparky");
+      if (sp && !sp.querySelector(".cv-cap")) {
+        sp.insertAdjacentHTML("beforeend", capSvg("cv-cap", true));
+        sp.querySelector(".cv-cap").addEventListener("click", (e) => { e.stopPropagation(); toss(); });
       }
       let seen = null;
       const key = "linkeen:convo-toss", today = now.toDateString();
