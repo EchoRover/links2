@@ -3766,3 +3766,12 @@ body .general .gen-more:hover, body .general .gen-more[aria-expanded="true"] { c
 /* Live status: the class line and its plates, no empty gutter */
 .live-tracker-bar .tracker-hero-body { padding: 0 !important; margin: 0 !important; }
 .live-tracker-bar .live-class-status { align-self: stretch; width: 100%; }
+
+/* Page scrollbar in the theme's colours, not the browser's grey */
+:root[data-theme="dark"] { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+html { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--accent) 45%, var(--border)) var(--surface); }
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: var(--surface); }
+html::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: 10px; border: 2px solid var(--surface); }
+html::-webkit-scrollbar-thumb:hover { background: var(--accent); }
