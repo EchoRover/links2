@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "087737f519fc";
+const VERSION = "f27e42420cb6";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -85,6 +85,7 @@ const SHELL = [
 "/icons/maskable-512.png",
 "/image.png",
 "/",
+"/install-wall.js",
 "/jumpscare.js",
 "/m2-data.js",
 "/m2",

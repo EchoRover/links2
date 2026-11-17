@@ -614,44 +614,37 @@ function renderModalTimetable(dayKey) {
   }
   
   let insertedDivider = false;
-  
+  let hidden = 0;
+
   const rowsHtml = [];
   sortedClasses.forEach(c => {
-    const isSplit = c.batch !== undefined;
-    const isActiveBatch = !isSplit || c.batch === currentBatch;
-    const itemClass = isSplit
-      ? (isActiveBatch ? "timeline-row batch-active" : "timeline-row batch-inactive")
-      : "timeline-row";
-      
+    // Only the chosen group's classes; the other group's are hidden, not dimmed.
+    if (c.batch !== undefined && c.batch !== currentBatch) { hidden++; return; }
+
     const borderClr = COURSE_COLORS[c.code] || "var(--text-muted)";
-    const batchLabel = isSplit ? ` · Group ${c.batch}` : "";
-    
-    const startTimeMins = timeToMinutes(c.time.split("-")[0].trim());
-    
-    if (!insertedDivider && startTimeMins >= 840) {
-      rowsHtml.push(`
-        <div class="afternoon-divider">
-          <span>✿ Afternoon Sessions</span>
-        </div>
-      `);
+    const [start, end] = c.time.split("-").map(s => s.trim());
+
+    if (!insertedDivider && timeToMinutes(start) >= 840) {
+      rowsHtml.push(`<div class="afternoon-divider"><span>Afternoon</span></div>`);
       insertedDivider = true;
     }
-    
+
     rowsHtml.push(`
-      <div class="${itemClass}" style="border-left-color: ${borderClr};">
-        <div class="timeline-time">⏱️ ${c.time}</div>
-        <div class="timeline-meta">
+      <div class="timeline-row" style="border-left-color: ${borderClr};">
+        <div class="timeline-time"><b>${start}</b><span>${end || ""}</span></div>
+        <div class="timeline-body">
           <div class="timeline-code-row">
             <span class="timeline-code">${c.code}</span>
             <span class="timeline-type">${c.special ? "Special · " : ""}${c.type}</span>
           </div>
-          <div class="timeline-room">📍 ${roomLabel(c.room)}${batchLabel}</div>
+          <div class="timeline-name">${c.name}</div>
+          <div class="timeline-room">${roomLabel(c.room)}${c.batch !== undefined ? ` · G${c.batch} only` : ""}</div>
         </div>
-        <div class="timeline-name">${c.name}</div>
       </div>
     `);
   });
 
+  if (hidden) rowsHtml.push(`<p class="timeline-note">${hidden} Group ${currentBatch === 1 ? 2 : 1} class${hidden > 1 ? "es" : ""} hidden. Switch group above to see ${hidden > 1 ? "them" : "it"}.</p>`);
   container.innerHTML = rowsHtml.join("");
 }
 
