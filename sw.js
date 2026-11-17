@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "cd42137797ac";
+const VERSION = "087737f519fc";
 const SHELL = [
 "/404",
 "/announce.js",
@@ -106,6 +106,7 @@ const SHELL = [
 "/overrides.js",
 "/planedit",
 "/planedit.js",
+"/push.js",
 "/rooms-data.js",
 "/rooms",
 "/rooms.js",
@@ -372,3 +373,24 @@ async function cacheFirst(req, name) {
     return new Response("", { status: 504 });
   }
 }
+
+// ---------- push notifications (push.js subscribes, tools/notify.mjs sends) ----------
+self.addEventListener("push", (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data && event.data.text() }; }
+  event.waitUntil(self.registration.showNotification(d.title || "linkeen", {
+    body: d.body || "", tag: d.tag, data: { url: d.url || "/" },
+    icon: "/icons/icon-192.png", badge: "/icons/icon-192.png",
+  }));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = new URL((event.notification.data && event.notification.data.url) || "/", self.location.origin).href;
+  event.waitUntil((async () => {
+    for (const c of await self.clients.matchAll({ type: "window", includeUncontrolled: true })) {
+      if ("focus" in c) { await c.navigate(url).catch(() => {}); return c.focus(); }
+    }
+    return self.clients.openWindow(url);
+  })());
+});
