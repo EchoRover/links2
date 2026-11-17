@@ -70,6 +70,25 @@ export function validate(op) {
       opt(o, "room", str(op.room, 20));
       break;
     }
+    case "class_weekly": {
+      // A standing change: every <weekday> from startDate (to endDate) the slot at
+      // fromTime is removed and/or a slot toTime-toEnd is added (on toWeekday if set).
+      const wd = (v) => { const n = Number(v); if (!Number.isInteger(n) || n < 1 || n > 5) throw new Error("bad weekday"); return n; };
+      o = { type: t, course: course(op.course), weekday: wd(op.weekday), startDate: date(op.startDate, "startDate") };
+      if (op.fromTime) o.fromTime = time(op.fromTime, "fromTime");
+      if (op.toTime) {
+        o.toTime = time(op.toTime, "toTime");
+        o.toEnd = time(op.toEnd, "toEnd");
+        if (o.toEnd <= o.toTime) throw new Error("toEnd before toTime");
+        if (op.toWeekday) o.toWeekday = wd(op.toWeekday);
+        opt(o, "room", str(op.room, 20));
+      }
+      if (!o.fromTime && !o.toTime) throw new Error("class_weekly needs fromTime and/or toTime");
+      const g = Number(op.group);
+      if (g === 1 || g === 2) o.group = g;
+      if (op.endDate) o.endDate = date(op.endDate, "endDate");
+      break;
+    }
     case "class_cancel": {
       o = { type: t, course: course(op.course), date: date(op.date, "date") };
       if (op.time) o.time = time(op.time, "time");
@@ -105,6 +124,12 @@ export function expiresOf(op) {
   switch (op.type) {
     case "announce": return op.until;
     case "class_move": return op.fromDate > op.toDate ? op.fromDate : op.toDate;
+    case "class_weekly": {
+      if (op.endDate) return op.endDate;
+      const d = new Date(op.startDate + "T00:00:00Z");
+      d.setUTCDate(d.getUTCDate() + 180);
+      return d.toISOString().slice(0, 10);
+    }
     default: return op.date;
   }
 }

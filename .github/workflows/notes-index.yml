@@ -1,0 +1,30 @@
+name: notes-index
+# When files land in notes/ (e.g. an /admin upload), rebuild the slide search
+# index, the /files catalogue and the offline list, and commit them back.
+on:
+  push:
+    branches: [main]
+    paths: ["notes/**", "!notes/index.json", "!notes/files.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: { group: notes-index, cancel-in-progress: false }
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pymupdf
+      - run: python tools/build_slide_index.py && python tools/build_offline.py
+      - name: Commit if anything changed
+        run: |
+          git config user.name "linkeen-bot"
+          git config user.email "linkeen-bot@users.noreply.github.com"
+          git add notes/index.json notes/files.json sw.js
+          git diff --cached --quiet || (git commit -m "Rebuild notes index after upload" && git push)

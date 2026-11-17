@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=32">
-  <link rel="stylesheet" href="admin.css?v=2">
+  <link rel="stylesheet" href="admin.css?v=3">
 </head>
 <body class="adm">
   <main class="adm-wrap">
@@ -55,10 +55,30 @@
         <p class="adm-label">preview</p>
         <p id="summary" class="adm-summary"></p>
         <ul id="preview-list" class="adm-ops"></ul>
+        <label class="adm-mini adm-notify"><input type="checkbox" id="notify"> also push a notification to subscribers</label>
+        <input id="notify-text" type="text" class="adm-notify-text" maxlength="200" placeholder="notification text (defaults to the summary)" hidden>
         <div class="adm-row">
           <button type="button" id="apply" class="adm-btn adm-primary">Apply all</button>
           <button type="button" id="discard" class="adm-btn">Discard</button>
         </div>
+      </div>
+
+      <div class="adm-card">
+        <label class="adm-label" for="up-file">add a file to notes</label>
+        <div class="adm-row">
+          <select id="up-course" aria-label="Course"></select>
+          <input id="up-file" type="file" multiple accept=".pdf,.pptx,.docx,.xlsx,.zip">
+        </div>
+        <div class="adm-row">
+          <input id="up-name" type="text" placeholder="name (optional, one file only), e.g. Module 6 Lecture 1" style="flex:1;min-width:0">
+          <button type="button" id="up-go" class="adm-btn adm-primary">Upload</button>
+        </div>
+        <div class="adm-row" id="up-token-row" hidden>
+          <input id="up-token" type="password" placeholder="GitHub token (one time, stays in this browser)" style="flex:1;min-width:0" autocomplete="off">
+          <button type="button" id="up-token-save" class="adm-btn">Save token</button>
+        </div>
+        <p class="adm-mini" id="up-token-set" hidden>GitHub token saved in this browser. <button type="button" id="up-token-forget" class="adm-link">forget it</button></p>
+        <p id="up-status" hidden></p>
       </div>
 
       <p class="adm-label">live now</p>
@@ -67,8 +87,9 @@
     </section>
   </main>
 
-  <script src="timetable.js?v=7"></script>
-  <script src="admin-prompt.js?v=2"></script>
-  <script src="admin.js?v=3"></script>
+  <script src="timetable.js?v=8"></script>
+  <script src="admin-prompt.js?v=3"></script>
+  <script src="admin.js?v=4"></script>
+  <script src="admin-upload.js?v=1"></script>
 </body>
 </html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="install-wall.js?v=1" data-name="linkeen" data-bg="#040b05" data-fg="#e6f8e8" data-accent="#39ff7a"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Files · linkeen</title>
+    <meta name="description" content="Every lecture, tutorial, lab manual and handout, by course. Searchable.">
+    <meta property="og:site_name" content="linkeen">
+    <meta property="og:title" content="Files · linkeen">
+    <meta property="og:description" content="Every lecture, tutorial, lab manual and handout, by course. Searchable.">
+    <meta property="og:image" content="https://linkeen.vercel.app/icons/icon-512.png">
+    <meta property="og:url" content="https://linkeen.vercel.app/files">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" type="image/png" href="sustainability.png">
+    <script src="theme-init.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500;1,600&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-cs.css">
+    <style>
+        .files-wrap { max-width: 900px; margin: 0 auto; padding: 0 16px 80px; }
+        .files-title { font-family: var(--font-serif); font-style: italic; font-weight: 500; font-size: clamp(1.7rem, 4vw, 2.4rem); color: var(--fg); margin: 30px 0 4px; }
+        .files-title em { color: var(--coral); }
+        .files-sub { font-size: 0.88rem; color: var(--fg-soft); margin: 0 0 18px; }
+        .files-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        .files-bar input { flex: 1 1 260px; min-width: 0; font: inherit; font-size: 0.95rem; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--rule); background: var(--bg-card); color: var(--fg); }
+        .files-bar select { font: inherit; font-size: 0.88rem; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--rule); background: var(--bg-card); color: var(--fg); }
+        .files-courses { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+        .files-courses button { font: inherit; font-size: 0.8rem; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--rule); background: var(--bg-card); color: var(--fg-soft); cursor: pointer; }
+        .files-courses button span { opacity: 0.6; font-weight: 500; }
+        .files-courses button.on { background: var(--coral); border-color: var(--coral); color: var(--bg-card); }
+        .files-count { font-size: 0.8rem; color: var(--fg-faint); margin: 0 0 8px; }
+        .files-group { font-size: 1rem; margin: 22px 0 8px; color: var(--fg); }
+        .files-group span { font-weight: 400; color: var(--fg-soft); font-size: 0.88rem; margin-left: 6px; }
+        .files-row { border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-card); margin-bottom: 6px; overflow: hidden; }
+        .files-main { display: flex; align-items: center; gap: 12px; padding: 10px 12px; text-decoration: none; color: var(--fg); }
+        .files-main:hover { background: var(--bg-elevated); }
+        .files-ext { flex: none; width: 44px; text-align: center; font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 0; border-radius: 6px; background: var(--bg-elevated); color: var(--fg-soft); }
+        .files-ext-pdf { color: #e5484d; } .files-ext-docx { color: #3e7bfa; } .files-ext-pptx { color: #f76b15; } .files-ext-xlsx { color: #30a46c; }
+        .files-text { min-width: 0; display: flex; flex-direction: column; }
+        .files-text b { font-weight: 600; font-size: 0.95rem; overflow-wrap: anywhere; }
+        .files-text small { font-size: 0.78rem; color: var(--fg-soft); margin-top: 2px; }
+        .files-hit { display: block; padding: 6px 12px 6px 68px; font-size: 0.8rem; color: var(--fg-soft); text-decoration: none; border-top: 1px dashed var(--rule); }
+        .files-hit em { font-style: normal; font-weight: 700; color: var(--coral); margin-right: 4px; }
+        .files-hit mark { background: var(--coral); color: var(--bg-card); border-radius: 2px; padding: 0 2px; }
+        .files-hit:hover { background: var(--bg-elevated); }
+        .files-more { display: block; padding: 4px 12px 8px 68px; font-size: 0.75rem; color: var(--fg-faint); }
+        .files-empty { color: var(--fg-soft); padding: 30px 0; text-align: center; }
+        @media (max-width: 560px) { .files-hit, .files-more { padding-left: 12px; } }
+    </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0b1210">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="linkeen">
+</head>
+
+<body>
+    <main class="page">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <img src="assets/text.webp" class="text-img" alt="IIT Delhi Abu Dhabi">
+                    <img src="assets/circle.webp" class="circle-img" alt="">
+                </div>
+                <span class="brand-name">
+                    <span class="brand-part-link">link</span><span class="brand-part-een">een</span>
+                </span>
+                <span class="brand-meta">files · all courses</span>
+            </div>
+            <div class="topbar-utils">
+                <a href="./" class="pill">
+                    <span class="pill-name">← Home</span>
+                </a>
+                <button class="button" id="theme-toggle" aria-label="Toggle theme">◐</button>
+            </div>
+        </header>
+
+        <div class="files-wrap">
+            <h1 class="files-title">All <em>Files</em></h1>
+            <p class="files-sub">Every lecture, tutorial, lab manual and handout from Blackboard and the class groups. Search looks inside the PDFs too.</p>
+            <div class="files-bar">
+                <input id="files-q" type="search" placeholder="Search names and slide text, e.g. buck converter" autocomplete="off">
+                <select id="files-sort" aria-label="Sort">
+                    <option value="course">By course</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="size">Biggest first</option>
+                </select>
+            </div>
+            <div class="files-courses" id="files-courses"></div>
+            <p class="files-count" id="files-count"></p>
+            <div id="files-list"></div>
+        </div>
+    </main>
+    <script src="files.js?v=1"></script>
+  <script src="offline.js?v=3" defer></script>
+  <script src="announce.js?v=7" defer></script>
+</body>
+
+</html>

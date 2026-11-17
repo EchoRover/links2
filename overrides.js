@@ -32,7 +32,7 @@
   function cap(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
 
   function derive(ops) {
-    const out = { noClass: {}, follows: {}, updates: [], announce: [], tweaks: {}, mess: {} };
+    const out = { noClass: {}, follows: {}, updates: [], announce: [], tweaks: {}, mess: {}, weekly: [] };
     const tw = (d) => out.tweaks[d] || (out.tweaks[d] = { cancel: [], add: [] });
     for (const o of ops) {
       try {
@@ -58,6 +58,7 @@
           case "class_cancel":
             tw(o.date).cancel.push({ course: o.course, time: o.time || "" });
             break;
+          case "class_weekly": out.weekly.push(o); break;
           case "mess_special": out.mess[o.date + "|" + o.meal] = o.items; break;
         }
       } catch (e) {}
@@ -98,7 +99,21 @@
         apply(l);
       } catch (e) {}
     },
-    tweaks(dateKey) { return derived.tweaks[dateKey] || null; },
+    // dow = the weekday whose timetable this date runs (make-up days differ from
+    // the calendar), so standing class_weekly changes follow make-up days too.
+    tweaks(dateKey, dow) {
+      const one = derived.tweaks[dateKey];
+      const weekly = derived.weekly.filter((o) => dow && o.startDate <= dateKey && (!o.endDate || dateKey <= o.endDate));
+      if (!weekly.length) return one || null;
+      const tw = { cancel: one ? one.cancel.slice() : [], add: one ? one.add.slice() : [] };
+      for (const o of weekly) {
+        if (o.fromTime && o.weekday === dow) tw.cancel.push({ course: o.course, time: o.fromTime });
+        if (o.toTime && (o.toWeekday || o.weekday) === dow) {
+          tw.add.push({ course: o.course, s: o.toTime, e: o.toEnd, room: o.room || "", grp: o.group || 0 });
+        }
+      }
+      return tw;
+    },
     announcements() { return derived.announce; },
     messSpecial(date, meal) {
       try {

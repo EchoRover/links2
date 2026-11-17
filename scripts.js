@@ -21,6 +21,7 @@ const linksData = {
     uni: {
       ERP: "https://iitdadierp.iitd.ac.in/student/login",
       Blackboard: "https://iida.blackboard.com/ultra/course",
+      Files: "files",
       Teams: "https://teams.microsoft.com/",
       more: {
         Outlook: "https://outlook.office.com/",
@@ -379,7 +380,7 @@ if (window.LINKEEN) {
 function classesOn(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const changes = CLASS_CHANGES[key] || [];
-  const tw = (window.LINKEEN && LINKEEN.tweaks(key)) || { cancel: [], add: [] };
+  const tw = (window.LINKEEN && LINKEEN.tweaks(key, dayOf(d))) || { cancel: [], add: [] };
   const list = (WEEKLY_CLASSES[dayOf(d)] || []).map(c => {
     const change = changes.find(ch => ch.code === c.code);
     return change ? { ...c, time: change.time, special: true } : c;
@@ -387,7 +388,8 @@ function classesOn(d) {
   tw.add.forEach(a => {
     const ref = Object.values(WEEKLY_CLASSES).flat().find(c => c.code === a.course);
     list.push({ code: a.course, name: ref ? ref.name : a.course, time: `${a.s}-${a.e}`,
-                room: a.room || (ref ? ref.room : ""), type: "Lecture", special: true });
+                room: a.room || (ref ? ref.room : ""), type: "Lecture", special: true,
+                ...(a.grp ? { batch: a.grp } : {}) });
   });
   return list.sort((a, b) => timeToMinutes(a.time.split("-")[0]) - timeToMinutes(b.time.split("-")[0]));
 }
@@ -652,6 +654,11 @@ function renderModalTimetable(dayKey) {
 window.addEventListener("DOMContentLoaded", () => {
   console.log("--- SCRIPTS.JS FORCE LOAD V14 ---");
   renderGeneralLinks(".general", linksData.general);
+  // Every subject card gets a "Files" link to its folder on /files.
+  for (const [title, c] of Object.entries(linksData.courses)) {
+    const code = title.split(" ")[0];
+    if (c.links && !c.links.Files) c.links = { Files: "files?c=" + code, ...c.links };
+  }
   renderCourseLinks(".links", linksData.courses);
   renderUpdates();
   buildHeroSub();

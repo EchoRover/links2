@@ -34,6 +34,7 @@ Rules:
 6. Anything students should simply read that fits no other type is an announce op: level "info" (default), "new" (good news), or "urgent" (time-critical or exam related). Set until to the last day it matters. Plain text, no emoji, no HTML.
 7. A note that creates both a notice and a schedule change gives both ops. Keep op count small and never invent facts the admin did not state.
 8. Use only course codes listed above.
+9. A standing change ("from now on", "every week", "permanently", "for the rest of the sem") is ONE class_weekly op, never a list of dated ops. Moving a weekly slot: weekday + fromTime of the current slot, plus toTime/toEnd (and toWeekday if the day changes). Dropping a weekly slot: weekday + fromTime only. A new extra weekly class: weekday + toTime/toEnd only. startDate is the first date it applies (default: today). Set group only if the change is for one group.
 
 OP SCHEMA (every op has "type" plus these fields; "?" = optional):
 announce {text, level, from?, until, link?}
@@ -41,6 +42,7 @@ holiday {date, label}
 makeup {date, followsWeekday}
 class_move {course, fromDate, fromTime, toDate, toTime, toEnd, room?}
 class_cancel {course, date, time?}
+class_weekly {course, weekday (1-5, the slot's current weekday), startDate, fromTime?, toWeekday?, toTime?, toEnd?, room?, group? (1|2), endDate?}
 exam {course, kind ("quiz" | "lab exam" | "midsem" | "viva" | "test"), date, time?, room?, note?}
 deadline {course, title, date}
 mess_special {date, meal, items[]}

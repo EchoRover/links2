@@ -177,7 +177,7 @@ const CLASS_CHANGES = {
 // Pass a date key to get that day's actual classes, changes included.
 function dayEntries(dow, key) {
     const changes = (key && CLASS_CHANGES[key]) || [];
-    const tw = (key && window.LINKEEN && LINKEEN.tweaks(key)) || { cancel: [], add: [] };
+    const tw = (key && window.LINKEEN && LINKEEN.tweaks(key, dow)) || { cancel: [], add: [] };
     return (WEEK[dow] || [])
         .map(([s, e, code, room, kind, grp]) => {
             const ch = changes.find((c) => c.code === code);
@@ -185,7 +185,7 @@ function dayEntries(dow, key) {
             return { s, e, code, room, kind, grp, from: tmin(s), to: tmin(e), special: !!ch };
         })
         .filter((x) => !tw.cancel.some((c) => c.course === x.code && (!c.time || c.time === x.s)))
-        .concat(tw.add.map((a) => ({ s: a.s, e: a.e, code: a.course, room: a.room || "", kind: "", grp: 0,
+        .concat(tw.add.map((a) => ({ s: a.s, e: a.e, code: a.course, room: a.room || "", kind: "", grp: a.grp || 0,
             from: tmin(a.s), to: tmin(a.e), special: true })))
         .sort((a, b) => a.from - b.from || a.grp - b.grp);
 }

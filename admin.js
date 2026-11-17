@@ -68,6 +68,13 @@
                 ["+", `${dlabel(o.toDate)}, ${o.course} ${o.toTime}-${o.toEnd}${o.room ? " in " + o.room : ""} added`]];
       case "class_cancel":
         return [["-", `${dlabel(o.date)}, ${o.course}${o.time ? " " + o.time : ""} cancelled`]];
+      case "class_weekly": {
+        const span = `from ${dlabel(o.startDate)}${o.endDate ? " to " + dlabel(o.endDate) : ""}${o.group ? ", G" + o.group + " only" : ""}`;
+        const out = [];
+        if (o.fromTime) out.push(["-", `Every ${DOW[o.weekday]}, ${o.course} ${tlabel(o.fromTime)} removed (${span})`]);
+        if (o.toTime) out.push(["+", `Every ${DOW[o.toWeekday || o.weekday]}, ${o.course} ${o.toTime}-${o.toEnd}${o.room ? " in " + o.room : ""} (${span})`]);
+        return out;
+      }
       case "exam":
         return [["+", `${o.course} ${o.kind} on ${dlabel(o.date)}${o.time ? " at " + o.time : ""}${o.room ? ", " + o.room : ""}${o.note ? " (" + o.note + ")" : ""}`]];
       case "deadline":
@@ -307,8 +314,20 @@
       if (r.status === 401) { show("login"); return; }
       const data = await r.json().catch(() => ({}));
       if (!r.ok || !data.ok) { status("Not applied: " + (data.error || r.status)); return; }
+      let pushed = "";
+      if ($("notify").checked) {
+        const body = $("notify-text").value.trim() || $("summary").textContent.trim()
+          || proposed.flatMap(describeOp).map(([, t]) => t).join(". ");
+        try {
+          const p = await api("/api/push/send", { method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: "linkeen", body, url: "/", topic: "news" }) });
+          const pd = await p.json().catch(() => ({}));
+          pushed = p.ok && pd.ok ? `Applied. Notified ${pd.sent} device${pd.sent === 1 ? "" : "s"}.` : "Applied, but the notification failed: " + (pd.error || p.status);
+        } catch (e) { pushed = "Applied, but the notification failed (offline?)"; }
+      }
+      $("notify").checked = false; $("notify-text").value = ""; $("notify-text").hidden = true;
       reset();
-      status("");
+      status(pushed);
       await loadLive();
     } finally { $("apply").disabled = false; }
   }
@@ -386,6 +405,7 @@
       if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); go(); }
     });
     $("apply").onclick = apply;
+    $("notify").onchange = () => { $("notify-text").hidden = !$("notify").checked; };
     $("discard").onclick = reset;
     $("logout").onclick = logout;
     $("login-form").addEventListener("submit", (e) => { e.preventDefault(); login($("pw").value); });

@@ -110,14 +110,18 @@ if (today >= TERM.start && today <= TERM.end && !holiday) {
   const makeup = ops.find((o) => o.type === "makeup" && o.date === today);
   const dow = makeup ? makeup.followsWeekday : (FOLLOWS[today] ?? now.getUTCDay());
   const changes = CHANGES[today] || [];
+  const weekly = ops.filter((o) => o.type === "class_weekly" && o.startDate <= today && (!o.endDate || today <= o.endDate));
   const cancel = ops.filter((o) => (o.type === "class_cancel" && o.date === today) || (o.type === "class_move" && o.fromDate === today))
-    .map((o) => ({ course: o.course, time: o.time || o.fromTime || "" }));
+    .map((o) => ({ course: o.course, time: o.time || o.fromTime || "" }))
+    .concat(weekly.filter((o) => o.fromTime && o.weekday === dow).map((o) => ({ course: o.course, time: o.fromTime })));
   const list = (WEEK[dow] || []).map(([s, e, code, room, kind, grp]) => {
     const ch = changes.find((c) => c.code === code);
     return { s: ch ? ch.s : s, code, room, kind, grp };
   }).filter((x) => x.kind !== "free" && !cancel.some((c) => c.course === x.code && (!c.time || c.time === x.s)))
     .concat(ops.filter((o) => o.type === "class_move" && o.toDate === today)
-      .map((o) => ({ s: o.toTime, code: o.course, room: o.room || "", kind: "", grp: 0 })));
+      .map((o) => ({ s: o.toTime, code: o.course, room: o.room || "", kind: "", grp: 0 })))
+    .concat(weekly.filter((o) => o.toTime && (o.toWeekday || o.weekday) === dow)
+      .map((o) => ({ s: o.toTime, code: o.course, room: o.room || "", kind: "", grp: o.group || 0 })));
   const KIND = { lab: "lab", tut: "tutorial", proj: "help session", "": "lecture" };
   for (const x of list) {
     const lead = tmin(x.s) - mins;

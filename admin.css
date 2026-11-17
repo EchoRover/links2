@@ -65,3 +65,12 @@ textarea:focus, input:focus, select:focus { outline: 1px solid var(--accent-stro
 .adm-chip:hover { border-color: var(--accent); }
 .adm-chip.on { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--surface-elevated); }
 .adm-chip:disabled { opacity: .5; cursor: default; }
+
+.adm-ok { color: var(--accent-strong); margin: 6px 0; font-size: 13px; }
+.adm-notify { margin-top: 4px; font-size: 12px; cursor: pointer; }
+.adm-notify-text, #up-name, #up-token { font: inherit; font-size: 13px; padding: 6px 8px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--surface-elevated); color: var(--text); }
+.adm-notify-text { display: block; width: 100%; box-sizing: border-box; margin-top: 6px; }
+#up-course { font: inherit; font-size: 13px; padding: 5px 6px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--surface-elevated); color: var(--text); }
+#up-file { font-size: 12px; min-width: 0; max-width: 100%; }
