@@ -118,3 +118,16 @@
     onChange(fn) { listeners.add(fn); }
   };
 })();
+
+// Hidden door: 7 taps on the linkeen logo within 4 seconds opens /admin.
+// (offline.js is on every page; admin itself still needs the password.)
+(function () {
+  const TAPS = 7, WINDOW_MS = 4000;
+  let times = [];
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest || !e.target.closest(".brand")) return;
+    const now = Date.now();
+    times = times.filter((t) => now - t < WINDOW_MS).concat(now);
+    if (times.length >= TAPS) { times = []; location.href = "/admin"; }
+  });
+})();
