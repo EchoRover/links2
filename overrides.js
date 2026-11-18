@@ -12,6 +12,15 @@
 (function () {
   const KEY = "linkeen:ov";
   const layers = [];
+  // Ops shipped with the code (same shape as /api/overrides), for changes
+  // known at deploy time. Dropped automatically after `expires`.
+  const SEED = [
+    // Convocation day, Thu 19 Nov: labs run 12:00-15:00 (dept. schedule + A. Das mail)
+    { type: "class_move", course: "AENP225", fromDate: "2026-11-19", fromTime: "16:00", toDate: "2026-11-19",
+      toTime: "12:30", toEnd: "14:50", room: "M3-1-014", group: 2, expires: "2026-11-19" },
+    { type: "class_add", course: "AENP200", date: "2026-11-19", s: "12:00", e: "13:50", room: "M3-1-009",
+      group: 1, expires: "2026-11-19" },
+  ];
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
@@ -53,7 +62,10 @@
             break;
           case "class_move":
             tw(o.fromDate).cancel.push({ course: o.course, time: o.fromTime });
-            tw(o.toDate).add.push({ course: o.course, s: o.toTime, e: o.toEnd, room: o.room || "" });
+            tw(o.toDate).add.push({ course: o.course, s: o.toTime, e: o.toEnd, room: o.room || "", grp: o.group || 0 });
+            break;
+          case "class_add":
+            tw(o.date).add.push({ course: o.course, s: o.s, e: o.e, room: o.room || "", grp: o.group || 0 });
             break;
           case "class_cancel":
             tw(o.date).cancel.push({ course: o.course, time: o.time || "" });
@@ -71,7 +83,7 @@
   function recompute() {
     const t = todayYmd();
     state.ops = state.ops.filter((o) => !o.expires || o.expires >= t);
-    derived = derive(state.ops);
+    derived = derive(SEED.filter((o) => o.expires >= t).concat(state.ops));
   }
   recompute();
 
