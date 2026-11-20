@@ -444,7 +444,8 @@ self.addEventListener("push", (event) => {
     class:    { mark: "📍 ", buzz: [200, 100, 200], stay: true },
     manual:   { mark: "📢 ", buzz: [300, 120, 300, 120, 600], stay: true },
     news:     { mark: "📢 ", buzz: [200, 100, 200], stay: false },
-  }[d.topic] || { mark: "", buzz: [200, 100, 200], stay: false };
+  }[d.topic || { dl: "deadline", cls: "class", bus: "class", ann: "news", op: "news" }[String(d.tag).split(":")[0]] || d.tag]
+    || { mark: "", buzz: [200, 100, 200], stay: false };
   if (/^Bus /.test(d.title || "")) T.mark = "🚌 ";
   event.waitUntil(self.registration.showNotification(T.mark + (d.title || "linkeen"), {
     body: d.body || "", tag: d.tag, renotify: Boolean(d.tag), requireInteraction: T.stay,
