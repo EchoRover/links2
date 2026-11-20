@@ -1,4 +1,4 @@
-// Push scheduler, run every 5 minutes by .github/workflows/notify.yml.
+// Push scheduler, run every minute by .github/workflows/notify-loop.yml.
 // Reads the site's own data (timetable.js, scripts.js, announce.js) plus the
 // live admin overrides, and asks linkeen-api to send:
 //   news      each announcement once, when it first goes live
@@ -84,17 +84,19 @@ if (!quiet) {
   }
 }
 
-// ---- deadlines: the evening before
-if (mins >= 18 * 60 && mins < 23 * 60) {
+// ---- deadlines: the evening before (18:00-23:00), and again the morning of (07:00-12:00)
+const dlDay = mins >= 18 * 60 && mins < 23 * 60 ? tomorrow : mins >= 7 * 60 && mins < 12 * 60 ? today : null;
+if (dlDay) {
   const due = grab("scripts.js", "updatesData")
-    .filter(([, , d]) => d === tomorrow)
+    .filter(([, , d]) => d === dlDay)
     .map(([cat, text]) => `${cat === "quizzes" ? "Test" : "Due"}: ${strip(text)}`);
   for (const o of ops) {
-    if (o.type === "deadline" && o.date === tomorrow) due.push(`Due: ${o.course}: ${o.title}`);
-    if (o.type === "exam" && o.date === tomorrow) due.push(`Test: ${o.course} ${o.kind}${o.time ? " at " + o.time : ""}`);
+    if (o.type === "deadline" && o.date === dlDay) due.push(`Due: ${o.course}: ${o.title}`);
+    if (o.type === "exam" && o.date === dlDay) due.push(`Test: ${o.course} ${o.kind}${o.time ? " at " + o.time : ""}`);
   }
   for (const line of due) {
-    out.push({ topic: "deadline", title: "Tomorrow", body: line, url: "/", key: `dl:${tomorrow}:${hash(line)}` });
+    const t = dlDay === today ? "Today" : "Tomorrow";
+    out.push({ topic: "deadline", title: t, body: line, url: "/", key: `dl:${t}:${dlDay}:${hash(line)}` });
   }
 }
 

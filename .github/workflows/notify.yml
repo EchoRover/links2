@@ -1,8 +1,6 @@
 name: notify
-# Push notifications for linkeen subscribers. See tools/notify.mjs.
+# Instant run on content push or manual broadcast. The every-minute scheduler is notify-loop.yml.
 on:
-  schedule:
-    - cron: "*/5 * * * *"
   push:
     branches: [main]
     paths: [announce.js, scripts.js]

@@ -320,12 +320,14 @@
           || proposed.flatMap(describeOp).map(([, t]) => t).join(". ");
         try {
           const p = await api("/api/push/send", { method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: "linkeen", body, url: "/", topic: "news" }) });
+            // Reuse the scheduler's key for an announcement so it never pings twice.
+            body: JSON.stringify({ title: "linkeen", body, url: "/", topic: "news",
+              key: (data.ops || []).filter((o) => o.type === "announce").map((o) => "op:" + o.id)[0] }) });
           const pd = await p.json().catch(() => ({}));
           pushed = p.ok && pd.ok ? `Applied. Notified ${pd.sent} device${pd.sent === 1 ? "" : "s"}.` : "Applied, but the notification failed: " + (pd.error || p.status);
         } catch (e) { pushed = "Applied, but the notification failed (offline?)"; }
       }
-      $("notify").checked = false; $("notify-text").value = ""; $("notify-text").hidden = true;
+      $("notify").checked = true; $("notify-text").value = ""; $("notify-text").hidden = false;
       reset();
       status(pushed);
       await loadLive();

@@ -1,0 +1,32 @@
+name: notify-loop
+# GitHub's own cron fires every few hours at best, so this job stays up and runs
+# tools/notify.mjs every minute for ~5h50m, then restarts itself. The cron line is
+# only a backup restarter if the chain ever breaks. Dedupe keys stop double pings.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+concurrency: { group: notify-loop, cancel-in-progress: false }
+permissions: { contents: read, actions: write }
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 358
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: "tools\nannounce.js\nscripts.js\ntimetable.js", sparse-checkout-cone-mode: false }
+      - name: run every minute
+        env: { PUSH_SECRET: "${{ secrets.PUSH_SECRET }}" }
+        run: |
+          end=$(( $(date +%s) + 350*60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do
+            git pull -q --ff-only || true
+            node tools/notify.mjs || true
+            sleep $(( 60 - $(date +%s) % 60 ))
+          done
+      - name: restart
+        if: always()
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh workflow run notify-loop.yml -R "${{ github.repository }}"
