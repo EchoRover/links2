@@ -1,9 +1,31 @@
 // System prompt for the admin override parser. Classic script; needs
 // COURSES / WEEK / TERM from timetable.js (loaded first).
+const NICK = {
+  AENL226: ["power electronics", "power systems", "PE", "PEPS", "power"],
+  AENL228: ["measurement", "instrumentation", "M&I", "MI", "measurements"],
+  AENP200: ["energy lab", "energy technology lab", "ETL", "Dibakar lab"],
+  AENP225: ["electrical lab", "electrical energy lab", "EE lab"],
+  AHUL256: ["critical thinking", "CT", "crit"],
+  AHUL261: ["psych", "psychology", "psycho"],
+  ASBL100: ["bio", "biology"],
+  AGRL130: ["entrepreneurship", "entre", "startup class"],
+};
 window.LINKEEN_PROMPT = {
   build(ctx) {
     const courses = Object.keys(ctx.courses || {})
-      .map((c) => `${c} ${ctx.courses[c].name}`).join("\n");
+      .map((c) => `${c} ${ctx.courses[c].name} | prof ${ctx.courses[c].prof || "?"} | also called: ${(NICK[c] || []).join(", ")}`).join("\n");
+    // Every real date for the next 14 days with its actual classes, so the model never does weekday maths.
+    const cal = [];
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(); d.setDate(d.getDate() + i);
+      const key = ymd(d), label = d.toDateString().slice(0, 10) + (i === 0 ? " (today)" : i === 1 ? " (tomorrow)" : "");
+      if (key < TERM.start || key > TERM.end) { cal.push(`${key} ${label}: outside term`); continue; }
+      if (NO_CLASS[key]) { cal.push(`${key} ${label}: no classes (${NO_CLASS[key]})`); continue; }
+      const f = FOLLOWS[key] ? ` [runs ${DAY_NAME[FOLLOWS[key]]} timetable]` : "";
+      const list = dayEntries(dowOf(d), key).filter((x) => x.kind !== "free")
+        .map((x) => `${x.s}-${x.e} ${x.code} ${x.kind || "lecture"} ${x.room}${x.grp ? " G" + x.grp : ""}`);
+      cal.push(`${key} ${label}${f}: ${list.join("; ") || "no classes"}`);
+    }
     const names = ["", "Mon", "Tue", "Wed", "Thu", "Fri"];
     const week = [1, 2, 3, 4, 5].map((d) =>
       `${names[d]}: ` + ((ctx.week[d] || []).map(([s, e, code, room, kind, grp]) =>
@@ -19,6 +41,11 @@ ${courses}
 
 WEEKLY TIMETABLE (start-end code room kind group; kind "-"=lecture, tut, lab; group 0 = everyone):
 ${week}
+
+CALENDAR, NEXT 14 DAYS (use this for every date; it already includes holidays and make-up days):
+${cal.join("\n")}
+
+The admin rarely remembers codes or titles. They will say things like "psych", "bio quiz", "Anandarup sir's class", "the 10am tomorrow", "the lab on Tuesday", "power". Match by nickname, professor surname, time, room or day using COURSES and CALENDAR. If exactly one class fits, use it without asking. Only ask when two or more really fit, and then list those classes as options.
 
 OUTPUT: reply with ONE JSON object and nothing else. Either
 {"status":"ask","questions":[{"q":"short question","options":["choice 1","choice 2","choice 3"]}]}

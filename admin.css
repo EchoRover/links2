@@ -63,6 +63,8 @@ textarea:focus, input:focus, select:focus { outline: 1px solid var(--accent-stro
 .adm-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; font-style: normal; }
 .adm-chip { font: 400 12px var(--font-mono, monospace); padding: 4px 9px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text); cursor: pointer; }
 .adm-chip:hover { border-color: var(--accent); }
+.adm-pick { max-height: 132px; overflow-y: auto; margin-top: 6px; }
+.adm-pick-break { flex-basis: 100%; height: 0; }
 .adm-chip.on { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--surface-elevated); }
 .adm-chip:disabled { opacity: .5; cursor: default; }
 

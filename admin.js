@@ -386,10 +386,40 @@
   // ---------- wiring ----------
   function syncModel() { $("model-wrap").hidden = $("brain").value !== "local"; }
 
+  // Tap-to-write: action words and the next 7 days of real classes, so no codes to remember.
+  function buildPicker() {
+    const box = $("pick");
+    const add = (label, text, title) => {
+      const b = el("button", "adm-chip", label);
+      b.type = "button"; if (title) b.title = title;
+      b.onclick = () => {
+        const n = $("note");
+        n.value = (n.value.trim() ? n.value.trim() + " " : "") + text;
+        n.focus();
+      };
+      box.appendChild(b);
+    };
+    ["cancelled", "moved to", "quiz on", "deadline", "room changed to", "holiday", "announce:"].forEach((w) => add(w, w));
+    box.appendChild(el("span", "adm-pick-break"));
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(); d.setDate(d.getDate() + i);
+      const key = ymd(d);
+      if (key < TERM.start || key > TERM.end || NO_CLASS[key]) continue;
+      const day = i === 0 ? "today" : i === 1 ? "tomorrow" : d.toDateString().slice(0, 10);
+      dayEntries(dowOf(d), key).filter((x) => x.kind !== "free").forEach((x) => {
+        const c = COURSES[x.code] || { name: x.code };
+        const kind = x.kind === "lab" ? " lab" : x.kind === "tut" ? " tutorial" : "";
+        add(`${day} ${x.s} · ${c.name}${kind}${x.grp ? " G" + x.grp : ""}`,
+            `${x.code} ${c.name}${kind} ${day} ${x.s}${x.grp ? " (group " + x.grp + ")" : ""}`, c.prof);
+      });
+    }
+  }
+
   function init() {
     $("brain").value = store.get("linkeen:admin:brain", "auto");
     $("model").value = store.get("linkeen:admin:model", "qwen2.5:3b");
     syncModel();
+    buildPicker();
     $("brain").addEventListener("change", () => { store.set("linkeen:admin:brain", $("brain").value); syncModel(); });
     $("model").addEventListener("change", () => store.set("linkeen:admin:model", $("model").value.trim()));
 
