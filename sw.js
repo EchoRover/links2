@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "159ade5d188a";
+const VERSION = "3ffb5738aec4";
 const SHELL = [
 "/404",
 "/admin-upload.js",
@@ -84,6 +84,7 @@ const SHELL = [
 "/gamesscript.js",
 "/gridgambit",
 "/icons/apple-touch-icon.png",
+"/icons/badge-96.png",
 "/icons/icon-192.png",
 "/icons/icon-512.png",
 "/icons/maskable-512.png",
@@ -437,14 +438,25 @@ async function cacheFirst(req, name) {
 self.addEventListener("push", (event) => {
   let d = {};
   try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data && event.data.text() }; }
-  event.waitUntil(self.registration.showNotification(d.title || "linkeen", {
-    body: d.body || "", tag: d.tag, data: { url: d.url || "/" },
-    icon: "/icons/icon-192.png", badge: "/icons/icon-192.png",
+  // Per topic: a marker in the title, a vibration pattern, and whether it stays on screen.
+  const T = {
+    deadline: { mark: "⏰ ", buzz: [300, 120, 300, 120, 600], stay: true },
+    class:    { mark: "📍 ", buzz: [200, 100, 200], stay: true },
+    manual:   { mark: "📢 ", buzz: [300, 120, 300, 120, 600], stay: true },
+    news:     { mark: "📢 ", buzz: [200, 100, 200], stay: false },
+  }[d.topic] || { mark: "", buzz: [200, 100, 200], stay: false };
+  if (/^Bus /.test(d.title || "")) T.mark = "🚌 ";
+  event.waitUntil(self.registration.showNotification(T.mark + (d.title || "linkeen"), {
+    body: d.body || "", tag: d.tag, renotify: Boolean(d.tag), requireInteraction: T.stay,
+    vibrate: T.buzz, timestamp: Date.now(), data: { url: d.url || "/" },
+    icon: "/icons/icon-192.png", badge: "/icons/badge-96.png",
+    actions: [{ action: "open", title: "Open linkeen" }, { action: "dismiss", title: "Dismiss" }],
   }));
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
+  if (event.action === "dismiss") return;
   const url = new URL((event.notification.data && event.notification.data.url) || "/", self.location.origin).href;
   event.waitUntil((async () => {
     for (const c of await self.clients.matchAll({ type: "window", includeUncontrolled: true })) {

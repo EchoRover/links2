@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 358
     steps:
       - uses: actions/checkout@v4
-        with: { sparse-checkout: "tools\nannounce.js\nscripts.js\ntimetable.js", sparse-checkout-cone-mode: false }
+        with: { sparse-checkout: "tools\nannounce.js\nscripts.js\ntimetable.js\nbus-core.js", sparse-checkout-cone-mode: false }
       - name: run every minute
         env: { PUSH_SECRET: "${{ secrets.PUSH_SECRET }}" }
         run: |

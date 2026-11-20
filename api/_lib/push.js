@@ -45,7 +45,7 @@ export async function broadcast(msg) {
   }
   webpush.setVapidDetails("https://linkeen.vercel.app", vapidPublic(), process.env.VAPID_PRIVATE_KEY);
   const payload = JSON.stringify({ title: String(msg.title).slice(0, 80), body: String(msg.body || "").slice(0, 240),
-                                   url: String(msg.url || "/").slice(0, 200), tag: msg.key || topic });
+                                   url: String(msg.url || "/").slice(0, 200), tag: msg.key || topic, topic });
   const flat = (await redis("HGETALL", HASH)) || [];
   let sent = 0, gone = 0, failed = 0;
   const jobs = [];

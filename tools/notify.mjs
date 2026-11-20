@@ -3,12 +3,17 @@
 // live admin overrides, and asks linkeen-api to send:
 //   news      each announcement once, when it first goes live
 //   deadline  the evening before (18:00-23:00 Dubai) anything due tomorrow
-//   class     ~10 min before each class, filtered by the subscriber's group
+//   deadline  and again the morning of (07:00-12:00)
+//   class     ~15 min before each class, filtered by the subscriber's group
+//   class     10 min before the last shuttle that reaches campus in time for the day's first class
 //   manual    NOTIFY_TITLE set (workflow_dispatch) -> sent to everyone now
 // Every send carries a dedupe key, so reruns never double-ping.
-// Env: PUSH_SECRET, LINKEEN_API (default https://linkeen-api.vercel.app), DRY=1 to print only.
+// Env: PUSH_SECRET, LINKEEN_API (default https://linkeen-api.vercel.app), DRY=1 to print only,
+//      NOW="2026-11-23T07:50" to pretend it is that Dubai time (testing).
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import vm from "node:vm";
+process.env.TZ = "Asia/Dubai"; // bus-core.js reads the local weekday
 
 const ROOT = new URL("../", import.meta.url);
 const API = process.env.LINKEEN_API || "https://linkeen-api.vercel.app";
@@ -33,7 +38,8 @@ function grab(file, name) {
 }
 
 // Dubai wall clock, whatever the runner's TZ.
-const now = new Date(Date.now() + 4 * 3600e3);
+const instant = process.env.NOW ? new Date(process.env.NOW + "+04:00") : new Date();
+const now = new Date(instant.getTime() + 4 * 3600e3);
 const ymdOf = (d) => d.toISOString().slice(0, 10);
 const today = ymdOf(now);
 const tomorrow = ymdOf(new Date(now.getTime() + 864e5));
@@ -96,7 +102,8 @@ if (dlDay) {
   }
   for (const line of due) {
     const t = dlDay === today ? "Today" : "Tomorrow";
-    out.push({ topic: "deadline", title: t, body: line, url: "/", key: `dl:${t}:${dlDay}:${hash(line)}` });
+    out.push({ topic: "deadline", title: `${line.startsWith("Test") ? "Test" : "Due"} ${t.toLowerCase()}`,
+               body: line.replace(/^(Due|Test): /, ""), url: "/", key: `dl:${t}:${dlDay}:${hash(line)}` });
   }
 }
 
@@ -132,6 +139,27 @@ if (today >= TERM.start && today <= TERM.end && !holiday) {
     out.push({ topic: "class", group: x.grp, title: `${x.code} ${KIND[x.kind] || "class"} at ${x.s}`,
                body: `${name}${x.room ? " · " + x.room : ""}${x.grp ? " · G" + x.grp : ""}`, url: "/",
                key: `cls:${today}:${x.s}:${x.code}:${x.grp}` });
+  }
+
+  // Bus: the last Dorms -> Campus shuttle that lands 5+ min before each group's first
+  // in-person class, pinged 10 min before it leaves KCA 1&2.
+  const bus = vm.runInNewContext(readFileSync(new URL("bus-core.js", ROOT), "utf8")
+    + ";({ SCHEDULES, getItineraryTrips, dayKey })", { console });
+  const trips = bus.getItineraryTrips(bus.SCHEDULES[bus.dayKey(instant)], "kca1", "campus");
+  const inPerson = list.filter((x) => !/online/i.test(x.room)).sort((a, b) => tmin(a.s) - tmin(b.s));
+  const firsts = [1, 2].map((g) => inPerson.find((x) => !x.grp || x.grp === g));
+  const targets = firsts[0] === firsts[1] ? [[0, firsts[0]]] : [[1, firsts[0]], [2, firsts[1]]];
+  for (const [g, x] of targets) {
+    if (!x) continue;
+    const t = trips.filter((r) => r.arriveMins <= tmin(x.s) - 5).pop();
+    if (!t) continue;
+    const lead = t.departMins - mins;
+    if (lead <= 0 || lead > 10) continue;
+    const at = (m) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+    out.push({ topic: "class", group: g, title: `Bus at ${t.departTime} for ${x.code} at ${x.s}`,
+               body: `KCA 1&2 ${t.departTime} · KCA 3 ${at(t.departMins + 5)} · campus ${t.arriveTime}`
+                 + `${t.vehicle ? " · " + t.vehicle : ""}${x.room ? " · " + x.room : ""}`, url: "/bus",
+               key: `bus:${today}:${t.departTime}:${g}` });
   }
 }
 
