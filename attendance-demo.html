@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>linkeen attendance demo</title>
+<script src="theme-init.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root, :root[data-theme="light"] {
+  --surface:#f1f6f0; --card:#ffffff; --sunken:#e3ece1; --border:#c2d6bf; --soft:#d5e3d3;
+  --text:#0a1f0e; --muted:#43604a; --subtle:#6e8674;
+  --accent:#00a83a; --accent-strong:#00742a; --accent-soft:#caead3;
+  --warm:#b38f00; --warm-soft:#f1e7ad; --red:#b91c1c; --red-soft:#fad8d8;
+}
+:root[data-theme="dark"] {
+  --surface:#040b05; --card:#0c1a0e; --sunken:#020602; --border:#1b3d20; --soft:#122915;
+  --text:#e6f8e8; --muted:#9ec8a4; --subtle:#78997c;
+  --accent:#39ff7a; --accent-strong:#a3ffbf; --accent-soft:#10411f;
+  --warm:#ffe14d; --warm-soft:#363613; --red:#ff6b6b; --red-soft:#3a1212;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--surface); color:var(--text); font:15px/1.5 Inter,system-ui,sans-serif; }
+.wrap { max-width:760px; margin:0 auto; padding:16px 16px 48px; }
+.ribbon { background:var(--warm-soft); color:var(--text); border:1px solid var(--warm); border-radius:8px; padding:8px 12px; font-size:13px; margin-bottom:14px; }
+h1 { font-size:22px; margin:4px 0 2px; letter-spacing:-.01em; }
+h1 span { color:var(--accent); }
+.sub { color:var(--muted); margin:0 0 16px; font-size:14px; }
+.tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+.tab { font:inherit; font-size:14px; padding:8px 14px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; }
+.tab[aria-selected="true"] { background:var(--accent); border-color:var(--accent); color:var(--surface); font-weight:600; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:12px; }
+.banner { border-left:4px solid var(--accent); background:var(--accent-soft); padding:10px 12px; border-radius:6px; font-size:14px; margin-bottom:12px; }
+.who { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; font-size:13px; color:var(--muted); margin-bottom:12px; }
+.who > span { min-width:0; overflow-wrap:anywhere; }
+body { overflow-x:hidden; }
+.mono { font-family:'JetBrains Mono',monospace; }
+.course-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.course-head b { font-size:16px; }
+.pct { font-size:24px; font-weight:700; color:var(--accent-strong); }
+.pct.low { color:var(--red); }
+.bar { height:6px; background:var(--sunken); border-radius:3px; margin:6px 0 8px; position:relative; overflow:hidden; }
+.bar i { position:absolute; inset:0 auto 0 0; background:var(--accent); border-radius:3px; }
+.bar.low i { background:var(--red); }
+.bar::after { content:''; position:absolute; left:75%; top:0; bottom:0; width:2px; background:var(--text); opacity:.35; }
+.meta { font-size:13px; color:var(--muted); }
+.warn { margin-top:8px; font-size:13px; background:var(--red-soft); color:var(--red); padding:6px 10px; border-radius:6px; }
+.dates { display:flex; flex-wrap:wrap; gap:5px; margin-top:10px; }
+.d { font:12px 'JetBrains Mono',monospace; padding:3px 7px; border-radius:5px; background:var(--accent-soft); color:var(--text); }
+.d.a { background:var(--red-soft); color:var(--red); font-weight:600; }
+.d.new { outline:2px solid var(--warm); }
+.legend { font-size:12px; color:var(--subtle); margin-top:8px; }
+.btn { font:inherit; font-size:14px; font-weight:600; padding:9px 16px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:var(--surface); cursor:pointer; }
+.btn.ghost { background:transparent; color:var(--text); border-color:var(--border); font-weight:500; }
+.btn:disabled { opacity:.45; cursor:not-allowed; }
+.row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.drop { border:2px dashed var(--border); border-radius:10px; padding:22px; text-align:center; color:var(--muted); font-size:14px; }
+.drop.over { border-color:var(--accent); background:var(--accent-soft); }
+.drop input { display:none; }
+.drop label { color:var(--accent-strong); text-decoration:underline; cursor:pointer; }
+.stats { display:flex; gap:10px; flex-wrap:wrap; margin:12px 0; }
+.stat { background:var(--sunken); border-radius:8px; padding:8px 12px; font-size:13px; color:var(--muted); }
+.stat b { display:block; font-size:18px; color:var(--text); }
+.tbl { width:100%; overflow-x:auto; }
+table { border-collapse:collapse; font-size:12px; width:100%; }
+th, td { padding:5px 7px; border-bottom:1px solid var(--soft); text-align:left; white-space:nowrap; }
+th { color:var(--muted); font-weight:600; }
+td.A { color:var(--red); font-weight:600; }
+.roster { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:6px; margin:12px 0; }
+.stu { display:flex; justify-content:space-between; align-items:center; gap:8px; text-align:left; font:inherit; font-size:13px; padding:9px 11px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; }
+.stu small { color:var(--subtle); font-family:'JetBrains Mono',monospace; font-size:11px; }
+.stu .tag { font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; background:var(--accent-soft); }
+.stu.abs { border-color:var(--red); background:var(--red-soft); }
+.stu.abs .tag { background:var(--red); color:#fff; }
+select, input[type=date] { font:inherit; font-size:14px; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); }
+.toast { position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(120px); background:var(--text); color:var(--surface); padding:10px 16px; border-radius:10px; font-size:14px; transition:transform .25s ease; max-width:calc(100% - 32px); z-index:5; }
+.toast.on { transform:translateX(-50%) translateY(0); }
+.note { font-size:13px; color:var(--muted); }
+.btn.danger { color:var(--red); border-color:var(--red); }
+footer { margin-top:24px; font-size:12px; color:var(--subtle); text-align:center; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="ribbon"><b>Demo with made-up data.</b> Nothing here is real or saved. It only shows how the attendance page would look and work.</div>
+  <h1>linkeen <span>attendance</span></h1>
+  <p class="sub">A display-only page where each student sees their own attendance, updated by the course TA.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="student" aria-selected="true">Student view</button>
+    <button class="tab" role="tab" data-tab="upload" aria-selected="false">TA: upload a file</button>
+    <button class="tab" role="tab" data-tab="tick" aria-selected="false">TA: tick absentees</button>
+  </div>
+
+  <!-- STUDENT -->
+  <section id="tab-student">
+    <div class="banner"><b>Display only.</b> The physical attendance sheets with your prof/TA are the official record.</div>
+    <div class="who"><span>Signed in with college Microsoft account: <span class="mono">24a1eenb0000@iitdabudhabi.ac.ae</span></span><button class="btn ghost" type="button" disabled>Sign out</button></div>
+    <div id="courses"></div>
+    <p class="legend">Green = present, red = absent. The line on each bar marks 75%. This student sees only their own row and cannot edit anything.</p>
+  </section>
+
+  <!-- UPLOAD -->
+  <section id="tab-upload" hidden>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><b>Course: AENL226 (sample)</b><span class="note">Private TA link, this course only</span></div>
+      <p class="note">Upload the sheet exported from whatever you use now: Excel, CSV, Google Sheets, MS Forms. In this demo, files are read in your browser and never uploaded.</p>
+      <div class="drop" id="drop">
+        <input type="file" id="file" accept=".csv,text/csv">
+        Drop a CSV here, <label for="file">choose a file</label>, or
+        <button class="btn ghost" type="button" id="sample" style="margin-left:4px">use the sample sheet</button>
+      </div>
+      <div id="preview" hidden>
+        <div class="stats">
+          <div class="stat"><b id="s-stu">0</b>students</div>
+          <div class="stat"><b id="s-dates">0</b>class dates</div>
+          <div class="stat"><b id="s-col">-</b>ID column found</div>
+        </div>
+        <div class="tbl"><table id="ptable"></table></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" type="button" id="publish">Publish</button>
+          <button class="btn ghost" type="button" id="undo" disabled>Undo last publish</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <span class="note">Last published: <b id="last-pub">10 Nov 2026 by TA (sample)</b><br>All data auto-deletes on the last day of the semester.</span>
+        <button class="btn ghost danger" type="button" id="del">Delete course data</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICK -->
+  <section id="tab-tick" hidden>
+    <div class="card">
+      <b>For courses with a paper register</b>
+      <p class="note">Pick the class date. Everyone starts as present. Tap the students who were absent, then publish. About 30 seconds per class.</p>
+      <div class="row">
+        <select id="tick-course"><option>AENL226 (sample)</option></select>
+        <input type="date" id="tick-date">
+        <span class="note" id="tick-count">0 absent</span>
+      </div>
+      <div class="roster" id="roster"></div>
+      <button class="btn" type="button" id="tick-pub">Publish this class</button>
+      <p class="note" style="margin-top:8px">Tip: publish, then open <b>Student view</b>. The demo student (24A1EENB0000) is first in the list.</p>
+    </div>
+  </section>
+
+  <footer>linkeen.vercel.app &middot; attendance demo &middot; sample data only</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const fmt = (iso) => new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  let toastT;
+  function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+
+  // Fake data for the demo student
+  function series(start, days, count, absentIdx) {
+    const out = []; let d = new Date(start + 'T00:00:00'); let i = 0;
+    while (out.length < count) {
+      if (days.includes(d.getDay())) { out.push({ date: d.toISOString().slice(0, 10), p: !absentIdx.includes(i) }); i++; }
+      d.setDate(d.getDate() + 1);
+    }
+    return out;
+  }
+  const COURSES = [
+    { code: 'AENL226', name: 'Sample course A', upd: '10 Nov 2026', by: 'TA (sample)', marks: series('2026-09-01', [1, 3], 20, [4, 11]) },
+    { code: 'AENL228', name: 'Sample course B', upd: '14 Nov 2026', by: 'TA (sample)', marks: series('2026-09-02', [2, 4], 18, [2, 6, 9, 13, 15]) },
+    { code: 'AHUL261', name: 'Sample course C', upd: '7 Nov 2026', by: 'Prof (sample)', marks: series('2026-09-03', [4], 10, []) },
+  ];
+  let fresh = null; // date added via tick mode
+
+  function renderStudent() {
+    $('#courses').innerHTML = COURSES.map((c) => {
+      const tot = c.marks.length, att = c.marks.filter((m) => m.p).length;
+      const pct = Math.round((att / tot) * 100), low = pct < 75;
+      const need = low ? Math.ceil((0.75 * tot - att) / 0.25) : 0;
+      return `<div class="card">
+        <div class="course-head"><span><b>${c.code}</b> <span class="meta">${c.name}</span></span><span class="pct${low ? ' low' : ''}">${pct}%</span></div>
+        <div class="bar${low ? ' low' : ''}"><i style="width:${pct}%"></i></div>
+        <div class="meta">${att} of ${tot} classes attended &middot; updated ${c.upd} by ${c.by}</div>
+        ${low ? `<div class="warn">Below 75%. Attend the next ${need} classes in a row to get back above it.</div>` : ''}
+        <div class="dates">${c.marks.map((m) => `<span class="d${m.p ? '' : ' a'}${m.date === fresh && c.code === 'AENL226' ? ' new' : ''}" title="${m.p ? 'Present' : 'Absent'}">${fmt(m.date)}</span>`).join('')}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', x === b));
+    ['student', 'upload', 'tick'].forEach((t) => ($('#tab-' + t).hidden = t !== b.dataset.tab));
+    if (b.dataset.tab === 'student') renderStudent();
+  }));
+
+  // Upload: minimal CSV parse, in-browser only
+  const SAMPLE = 'Entry No,Name,01-Sep,03-Sep,08-Sep,10-Sep,15-Sep,17-Sep\n24A1EENB0000,Demo Student,P,P,P,P,A,P\n24A1EENB0001,Student One,P,A,P,P,P,P\n24A1EENB0002,Student Two,P,P,P,A,A,P\n24A1EENB0003,Student Three,P,P,P,P,P,P\n24A1EENB0004,Student Four,A,P,P,P,P,A\n24A1EENB0005,Student Five,P,P,A,P,P,P';
+  let published = false;
+  function preview(text) {
+    const rows = text.trim().split(/\r?\n/).map((l) => l.split(',').map((x) => x.trim()));
+    const head = rows[0] || [], body = rows.slice(1).filter((r) => r.length > 1);
+    const idCol = head.findIndex((h) => /e-?mail|entry|roll|enrol/i.test(h));
+    const dateCols = head.length - (idCol >= 0 ? 2 : 1);
+    $('#s-stu').textContent = body.length;
+    $('#s-dates').textContent = Math.max(dateCols, 0);
+    $('#s-col').textContent = idCol >= 0 ? head[idCol] : 'none';
+    $('#publish').disabled = idCol < 0;
+    const show = [head].concat(body.slice(0, 6));
+    $('#ptable').innerHTML = show.map((r, i) => '<tr>' + r.map((c) => i ? `<td class="${c === 'A' ? 'A' : ''}">${c.replace(/</g, '&lt;')}</td>` : `<th>${c.replace(/</g, '&lt;')}</th>`).join('') + '</tr>').join('');
+    $('#preview').hidden = false;
+    if (idCol < 0) toast('No entry number or email column found. Publish stays off until there is one.');
+  }
+  $('#sample').addEventListener('click', () => preview(SAMPLE));
+  $('#file').addEventListener('change', (e) => { const f = e.target.files[0]; if (f) f.text().then(preview); });
+  const drop = $('#drop');
+  ['dragover', 'dragenter'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, () => drop.classList.remove('over')));
+  drop.addEventListener('drop', (e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) f.text().then(preview); });
+  $('#publish').addEventListener('click', () => {
+    published = true; $('#undo').disabled = false;
+    $('#last-pub').textContent = 'just now by TA (sample)';
+    toast('Published. Each student now sees only their own row.');
+  });
+  $('#undo').addEventListener('click', () => { published = false; $('#undo').disabled = true; $('#last-pub').textContent = '10 Nov 2026 by TA (sample)'; toast('Restored the previous sheet.'); });
+  $('#del').addEventListener('click', () => toast('In the real page, the TA types the course code to confirm, then all data for this course is deleted.'));
+
+  // Tick mode
+  const ROSTER = [['24A1EENB0000', 'Demo Student']].concat(Array.from({ length: 11 }, (_, i) => ['24A1EENB' + String(i + 1).padStart(4, '0'), 'Student ' + ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven'][i]]));
+  const absent = new Set();
+  const today = new Date(); $('#tick-date').value = today.toISOString().slice(0, 10);
+  function renderRoster() {
+    $('#roster').innerHTML = ROSTER.map(([e, n]) => `<button type="button" class="stu${absent.has(e) ? ' abs' : ''}" data-e="${e}"><span>${n}<br><small>${e}</small></span><span class="tag">${absent.has(e) ? 'ABSENT' : 'present'}</span></button>`).join('');
+    $('#tick-count').textContent = absent.size + ' absent';
+  }
+  $('#roster').addEventListener('click', (e) => {
+    const b = e.target.closest('.stu'); if (!b) return;
+    absent.has(b.dataset.e) ? absent.delete(b.dataset.e) : absent.add(b.dataset.e);
+    renderRoster();
+  });
+  $('#tick-pub').addEventListener('click', () => {
+    const date = $('#tick-date').value; if (!date) return toast('Pick a date first.');
+    const c = COURSES[0];
+    const ex = c.marks.find((m) => m.date === date), p = !absent.has('24A1EENB0000');
+    ex ? (ex.p = p) : c.marks.push({ date, p });
+    c.marks.sort((a, b) => a.date.localeCompare(b.date));
+    c.upd = 'just now'; fresh = date;
+    toast(`Published ${fmt(date)}: ${absent.size} absent. Open Student view to see it.`);
+  });
+
+  renderStudent(); renderRoster();
+  const start = new URLSearchParams(location.search).get('tab');
+  const startBtn = start && document.querySelector(`.tab[data-tab="${CSS.escape(start)}"]`);
+  if (startBtn) startBtn.click();
+})();
+</script>
+</body>
+</html>

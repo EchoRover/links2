@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "b3dca6eb4285";
+const VERSION = "159ade5d188a";
 const SHELL = [
 "/404",
 "/admin-upload.js",
@@ -42,6 +42,7 @@ const SHELL = [
 "/assets/text.webp",
 "/assets/timetable-sem5-2026-08-23.pdf",
 "/assets/zu-abu-dhabi-campus-map.pdf",
+"/attendance-demo",
 "/boards-data.js",
 "/both",
 "/building.js",
@@ -143,7 +144,8 @@ const FONTS = [
 "https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap",
 "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,400;1,500;1,600&family=Familjen+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
 "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;1,400;1,500&display=swap",
-"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap"
+"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap",
+"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
 ];
 const SLIDES = [
 "/notes/AENL226/L4-DC-DC-part1.pdf",
