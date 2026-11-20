@@ -140,7 +140,7 @@ const updatesData = [
   ["quizzes", "AENL228: Lab exam, G2 · instruments lab M2-2-031 (Ravi sir)", "2026-11-04"],
   ["quizzes", "AENL228: Lab exam, G1 · regular lab slot Thu 16:00-17:50, M2-2-031 · clash? contact Ravi sir", "2026-11-12"],
   ["assignments", "AHUL261: Submission 2 · Portfolio Entry 2 on Blackboard by 23:59", "2026-11-16"],
-  ["quizzes", "AENL226: Power Electronics quiz · 1 hour (Anandarup sir)", "2026-11-24"],
+  ["quizzes", "AENL226: Power Electronics quiz · 15:30, 1 hour (Anandarup sir)", "2026-11-23"],
   ["assignments", "AHUL256: Tutorial debates report by 23:26", "2026-11-25"],
   // weekly psych portfolio, 5 entries in all; each shows only after the last one's deadline
   ["assignments", "AHUL261: Submission 3 · Portfolio Entry 3 on Blackboard by 23:59 (3 of 5 left)", "2026-11-23", "2026-11-17"],
