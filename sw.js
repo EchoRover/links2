@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "7deaefc13600";
+const VERSION = "4dc5a350839d";
 const SHELL = [
 "/404",
 "/admin-upload.js",
