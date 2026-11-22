@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "a28ef7d6f0f9";
+const VERSION = "7deaefc13600";
 const SHELL = [
 "/404",
 "/admin-upload.js",
@@ -152,6 +152,7 @@ const SLIDES = [
 "/notes/AENL226/L4-DC-DC-part1.pdf",
 "/notes/AENL226/L5-DC-AC-part1.pdf",
 "/notes/AENL226/L6-DC-AC-part2.pdf",
+"/notes/AENL226/L7-DC-AC-part3.pdf",
 "/notes/AENL226/Minor1-soln-power-elec.pdf",
 "/notes/AENL226/Minor1.pdf",
 "/notes/AENL226/PE-L1-introduction.pdf",

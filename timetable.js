@@ -93,7 +93,7 @@ const NO_CLASS = {
 
 // Make-up days (Vice-Provost email, 29 Oct 2026): this date runs that
 // weekday's timetable. Keep in step with MAKEUP_DAYS in scripts.js.
-const FOLLOWS = { "2026-11-05": 1, "2026-11-22": 5, "2026-11-30": 4, "2026-12-01": 5 };
+const FOLLOWS = { "2026-11-05": 1, "2026-11-22": 5, "2026-11-23": 4, "2026-11-30": 4, "2026-12-01": 5 };
 if (window.LINKEEN) {
     LINKEEN.layer(NO_CLASS, (d) => d.noClass);
     LINKEEN.layer(FOLLOWS, (d) => d.follows);

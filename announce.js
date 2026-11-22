@@ -23,8 +23,10 @@
 const ANNOUNCEMENTS = [
   { id: "convocation-2026", text: "IITD-AD's first Convocation, for the first M.Tech batch.",
     at: "2026-11-19", from: "2026-11-15", until: "2026-11-19", level: "new" },
-  { id: "aenl226-quiz-nov-2026", text: "AENL226 Power Electronics quiz, Mon 23 Nov 15:30.",
-    at: "2026-11-23", from: "2026-11-16", until: "2026-11-23", level: "urgent" },
+  { id: "aenl226-quiz-tue-2026", text: "AENL226 quiz likely moved to Tue 24 Nov 12:30-13:30 (watch for sir's confirmation). Formula sheet allowed. New: DC-AC part 3 slides.",
+    at: "2026-11-24", from: "2026-11-22", until: "2026-11-24T13:30", level: "urgent", link: "files", linkText: "Files" },
+  { id: "mon23-thursday-2026", text: "Mon 23 Nov runs Thursday's timetable.",
+    at: "2026-11-23", from: "2026-11-22", until: "2026-11-23", level: "info", link: "week", linkText: "Week" },
   { id: "sun22-friday-2026", text: "Sun 22 Nov runs Friday's timetable, online.",
     at: "2026-11-22", from: "2026-11-16", until: "2026-11-22", level: "info" },
   { id: "national-day-2026", text: "National Day break 2-4 Dec. Mon 30 Nov runs Thursday's timetable, Tue 1 Dec runs Friday's.",

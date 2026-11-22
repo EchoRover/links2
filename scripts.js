@@ -140,7 +140,7 @@ const updatesData = [
   ["quizzes", "AENL228: Lab exam, G2 · instruments lab M2-2-031 (Ravi sir)", "2026-11-04"],
   ["quizzes", "AENL228: Lab exam, G1 · regular lab slot Thu 16:00-17:50, M2-2-031 · clash? contact Ravi sir", "2026-11-12"],
   ["assignments", "AHUL261: Submission 2 · Portfolio Entry 2 on Blackboard by 23:59", "2026-11-16"],
-  ["quizzes", "AENL226: Power Electronics quiz · 15:30, 1 hour (Anandarup sir)", "2026-11-23"],
+  ["quizzes", "AENL226: Power Electronics quiz · likely 12:30-13:30, 1 hour, formula sheet allowed (Anandarup sir)", "2026-11-24"],
   ["assignments", "AHUL256: Tutorial debates report by 23:26", "2026-11-25"],
   // weekly psych portfolio, 5 entries in all; each shows only after the last one's deadline
   ["assignments", "AHUL261: Submission 3 · Portfolio Entry 3 on Blackboard by 23:59 (3 of 5 left)", "2026-11-23", "2026-11-17"],
@@ -358,7 +358,7 @@ const DAYS_OFF = {
 
 // Make-up days: this date runs that weekday's timetable (Thu 5 Nov = Monday,
 // Sun 22 Nov = Friday, online). Keep in step with FOLLOWS in timetable.js (other name: free.html loads both).
-const MAKEUP_DAYS = { "2026-11-05": 1, "2026-11-22": 5, "2026-11-30": 4, "2026-12-01": 5 };
+const MAKEUP_DAYS = { "2026-11-05": 1, "2026-11-22": 5, "2026-11-23": 4, "2026-11-30": 4, "2026-12-01": 5 };
 function dayOf(d) {
   const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   return MAKEUP_DAYS[key] ?? d.getDay();
