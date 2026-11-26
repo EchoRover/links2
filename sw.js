@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "4b488e4bc8f0";
+const VERSION = "e0f89ae8b287";
 const SHELL = [
 "/404",
 "/admin-upload.js",
@@ -107,6 +107,7 @@ const SHELL = [
 "/mess-next.js",
 "/mess",
 "/mess.js",
+"/national-day.js",
 "/night-mode.png",
 "/offline.js",
 "/overrides.js",

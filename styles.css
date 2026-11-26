@@ -5619,3 +5619,26 @@ a.cs-link:hover, :root[data-theme="dark"] a.cs-link:hover { background: var(--su
 body .cr-badge { background: none !important; border: 0 !important; color: var(--text-subtle) !important; padding: 0 !important; }
 body .upd-code { color: var(--text-muted) !important; background: none !important; border-color: var(--border) !important; }
 .brand-text { color: var(--accent); }
+
+/* uniform type: Inter everywhere on the page except the wordmark */
+.container *:not(.brand-text) { font-family: var(--font-sans) !important; font-style: normal; }
+.container { font-variant-numeric: tabular-nums; }
+.course-code, .ltp, .cr-badge, .upd-code, .upd-kind, .upd-countdown, .gen-label, .agenda-count-badge, .live-tag, .an-word {
+  letter-spacing: .02em !important; font-weight: 600 !important;
+}
+/* trim filler */
+.hero-eyebrow, .hero-sub, .agenda-count-badge, .site-footer { display: none !important; }
+
+/* a little colour back: course hue on code + stripe, tinted live card, accent headings */
+.course-card { border-left-width: 4px !important; }
+body .course-code { color: var(--course-color) !important; }
+:root[data-theme="light"] body .course-code { color: color-mix(in srgb, var(--course-color) 65%, #000) !important; }
+.course-links a:hover { background: color-mix(in srgb, var(--course-color, var(--accent)) 18%, transparent); color: var(--text); border-color: color-mix(in srgb, var(--course-color, var(--accent)) 45%, transparent); }
+.live-tracker-bar {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface-elevated)), var(--surface-elevated) 60%) !important;
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--border)) !important;
+}
+.tracker-title, .updates-title { color: var(--accent-strong) !important; }
+:root[data-theme="light"] .tracker-title, :root[data-theme="light"] .updates-title { color: var(--accent) !important; }
+body .general .gen-links a:hover { background: var(--accent-soft) !important; color: var(--accent-strong) !important; }
+.update-card-item .upd-dow { color: var(--accent) !important; }

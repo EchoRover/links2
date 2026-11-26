@@ -439,7 +439,7 @@ function updateLiveClassStatus() {
             <span class="live-tag live-tag-free">WEEKEND</span>
             <strong>Campus Quiet · Rest Period</strong>
           </div>
-          <div class="tracker-prof-line">No lectures scheduled today · Enjoy your weekend ✿</div>
+          <div class="tracker-prof-line">Weekend</div>
         </div>
       </div>
     `;
@@ -567,10 +567,8 @@ function updateLiveClassStatus() {
         <div class="tracker-hero-body">
           <div class="tracker-main-info">
             <div class="tracker-class-name">
-              <span class="live-tag live-tag-done">DONE FOR TODAY</span>
-              <strong>Classes Complete ✿</strong>
+              <strong>No more classes today</strong>
             </div>
-            <div class="tracker-prof-line">All scheduled academic lectures for today are finished</div>
           </div>
         </div>
       `;

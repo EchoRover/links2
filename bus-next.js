@@ -56,7 +56,7 @@
       main = `${to12h(first.departTime)} <span class="bn-in">⏱ <span data-at="${first.departMins}">${untilLabelSec(first.departMins)}</span></span>`;
       sub = trips.slice(1).filter((t) => !t.tomorrow).map((t) => to12hSimple(t.departTime)).join(" · ");
       if (sub) sub = `then ${sub}`;
-      sub += (sub ? " · " : "") + `best: at the stop by ${bestTime(first.departTime)} (seconds are approx)`;
+      sub += (sub ? " · " : "") + `be at the stop by ${bestTime(first.departTime)}`;
       if (first.assumed) sub += (sub ? " · " : "") + "late runs are assumed, check the board";
     }
 
