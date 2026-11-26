@@ -15,7 +15,7 @@
   const css = document.createElement("style");
   css.textContent = `
   #push-btn svg{width:18px;height:18px}
-  #push-btn{position:relative}
+  #push-btn{position:relative;inset:auto}
   #push-btn.on{color:var(--accent-strong)}
   #push-btn.nudge::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
   .push-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(280px,calc(100vw - 32px));
@@ -34,6 +34,7 @@
 
   const wrap = document.createElement("div");
   wrap.style.position = "relative";
+  wrap.style.display = "flex";
   wrap.innerHTML = `
     <button class="${toggle.className}" id="push-btn" type="button" aria-label="Notifications" title="Notifications" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

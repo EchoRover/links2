@@ -988,3 +988,6 @@ body.game-page {
 	background: var(--accent-700);
 	transform: scale(1.04);
 }
+
+.game-shell, .game-header { box-sizing: border-box; max-width: 100%; }
+.game-canvas { box-sizing: border-box; max-width: 100%; }

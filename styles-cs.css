@@ -9,12 +9,12 @@
 }
 
 :root[data-theme="light"] {
-    --bg: #F5F7EC;              /* soft match cream background */
+    --bg: #eef1ee;
     --bg-card: #FFFFFF;          /* off-white card */
-    --bg-elevated: #E6ECDC;
-    --fg: #132515;              /* deep forest green text */
-    --fg-soft: #354D38;
-    --fg-faint: #5D7560;
+    --bg-elevated: #e6ebe7;
+    --fg: #121813;
+    --fg-soft: #3c4740;
+    --fg-faint: #5f6b63;
     --rule: rgba(19, 37, 21, 0.16);
     --rule-faint: rgba(19, 37, 21, 0.08);
 
@@ -57,10 +57,10 @@
 }
 
 :root[data-theme="dark"] {
-    --bg: #0A0F0D;              /* deep forest black */
-    --bg-card: #131F19;
+    --bg: #0a0d0b;
+    --bg-card: #171e1a;
     --bg-elevated: #1E2F26;
-    --fg: #E1ECD9;
+    --fg: #f1f5f2;
     --fg-soft: #91A58D;
     --fg-faint: #4E5E4C;
     --rule: rgba(225, 236, 217, 0.15);
@@ -1435,3 +1435,15 @@ a:focus-visible, button:focus-visible {
         letter-spacing: 0.06em;
     }
 }
+
+/* 2026-11-27: phone header fits; one font family like the home page */
+@media (max-width: 600px) {
+  .topbar { flex-wrap: wrap; }
+  .brand-meta { display: none; }
+  .brand-part-link, .brand-part-een, .brand-part-cs { font-size: 1.55rem !important; }
+  .topbar-utils { flex-wrap: wrap; justify-content: flex-end; row-gap: .4rem; max-width: 100%; }
+}
+body :not(.brand-name, .brand-name *, code, pre, kbd) { font-family: var(--font-sans, Inter, system-ui, sans-serif) !important; }
+body h1, body h2 { font-style: normal; }
+body h1 *, body h2 *, body h3, body h3 * { font-style: normal; }
+body h1, body h2, body h1 *, body h2 *, body h3, body h3 * { font-style: normal !important; }

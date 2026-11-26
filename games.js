@@ -434,7 +434,7 @@ window.initEnergyPong = function() {
 
   const canvas = document.createElement('canvas');
   canvas.className = 'game-canvas pong-canvas';
-  const overlay = createOverlay('pong-msg', 'Click to serve', 'Move with your mouse or W/S keys.');
+  const overlay = createOverlay('pong-msg', 'Click to serve', 'Drag your finger, use the mouse, or W/S keys.');
 
   shell.appendChild(hud);
   shell.appendChild(canvas);
