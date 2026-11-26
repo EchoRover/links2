@@ -27,7 +27,7 @@ const ANNOUNCEMENTS = [
     at: "2026-11-24", from: "2026-11-22", until: "2026-11-24T13:30", level: "urgent", link: "files", linkText: "Files" },
   { id: "sun22-friday-2026", text: "Sun 22 Nov runs Friday's timetable, online.",
     at: "2026-11-22", from: "2026-11-16", until: "2026-11-22", level: "info" },
-  { id: "national-day-2026", text: "National Day break 2-4 Dec. Mon 30 Nov runs Thursday's timetable, Tue 1 Dec runs Friday's.",
+  { id: "national-day-2026", text: "National Day break 2-4 Dec. Mon 30 Nov runs Thursday's timetable, Tue 1 Dec runs Friday's, with the National Day celebration on campus after 12:00.",
     at: "2026-11-30", from: "2026-11-20", until: "2026-12-04", level: "info", link: "week", linkText: "Week" },
   { id: "friday-bus-2026", text: "Fridays run their own shuttle sheet: no trips 12:30-1:15, last day run 6:30 PM.",
     link: "bus", linkText: "Bus", from: "2026-11-06", until: "2026-11-20", level: "info" }
