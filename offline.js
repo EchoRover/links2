@@ -10,6 +10,14 @@
 // window.linkeenOffline exposes status() and saveSlides() for /exams.
 // ============================================================
 
+// The notification bell (push.js) rides along on every page that doesn't load it itself.
+if (!document.querySelector('script[src^="push.js"]')) {
+  const s = document.createElement("script");
+  s.src = "/push.js?v=4"; s.defer = true;
+  (document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", () => document.head.appendChild(s))
+                                     : document.head.appendChild(s));
+}
+
 (function () {
   if (!("serviceWorker" in navigator) || !window.caches) return;
 

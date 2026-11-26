@@ -7,13 +7,17 @@
 (function () {
   const API = window.LINKEEN_API || "https://linkeen-api.vercel.app";
   const KEY = "linkeen-push";
-  const bar = document.querySelector(".topbar-actions");
-  if (!bar) return;
+  // Mounts beside the theme toggle on any page (offline.js loads this file everywhere).
+  const toggle = document.getElementById("theme-toggle");
+  if (!toggle || document.getElementById("push-btn")) return;
+  const bar = toggle.parentElement;
 
   const css = document.createElement("style");
   css.textContent = `
   #push-btn svg{width:18px;height:18px}
+  #push-btn{position:relative}
   #push-btn.on{color:var(--accent-strong)}
+  #push-btn.nudge::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
   .push-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(280px,calc(100vw - 32px));
     background:var(--surface-elevated);border:1px solid var(--border);border-radius:10px;padding:12px;
     box-shadow:0 8px 24px rgba(0,0,0,.18);font:13px/1.4 var(--font-sans);color:var(--text)}
@@ -31,7 +35,7 @@
   const wrap = document.createElement("div");
   wrap.style.position = "relative";
   wrap.innerHTML = `
-    <button class="button" id="push-btn" type="button" aria-label="Notifications" title="Notifications" aria-expanded="false">
+    <button class="${toggle.className}" id="push-btn" type="button" aria-label="Notifications" title="Notifications" aria-expanded="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
       </svg>
@@ -47,7 +51,7 @@
       <button class="go off" type="button" hidden>Turn off</button>
       <small></small>
     </div>`;
-  bar.insertBefore(wrap, document.getElementById("theme-toggle"));
+  bar.insertBefore(wrap, toggle);
 
   const btn = wrap.querySelector("#push-btn");
   const panel = wrap.querySelector(".push-panel");
@@ -71,6 +75,7 @@
     groupRow.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.g === prefs.group)));
     groupRow.style.opacity = prefs.class ? 1 : 0.4;
     btn.classList.toggle("on", !!saved);
+    btn.classList.toggle("nudge", !saved && supported && Notification.permission !== "denied");
     go.textContent = saved ? "Save" : "Turn on";
     off.hidden = test.hidden = !saved;
     if (!supported) {
