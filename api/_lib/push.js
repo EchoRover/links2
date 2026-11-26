@@ -24,11 +24,30 @@ export function cleanSub(sub) {
 
 export function cleanPrefs(p = {}) {
   const g = Number(p.group);
-  return { news: p.news !== false, deadline: p.deadline !== false, class: p.class === true,
-           group: g === 1 || g === 2 ? g : 0 };
+  // v:2 = chosen with the "class + bus" box on by default; older records predate it and get classes too.
+  return { news: p.news !== false, deadline: p.deadline !== false, class: p.class !== false,
+           group: g === 1 || g === 2 ? g : 0, v: 2 };
 }
 
-export async function saveSub(sub, prefs) {
+const dubaiDay = () => new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10);
+const HERE = (day) => `linkeen:push:here:${day}`;
+
+// "I'm on campus" for today: bus pings stop for this phone until tomorrow.
+export async function markHere(endpoint) {
+  const key = HERE(dubaiDay());
+  await redis("SADD", key, idOf(String(endpoint || "")));
+  await redis("EXPIRE", key, "172800");
+}
+
+// The service worker resends a rotated subscription with `old` and no prefs: carry the old prefs over.
+export async function saveSub(sub, prefs, old) {
+  if (old && old !== sub.endpoint) {
+    if (!prefs) {
+      try { prefs = JSON.parse(await redis("HGET", HASH, idOf(old))).prefs; } catch { /* none stored */ }
+    }
+    await redis("HDEL", HASH, idOf(old));
+  }
+  prefs = cleanPrefs(prefs || {});
   await redis("HSET", HASH, idOf(sub.endpoint), JSON.stringify({ sub, prefs, at: new Date().toISOString() }));
 }
 
@@ -36,7 +55,7 @@ export async function dropSub(endpoint) {
   return redis("HDEL", HASH, idOf(String(endpoint || "")));
 }
 
-// msg: { title, body, url, topic, group?, key? }
+// msg: { title, body, url, topic, group?, key?, skipHere? (true = skip phones marked on campus today) }
 export async function broadcast(msg) {
   const topic = TOPICS.includes(msg.topic) ? msg.topic : "manual";
   if (msg.key) {
@@ -47,13 +66,15 @@ export async function broadcast(msg) {
   const payload = JSON.stringify({ title: String(msg.title).slice(0, 80), body: String(msg.body || "").slice(0, 240),
                                    url: String(msg.url || "/").slice(0, 200), tag: msg.key || topic, topic });
   const flat = (await redis("HGETALL", HASH)) || [];
+  const here = msg.skipHere ? new Set((await redis("SMEMBERS", HERE(dubaiDay()))) || []) : null;
   let sent = 0, gone = 0, failed = 0;
   const jobs = [];
   for (let i = 0; i < flat.length; i += 2) {
     let rec;
     try { rec = JSON.parse(flat[i + 1]); } catch { continue; }
     const p = rec.prefs || {};
-    if (topic !== "manual" && !p[topic]) continue;
+    if (topic !== "manual" && !(p[topic] || (topic === "class" && !p.v))) continue;
+    if (here && here.has(flat[i])) continue;
     if (topic === "class" && msg.group && p.group && p.group !== msg.group) continue;
     const field = flat[i];
     jobs.push(webpush.sendNotification(rec.sub, payload, { TTL: topic === "class" ? 900 : 86400, urgency: "high" })

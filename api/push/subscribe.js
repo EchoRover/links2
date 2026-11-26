@@ -1,9 +1,10 @@
 // GET    /api/push/subscribe          -> { key } (VAPID public key)
-// POST   /api/push/subscribe {sub, prefs} -> save / update this browser
+// POST   /api/push/subscribe {sub, prefs, old?} -> save / update this browser (old = rotated endpoint)
+// POST   /api/push/subscribe {here: endpoint} -> this phone is on campus today, stop bus pings
 // DELETE /api/push/subscribe {endpoint}   -> forget this browser
 import { configured } from "../_lib/store.js";
 import { cors } from "../_lib/cors.js";
-import { vapidPublic, pushReady, cleanSub, cleanPrefs, saveSub, dropSub } from "../_lib/push.js";
+import { vapidPublic, pushReady, cleanSub, saveSub, dropSub, markHere } from "../_lib/push.js";
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;
@@ -16,8 +17,12 @@ export default async function handler(req, res) {
   catch { return res.status(400).json({ ok: false, error: "bad json" }); }
 
   try {
+    if (req.method === "POST" && body.here) {
+      await markHere(body.here);
+      return res.status(200).json({ ok: true });
+    }
     if (req.method === "POST") {
-      await saveSub(cleanSub(body.sub), cleanPrefs(body.prefs));
+      await saveSub(cleanSub(body.sub), body.prefs || null, body.old ? String(body.old) : null);
       return res.status(200).json({ ok: true });
     }
     if (req.method === "DELETE") {

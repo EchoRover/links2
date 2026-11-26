@@ -16,7 +16,7 @@
 // ============================================================
 
 // <offline-manifest> written by tools/build_offline.py, do not edit by hand
-const VERSION = "4dc5a350839d";
+const VERSION = "5eb56d5c38cd";
 const SHELL = [
 "/404",
 "/admin-upload.js",
@@ -447,18 +447,46 @@ self.addEventListener("push", (event) => {
     news:     { mark: "📢 ", buzz: [200, 100, 200], stay: false },
   }[d.topic || { dl: "deadline", cls: "class", bus: "class", ann: "news", op: "news" }[String(d.tag).split(":")[0]] || d.tag]
     || { mark: "", buzz: [200, 100, 200], stay: false };
-  if (/^Bus /.test(d.title || "")) T.mark = "🚌 ";
+  const isBus = /^(Last )?[Bb]us /.test(d.title || "");
+  if (isBus) T.mark = "🚌 ";
   event.waitUntil(self.registration.showNotification(T.mark + (d.title || "linkeen"), {
     body: d.body || "", tag: d.tag, renotify: Boolean(d.tag), requireInteraction: T.stay,
     vibrate: T.buzz, timestamp: Date.now(), data: { url: d.url || "/" },
     icon: "/icons/icon-192.png", badge: "/icons/badge-96.png",
-    actions: [{ action: "open", title: "Open linkeen" }, { action: "dismiss", title: "Dismiss" }],
+    actions: isBus ? [{ action: "here", title: "I'm on campus" }, { action: "open", title: "Bus times" }]
+                   : [{ action: "open", title: "Open linkeen" }, { action: "dismiss", title: "Dismiss" }],
   }));
+});
+
+const PUSH_API = "https://linkeen-api.vercel.app/api/push/subscribe";
+async function pushApi(make) {
+  const sub = await self.registration.pushManager.getSubscription();
+  if (!sub) return;
+  await fetch(PUSH_API, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(await make(sub)) }).catch(() => {});
+}
+
+// The browser rotated or expired the subscription: make a new one and move the stored prefs to it,
+// so the phone doesn't silently drop off the list.
+self.addEventListener("pushsubscriptionchange", (event) => {
+  const old = event.oldSubscription && event.oldSubscription.endpoint;
+  event.waitUntil((async () => {
+    let sub = event.newSubscription || await self.registration.pushManager.getSubscription();
+    if (!sub) {
+      const { key } = await (await fetch(PUSH_API)).json();
+      const raw = atob(key.replace(/-/g, "+").replace(/_/g, "/"));
+      sub = await self.registration.pushManager.subscribe({ userVisibleOnly: true,
+        applicationServerKey: Uint8Array.from(raw, (c) => c.charCodeAt(0)) });
+    }
+    await fetch(PUSH_API, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sub: sub.toJSON(), old }) }).catch(() => {});
+  })());
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   if (event.action === "dismiss") return;
+  if (event.action === "here") return event.waitUntil(pushApi(async (sub) => ({ here: sub.endpoint })));
   const url = new URL((event.notification.data && event.notification.data.url) || "/", self.location.origin).href;
   event.waitUntil((async () => {
     for (const c of await self.clients.matchAll({ type: "window", includeUncontrolled: true })) {
