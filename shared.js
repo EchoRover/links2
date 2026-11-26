@@ -513,6 +513,4 @@ function drawTerrain() {
 window.addEventListener("DOMContentLoaded", () => {
   wireThemeToggle();
   buildFooterQuote();
-  drawTerrain();
-  spawnBotanicals(6);
 });

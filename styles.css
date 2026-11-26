@@ -4,19 +4,19 @@
    ===================================================== */
 
 :root[data-theme="light"] {
-  --surface:           #f1f6f0;
+  --surface:           #f5f7f5;
   --surface-elevated:  #ffffff;
-  --surface-sunken:    #e3ece1;
-  --border:            #c2d6bf;
-  --border-soft:       #d5e3d3;
-  --text:              #0a1f0e;
-  --text-muted:        #43604a;
-  --text-subtle:       #6e8674;
-  --accent:            #00a83a;
-  --accent-strong:     #00742a;
-  --accent-soft:       #caead3;
-  --accent-warm:       #f2c200;  /* whimsy secondary */
-  --accent-warm-soft:  #f1e7ad;
+  --surface-sunken:    #eceeeb;
+  --border:            #d4dad5;
+  --border-soft:       #e3e7e3;
+  --text:              #121813;
+  --text-muted:        #4b574f;
+  --text-subtle:       #77827a;
+  --accent:            #0f8a45;
+  --accent-strong:     #0a6b35;
+  --accent-soft:       #dcefe3;
+  --accent-warm:       #b98a10;  /* whimsy secondary */
+  --accent-warm-soft:  #f4ecd2;
 
   --text-50:#e6e9e7;--text-100:#ced2cf;--text-200:#9da59f;--text-300:#6c796e;
   --text-400:#3b4c3e;--text-500:#0a1f0e;--text-600:#08190b;--text-700:#061309;
@@ -53,7 +53,7 @@
   --fg-faint: var(--text-subtle);
   --coral: var(--accent);
   --coral-bright: var(--accent-strong);
-  --coral-glow: rgba(0, 168, 58, 0.25);
+  --coral-glow: rgba(15, 138, 69, 0.2);
   --coral-soft: var(--accent-soft);
   --indigo: var(--accent-warm);
   --indigo-soft: var(--accent-warm-soft);
@@ -65,19 +65,19 @@
 }
 
 :root[data-theme="dark"] {
-  --surface:           #040b05;
-  --surface-elevated:  #0c1a0e;
-  --surface-sunken:    #020602;
-  --border:            #1b3d20;
-  --border-soft:       #122915;
-  --text:              #e6f8e8;
-  --text-muted:        #9ec8a4;
-  --text-subtle:       #78997c;
-  --accent:            #39ff7a;
-  --accent-strong:     #a3ffbf;
-  --accent-soft:       #10411f;
-  --accent-warm:       #ffe14d;
-  --accent-warm-soft:  #363613;
+  --surface:           #0c100e;
+  --surface-elevated:  #131915;
+  --surface-sunken:    #090c0a;
+  --border:            #26302a;
+  --border-soft:       #1c241f;
+  --text:              #e6ebe7;
+  --text-muted:        #a2ada6;
+  --text-subtle:       #76827a;
+  --accent:            #3dcf7c;
+  --accent-strong:     #86dfaa;
+  --accent-soft:       #163020;
+  --accent-warm:       #e3b54a;
+  --accent-warm-soft:  #2c2614;
 
   --text-50:#171917;--text-100:#2e322e;--text-200:#5c635d;--text-300:#8a958b;
   --text-400:#b8c6ba;--text-500:#e6f8e8;--text-600:#ebf9ed;--text-700:#f0fbf1;
@@ -114,7 +114,7 @@
   --fg-faint: var(--text-subtle);
   --coral: var(--accent);
   --coral-bright: var(--accent-strong);
-  --coral-glow: rgba(57, 255, 122, 0.25);
+  --coral-glow: rgba(61, 207, 124, 0.2);
   --coral-soft: var(--accent-soft);
   --indigo: var(--accent-warm);
   --indigo-soft: var(--accent-warm-soft);
@@ -5562,3 +5562,60 @@ html::-webkit-scrollbar { width: 10px; }
 html::-webkit-scrollbar-track { background: var(--surface); }
 html::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: 10px; border: 2px solid var(--surface); }
 html::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* =====================================================
+   CALM PASS (2026-11-26): one accent, flat surfaces, no glow,
+   no ambient motion. Course colour lives only in the card's
+   left stripe. Keep this block last.
+   ===================================================== */
+#bg { display: none !important; }
+:root[data-theme="dark"] body, :root[data-theme="light"] body { background-image: none; }
+:root[data-theme="dark"] .course-card,
+:root[data-theme="dark"] .updates .box,
+:root[data-theme="dark"] .reel-panel { box-shadow: none; }
+
+/* type: one sans family, no decorative flourishes */
+.hero h1 { font-family: var(--font-sans); font-style: normal; font-weight: 650; letter-spacing: -0.02em; }
+.hero h1::after { content: none; }
+.hero-sub { font-style: normal; }
+.course-title::first-letter,
+:root[data-theme="dark"] .course-title::first-letter { color: inherit; font-size: inherit; font-weight: inherit; }
+.updates-layout::before { content: none; }
+.updates-layout { border-top: 1px solid var(--border-soft); }
+
+/* cards: flat, hairline border, thin course stripe */
+.course-card, .live-tracker-bar, .updates-layout, .an-card { box-shadow: none !important; }
+.course-card { border-left-width: 3px !important; }
+.course-card:hover { transform: none; box-shadow: none; }
+body .course-code {
+  color: var(--text-muted) !important; background: none !important; border: 0 !important; padding: 0 !important;
+  font-weight: 600; letter-spacing: .04em;
+}
+.cr-badge { background: none; border: 0; color: var(--text-subtle); font-weight: 600; padding: 0; }
+.course-links a {
+  background: var(--surface-sunken); color: var(--text-muted); font-weight: 600;
+  border: 1px solid var(--border-soft);
+}
+.course-links a::before { display: none; }
+.course-links a:hover { background: var(--accent-soft); color: var(--accent-strong); transform: none; box-shadow: none; }
+
+/* nav rows: plain labels, no lit nodes or wires */
+.general .gen-label::before, .general .gen-label::after { content: none; }
+.general .gen-label { width: 84px; }
+body .general .gen-links { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface-elevated); border-color: var(--border); }
+
+/* linkCS: quiet outline, no wiggle */
+a.cs-link { background: none; color: var(--text-muted); border: 1px solid var(--border); }
+:root[data-theme="dark"] a.cs-link { color: var(--text-muted); }
+a.cs-link:hover, :root[data-theme="dark"] a.cs-link:hover { background: var(--surface-sunken); color: var(--text); border-color: var(--border); transform: none; }
+
+/* status dots and due list: no glow, no nested card shells */
+.dot-active { box-shadow: none; }
+.updates .box.agenda-list { background: none !important; border: 0 !important; padding: 0 !important; }
+.update-card-item { box-shadow: none !important; }
+
+/* one family everywhere except the wordmark */
+.hero-sub, .tracker-title, .bn-main, .bn-in, .updates-title, .site-footer, .site-footer * { font-family: var(--font-sans) !important; font-style: normal !important; }
+body .cr-badge { background: none !important; border: 0 !important; color: var(--text-subtle) !important; padding: 0 !important; }
+body .upd-code { color: var(--text-muted) !important; background: none !important; border-color: var(--border) !important; }
+.brand-text { color: var(--accent); }
