@@ -5642,3 +5642,18 @@ body .course-code { color: var(--course-color) !important; }
 :root[data-theme="light"] .tracker-title, :root[data-theme="light"] .updates-title { color: var(--accent) !important; }
 body .general .gen-links a:hover { background: var(--accent-soft) !important; color: var(--accent-strong) !important; }
 .update-card-item .upd-dow { color: var(--accent) !important; }
+
+/* phone: keep nav strips on one line, keep the live card header on one row */
+@media (max-width: 600px) {
+  .general .gen-label { width: 66px !important; font-size: .6rem !important; letter-spacing: .06em !important; }
+  body .general .gen-links { flex-wrap: nowrap !important; max-width: calc(100% - 66px); overflow-x: auto; scrollbar-width: none; }
+  body .general .gen-links::-webkit-scrollbar { display: none; }
+  body .general .gen-links a, body .general .gen-links a#open-games-modal, body .general .gen-more { flex: none; white-space: nowrap; padding: 7px 10px !important; font-size: .82rem !important; }
+  .tracker-top-row { flex-wrap: nowrap !important; gap: 8px; }
+  .tracker-badge-group { min-width: 0; }
+  .tracker-title { white-space: nowrap; font-size: .92rem !important; }
+  .tracker-actions { gap: 6px !important; flex: none; }
+  .tracker-calendar-btn { display: none !important; }
+  .tracker-title { overflow: hidden; text-overflow: ellipsis; }
+  .nd-row { gap: 6px; }
+}

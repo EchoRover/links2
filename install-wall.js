@@ -1,5 +1,5 @@
-// install-wall.js: on phones, the site only works once opened from the Home
-// Screen (installed PWA). In a normal browser tab it shows install steps instead.
+// install-wall.js: on phones in a normal browser tab, shows install steps and
+// why installing helps (notifications), with a "Continue in browser" button.
 // Desktop is never walled. Load it synchronously in <head>:
 //   <script src="install-wall.js" data-name="linkeen" data-bg="#06120a" data-fg="#e6f4e8" data-accent="#00c24a"></script>
 // Escape hatch (testing): open any page with ?letmein once; ?wall turns it back on.
@@ -36,7 +36,9 @@
   html #iw button{display:block;width:100%;padding:13px;border:0;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;
     background:${cfg("accent", "#4c8")};color:#000;margin:0 0 10px}
   html #iw svg{display:inline;width:18px;height:18px;vertical-align:-3px;fill:none;stroke:currentColor}
-  html #iw path{fill:none;stroke:currentColor}`;
+  html #iw path{fill:none;stroke:currentColor}
+  html #iw ul{display:block;margin:0 0 16px;padding-left:20px;font-size:14px;opacity:.85}html #iw ul li{margin:4px 0}
+  html #iw #iw-skip{background:transparent;color:inherit;border:1px solid currentColor;opacity:.7;margin-top:4px}`;
   document.documentElement.classList.add("iw-on");
   document.head.appendChild(style);
 
@@ -72,7 +74,14 @@
         <ol><li>Tap the browser menu <b>⋮</b>.</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li>
         <li>Open <b>${NAME}</b> from your Home Screen.</li></ol>`;
     }
+    if (!installed) html += `<p style="margin:0 0 6px;font-weight:600;opacity:1">Why install it</p><ul><li>Class reminders 10 minutes before</li><li>Shuttle pings until you reach campus</li><li>Deadline and exam alerts the evening before</li><li>Works with no wifi</li></ul>
+      ${iOS ? "<p style=\"font-size:13px\">On iPhone, notifications only work from the installed app.</p>" : ""}
+      <button id="iw-skip">Continue in browser</button>`;
     box.innerHTML = html + "</div>";
+    document.getElementById("iw-skip")?.addEventListener("click", () => {
+      try { localStorage.setItem("install-wall-off", "1"); } catch (e) {}
+      box.remove(); style.remove(); document.documentElement.classList.remove("iw-on");
+    });
     const go = document.getElementById("iw-go");
     if (go) go.onclick = async () => { deferred.prompt(); const r = await deferred.userChoice; if (r.outcome === "accepted") render(true); };
     const copy = document.getElementById("iw-copy");
