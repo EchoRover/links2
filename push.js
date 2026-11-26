@@ -43,6 +43,7 @@
       <label><input type="checkbox" data-k="class"> Next class + bus until you're on campus</label>
       <div class="row" data-group><button data-g="0">Both</button><button data-g="1">G1</button><button data-g="2">G2</button></div>
       <button class="go" type="button">Turn on</button>
+      <button class="go off test" type="button" hidden>Send me a test</button>
       <button class="go off" type="button" hidden>Turn off</button>
       <small></small>
     </div>`;
@@ -51,7 +52,8 @@
   const btn = wrap.querySelector("#push-btn");
   const panel = wrap.querySelector(".push-panel");
   const go = panel.querySelector(".go:not(.off)");
-  const off = panel.querySelector(".go.off");
+  const off = panel.querySelector(".go.off:not(.test)");
+  const test = panel.querySelector(".go.test");
   const note = panel.querySelector("small");
   const groupRow = panel.querySelector("[data-group]");
 
@@ -70,7 +72,7 @@
     groupRow.style.opacity = prefs.class ? 1 : 0.4;
     btn.classList.toggle("on", !!saved);
     go.textContent = saved ? "Save" : "Turn on";
-    off.hidden = !saved;
+    off.hidden = test.hidden = !saved;
     if (!supported) {
       go.disabled = true;
       note.textContent = isIOS ? "On iPhone: Share → Add to Home Screen, open linkeen from there, then tap the bell."
@@ -130,6 +132,17 @@
       note.textContent = "On. You'll get the ones ticked above.";
     } catch (e) { note.textContent = "Couldn't turn on: " + e.message; }
     paint();
+  });
+
+  test.addEventListener("click", async () => {
+    note.textContent = "Sending…";
+    try {
+      const sub = await save(); // re-sync first, so a stale subscription gets fixed before the test
+      const r = await (await fetch(API + "/api/push/subscribe", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ test: sub.endpoint }) })).json();
+      note.textContent = r.ok ? "Sent. It should pop up in a few seconds. Nothing? Check this app's notification settings on the phone."
+                              : "Test failed: " + r.error;
+    } catch (e) { note.textContent = "Test failed: " + e.message; }
   });
 
   off.addEventListener("click", async () => {

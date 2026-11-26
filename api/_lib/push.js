@@ -55,6 +55,24 @@ export async function dropSub(endpoint) {
   return redis("HDEL", HASH, idOf(String(endpoint || "")));
 }
 
+// "Send me a test" from the bell: one push to this phone only, at most once a minute.
+export async function sendTest(endpoint) {
+  const id = idOf(String(endpoint || ""));
+  const raw = await redis("HGET", HASH, id);
+  if (!raw) return { ok: false, error: "this phone isn't subscribed; tap Turn on first" };
+  if (!(await redis("SET", `linkeen:push:test:${id}`, "1", "NX", "EX", "60"))) return { ok: false, error: "wait a minute between tests" };
+  webpush.setVapidDetails("https://linkeen.vercel.app", vapidPublic(), process.env.VAPID_PRIVATE_KEY);
+  try {
+    await webpush.sendNotification(JSON.parse(raw).sub, JSON.stringify({ title: "Test: notifications work",
+      body: "You'll get class, bus and deadline pings like this one.", url: "/", tag: "test", topic: "class" }),
+      { TTL: 300, urgency: "high" });
+    return { ok: true };
+  } catch (e) {
+    if (e.statusCode === 404 || e.statusCode === 410) await redis("HDEL", HASH, id);
+    return { ok: false, error: `push service said ${e.statusCode || e.message}; tap Save to re-subscribe` };
+  }
+}
+
 // msg: { title, body, url, topic, group?, key?, skipHere? (true = skip phones marked on campus today) }
 export async function broadcast(msg) {
   const topic = TOPICS.includes(msg.topic) ? msg.topic : "manual";
