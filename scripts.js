@@ -146,6 +146,7 @@ const updatesData = [
   ["assignments", "AHUL261: Submission 3 · Portfolio Entry 3 on Blackboard by 23:59 (3 of 5 left)", "2026-11-23", "2026-11-17"],
   ["assignments", "AHUL261: Submission 4 · Portfolio Entry 4 on Blackboard by 23:59 (2 of 5 left)", "2026-11-30", "2026-11-24"],
   ["assignments", "AHUL261: Submission 5 · Portfolio Entry 5 on Blackboard by 23:59 (last one)", "2026-12-07", "2026-12-01"],
+  ["quizzes", "AENP225: Cycle 2 viva & demo, G2", "2026-11-30"],
   ["quizzes", "AENP225: Electrical lab quiz · 15:30-16:30 (slot the class proposed, 25 Nov)", "2026-12-07"],
   ["quizzes", "AENL228: Lab exam · regular lab slot (G2 09:00, G1 16:00), M2-2-031", "2026-12-08"],
   ["quizzes", "ASBL100: Bio lab exam", "2026-12-11"],
